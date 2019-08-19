@@ -23,7 +23,16 @@ public class FocusGame {
      * @return True if the piece placement is well-formed
      */
     static boolean isPiecePlacementWellFormed(String piecePlacement) {
-        // FIXME Task 2: determine whether a piece placement is well-formed
+        /*
+
+        So we're checking if the piece placement exists, the criteria for existence is given above
+
+        iterating through this
+
+
+         */
+
+
         return false;
     }
 
@@ -37,7 +46,18 @@ public class FocusGame {
      * @return True if the placement is well-formed
      */
     public static boolean isPlacementStringWellFormed(String placement) {
-        // FIXME Task 3: determine whether a placement is well-formed
+        /*
+        Iterating throughout the string, it can be pass every four characters through isPiecePlacementWellFormed()
+            to check if they are all well formed to begin with
+
+        After that, we can utilise .charAt() to check that every fourth character is within the range of a-j
+            Simultaneously, we will store these .charAt() values in a seperate string named "dupeCheck"
+
+        Iterating through dupeCheck, we can see if there are any duplicated pieces present
+
+        return true if all the above criteria is met
+
+         */
         return false;
     }
 
