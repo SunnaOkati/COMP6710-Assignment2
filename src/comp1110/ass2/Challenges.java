@@ -4,7 +4,7 @@ public class Challenges {
     private int challengeNumber;          // The problem number from the original board game
     private String colorConstraint;    // The color constraint of 3 * 3 matrix.
 
-    static Challenges[] challenge = {};
+    static Challenges[] challenge = {}; //List of challenges.
 
     /**
      * Given the two parts of a game objective and a problem number, constructs an `Challenges` object
