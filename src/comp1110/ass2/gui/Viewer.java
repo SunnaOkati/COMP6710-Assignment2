@@ -38,6 +38,9 @@ public class Viewer extends Application {
      */
     void makePlacement(String placement) {
         // FIXME Task 4: implement the simple placement viewer
+        //idea: divided the placement string in each 4 characters string(each piece), then choose the pictures corresponding to
+        // each piece by the orientation,type, location we obtained from the 4 characters string(each piece) and put it on
+        //javaFX stage
     }
 
     /**
