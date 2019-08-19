@@ -60,6 +60,15 @@ public class FocusGame {
      */
     public static boolean isPlacementStringValid(String placement) {
         // FIXME Task 5: determine whether a placement string is valid
+        
+        /*
+        To be valid it has to satisfy two conditions
+        1) Use isPlacementStringWellFormed(), we can say whether "placement" is well formed
+        2) Rules:
+            a) Extract row and column co-ordinates from "placement" and check whether 0 <= row < 5 and 0 <= column < 10.
+            b) Use the boardstates which contains the colors associated with each square(block) 
+            and verify that current set of placement co-ordinates doesn't have any color associated with it already.
+        */
         return false;
     }
 
