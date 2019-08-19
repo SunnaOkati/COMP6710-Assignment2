@@ -24,6 +24,10 @@ public class FocusGame {
      */
     static boolean isPiecePlacementWellFormed(String piecePlacement) {
         // FIXME Task 2: determine whether a piece placement is well-formed
+        
+        /* Seperate 4 characters by using String.charAt() and check whether 
+         each lie within the above specified limits.
+        */
         return false;
     }
 
