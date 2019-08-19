@@ -10,17 +10,17 @@ declaration: >-
 contributions:
   - uid: u6950099
     contribution: 33 
-  - uid:u6975662
+  - uid: u6975662
     contribution: 33
-  - uid:u7004474
+  - uid: u7004474
     contribution: 33
 
 # Sign *your* name and uids here. (Remove entries if you have fewer
 # than three members)
 signatures:
-  - name:Victor Horvat
+  - name: Victor Horvat
     uid: u6950099
-  - name:Rong Hu
+  - name: Rong Hu
     uid: u6975662
-  - name:Ranjth Raj kandasamy Senthil Kumar
+  - name: Ranjth Raj kandasamy Senthil Kumar
     uid: u7004474
