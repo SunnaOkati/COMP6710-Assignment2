@@ -4,6 +4,6 @@ public class B {
 
     @Override
     public String toString(){
-        return "Experimental B";
+        return "Seccond Experiment B";
     }
 }
