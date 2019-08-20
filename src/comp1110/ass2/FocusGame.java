@@ -42,6 +42,18 @@ public class FocusGame {
      */
     public static boolean isPlacementStringWellFormed(String placement) {
         // FIXME Task 3: determine whether a placement is well-formed
+        /*
+        Iterating throughout the string, it can be pass every four characters through isPiecePlacementWellFormed()
+            to check if they are all well formed to begin with
+
+        After that, we can utilise .charAt() to check that every fourth character is within the range of a-j
+            Simultaneously, we will store these .charAt() values in a seperate string named "dupeCheck"
+
+        Iterating through dupeCheck, we can see if there are any duplicated pieces present
+
+        return true if all the above criteria is met
+
+         */
         return false;
     }
 
@@ -99,6 +111,22 @@ public class FocusGame {
      */
     static Set<String> getViablePiecePlacements(String placement, String challenge, int col, int row) {
         // FIXME Task 6: determine the set of all viable piece placements given existing placements and a challenge
+        /*
+            Regarding the placement string, if it results in having pieces that satisfy the challenge then allow that
+                placement
+
+            Checking each individual piece for each of its tiles to see if they're within the 3*3 challenge square
+                will be sufficient for this function
+
+            Along with checking the range of each tile, this function will also check the colour of the tiles within
+                the 3*3 range to see if they're the correctly coloured tiles.
+
+            To tidy this method up and for documentation purposes, there will be a method to see each individual
+                pieces tiles, and another function to see match that against the challenge square.
+
+            The first method may have to be hardcoded, the second method will check the just to see if the correct
+                colours are present, with respect to the challenge.
+         */
         return null;
     }
 
@@ -120,6 +148,19 @@ public class FocusGame {
      */
     public static String getSolution(String challenge) {
         // FIXME Task 9: determine the solution to the game, given a particular challenge
+        /*
+            The methods from task 5 & 6 will be used within this task, as they can check whether certain strings will
+                be suitable for the board & the challenge respectively.
+
+            Right now, with a limited understanding of the nuance of the game, the current approach is to brute force
+
+            Brute forcing can be done by using task 5 to find all the string placements that are allowed to exist on
+                the board, these strings can then be stored in a separate file under "all viable strings"
+
+            All of the strings from "all viable strings" can then be input into the methods from task 6 to find
+                the one string that satisfies the challenge. This will become the output for task 9.
+
+         */
         return null;
     }
 }
