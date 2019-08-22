@@ -1,5 +1,7 @@
 package comp1110.ass2;
 
+import static comp1110.ass2.Colors.*;
+
 public enum PieceType {
     a,b,c,d,e,f,g,h,i,j;
 
@@ -21,7 +23,8 @@ public enum PieceType {
      * not covered by the piece.
      */
 
-    private static Colors[][] statemap = {};
+    private static Colors[][] statemap = {
+    };
 
     public Colors stateFromOffset(int xoff, int yoff, Orientation orientation){
 
