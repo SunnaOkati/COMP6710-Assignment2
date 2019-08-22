@@ -28,6 +28,16 @@ public class FocusGame {
         /* Seperate 4 characters from "piecePlacement" by using String.charAt() and check whether
          each lie within the above specified limits.
         */
+        if (piecePlacement.length()!=4)
+            return false;
+        
+        Location location = Piece.placementToLocation(piecePlacement);
+        Orientation orientation = Piece.placementToOrientation(piecePlacement);
+        PieceType type = Piece.placementToPieceType(piecePlacement);
+
+        if ( (type!= null) && (location.getX()>=0) && (location.getX()<9) && (location.getY()>=0) && (location.getY()<5) && (orientation != null)){
+            return true;
+        }
         return false;
     }
 

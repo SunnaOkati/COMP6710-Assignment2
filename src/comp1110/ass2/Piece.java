@@ -50,6 +50,8 @@ public class Piece {
             case '3':
                 p = Orientation.THREE;
                 break;
+            default:
+                p = null;
         }
         return p;
     }
@@ -68,6 +70,36 @@ public class Piece {
         int x = Character.getNumericValue(placement.charAt(1));
         int y = Character.getNumericValue(placement.charAt(2));
         return new Location(x, y);
+    }
+
+    public static  PieceType placementToPieceType(String placement){
+        // Use switch case
+        char t = placement.charAt(0);
+        switch (t){
+            case 'a':
+                return PieceType.a;
+            case 'b':
+                return PieceType.b;
+            case 'c':
+                return PieceType.c;
+            case 'd':
+                return PieceType.d;
+            case 'e':
+                return PieceType.e;
+            case 'f':
+                return PieceType.f;
+            case 'g':
+                return PieceType.g;
+            case 'h':
+                return PieceType.h;
+            case 'i':
+                return PieceType.i;
+            case 'j':
+                return PieceType.j;
+            default:
+                return null;
+
+        }
     }
 
 }
