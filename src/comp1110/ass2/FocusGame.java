@@ -30,7 +30,7 @@ public class FocusGame {
         */
         if (piecePlacement.length()!=4)
             return false;
-        
+
         Location location = Piece.placementToLocation(piecePlacement);
         Orientation orientation = Piece.placementToOrientation(piecePlacement);
         PieceType type = Piece.placementToPieceType(piecePlacement);
@@ -64,6 +64,26 @@ public class FocusGame {
         return true if all the above criteria is met
 
          */
+
+        String dupCheck = "";
+        if (placement.length() % 4 == 0 && placement.length()!=0){
+            for (int i = 0; i < placement.length(); i = i + 4){
+                // Check whether the substrings are well formed
+                if(!isPiecePlacementWellFormed(placement.substring(i, i+ 4))){
+                    return false;
+                }
+                else{
+                    // Redundancy check
+                    for (int j = 0; j < dupCheck.length(); j++){
+                        if (dupCheck.charAt(j) == placement.substring(i, i+4).charAt(0))
+                            return false;
+                    }
+                            dupCheck += placement.substring(i, i+4).charAt(0);
+                }
+            }
+            return true;
+        }
+
         return false;
     }
 
