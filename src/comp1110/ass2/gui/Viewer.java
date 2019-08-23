@@ -1,5 +1,6 @@
 package comp1110.ass2.gui;
 
+import com.sun.prism.Image;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -41,6 +42,29 @@ public class Viewer extends Application {
         //idea: divided the placement string in each 4 characters string(each piece)-->choose the pictures（/gui/assets/a.png） corresponding to
         // each piece by the orientation,type, location we obtained from the 4 characters string(each piece) --> put it on
         //javaFX stage
+
+        //divided the placement string in each 4 characters string
+        String piece[]=new String[10];
+        for (int i=0;i<placement.length();i=i+4){
+            piece[i/4]=placement.substring(i,i+4);
+        }
+        for(int i=0;i<10;i++){
+            char type=piece[i].charAt(0);
+            int x=piece[i].charAt(1);
+            int y=piece[i].charAt(2);
+            int orientation=piece[i].charAt(3);
+            Image image=new Image("\assets"+type+".png");
+
+        }
+
+
+
+
+
+
+
+
+
     }
 
     /**
