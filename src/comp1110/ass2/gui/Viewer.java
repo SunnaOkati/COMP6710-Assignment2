@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.transform.Rotate;
 
 
 
@@ -58,57 +59,62 @@ public class Viewer extends Application {
         String piece[]=new String[10];
         for (int i=0;i<placement.length();i=i+4){
             piece[i/4]=placement.substring(i,i+4);
+
         }
 
 
         //set location of every piece
         for(int i=0;i<10;i++){
+            System.out.println(piece[i]);
             char type=piece[i].charAt(0);
-            int x=piece[i].charAt(1);
-            int y=piece[i].charAt(2);
-            int orientation=piece[i].charAt(3);
+            int x=piece[i].charAt(1)-48;
+            int y=piece[i].charAt(2)-48;
+            int orientation=piece[i].charAt(3)-48;
             //String delivery="file:assets"+String.valueOf(type)+".png";
+
             Image image=new Image(Viewer.class.getResource(URI_BASE + type + ".png").toString());
             ImageView a = new ImageView(image);
-            //set height
-            if (type=='f'&&(orientation==0||orientation==2)){
+
+
+            //set height and width
+            if (type=='f'){
                 a.setFitHeight(1*SQUARE_SIZE);
-            }else if (((type=='a'||type=='b'||type=='c'||type=='d'||type=='e'||type=='g'||type=='j')&&(orientation==0||orientation==2))||type=='i'){
-                a.setFitHeight(2*SQUARE_SIZE);
-            }else if(((type=='a'||type=='e'||type=='f'||type=='g'||type=='d')&&(orientation==1||orientation==3))||type=='h'){
-                a.setFitHeight(3*SQUARE_SIZE);
-            }else if(((type=='b'||type=='c'||type=='j')&&(orientation==1||orientation==3))){
-                a.setFitHeight(4*SQUARE_SIZE);
-            }else{
-
-            }
-            //set width
-            if (type=='f'&&(orientation==1||orientation==3)){
-                a.setFitWidth(1*SQUARE_SIZE);
-            }else if (((type=='a'||type=='b'||type=='c'||type=='d'||type=='e'||type=='g'||type=='j')&&(orientation==1||orientation==3))||type=='i'){
-                a.setFitWidth(2*SQUARE_SIZE);
-            }else if(((type=='a'||type=='e'||type=='f'||type=='g'||type=='d')&&(orientation==0||orientation==2))||type=='h'){
                 a.setFitWidth(3*SQUARE_SIZE);
-            }else if((type=='b'||type=='c'||type=='j')&&(orientation==0||orientation==2)){
+            }else if (type=='h'){
+                a.setFitHeight(3*SQUARE_SIZE);
+                a.setFitWidth(3*SQUARE_SIZE);
+            }else if (type=='i'){
+                a.setFitHeight(2*SQUARE_SIZE);
+                a.setFitWidth(2*SQUARE_SIZE);
+            }else if(type=='a'||type=='d'||type=='e'||type=='g'){
+                a.setFitHeight(2*SQUARE_SIZE);
+                a.setFitWidth(3*SQUARE_SIZE);
+            }else {
+                a.setFitHeight(2*SQUARE_SIZE);
                 a.setFitWidth(4*SQUARE_SIZE);
-            }else{
-
             }
+
 
             a.setRotate(90*orientation);
-            a.setLayoutX(x*60);
-            a.setLayoutY(y*60);
+
+            //Rotate rotate = new Rotate(90*orientation, 0, 0);
+            //a.getTransforms().addAll(rotate);
+
+            if (orientation==0||orientation==2){
+                a.setLayoutX(x*SQUARE_SIZE);
+                a.setLayoutY(y*SQUARE_SIZE);
+            }
+            if (orientation==1||orientation==3){
+                a.setLayoutX(x*SQUARE_SIZE);
+                a.setLayoutY(y*SQUARE_SIZE);
+            }
+
+            System.out.println(x*SQUARE_SIZE);
+            System.out.println(y*SQUARE_SIZE);
+
             root.getChildren().add(a);
 
         }
-
-
-
-
-
-
-
-
 
     }
 
