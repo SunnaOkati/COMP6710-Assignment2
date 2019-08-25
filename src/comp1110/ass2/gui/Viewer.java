@@ -62,7 +62,6 @@ public class Viewer extends Application {
 
         }
 
-
         //set location of every piece
         for(int i=0;i<10;i++){
             System.out.println(piece[i]);
@@ -70,6 +69,7 @@ public class Viewer extends Application {
             int x=piece[i].charAt(1)-48;
             int y=piece[i].charAt(2)-48;
             int orientation=piece[i].charAt(3)-48;
+            int height=0,width=0;
             //String delivery="file:assets"+String.valueOf(type)+".png";
 
             Image image=new Image(Viewer.class.getResource(URI_BASE + type + ".png").toString());
@@ -78,18 +78,28 @@ public class Viewer extends Application {
 
             //set height and width
             if (type=='f'){
+                height=1;
+                width=3;
                 a.setFitHeight(1*SQUARE_SIZE);
                 a.setFitWidth(3*SQUARE_SIZE);
             }else if (type=='h'){
+                height=3;
+                width=3;
                 a.setFitHeight(3*SQUARE_SIZE);
                 a.setFitWidth(3*SQUARE_SIZE);
             }else if (type=='i'){
+                height=2;
+                width=2;
                 a.setFitHeight(2*SQUARE_SIZE);
                 a.setFitWidth(2*SQUARE_SIZE);
             }else if(type=='a'||type=='d'||type=='e'||type=='g'){
+                height=2;
+                width=3;
                 a.setFitHeight(2*SQUARE_SIZE);
                 a.setFitWidth(3*SQUARE_SIZE);
             }else {
+                height=2;
+                width=4;
                 a.setFitHeight(2*SQUARE_SIZE);
                 a.setFitWidth(4*SQUARE_SIZE);
             }
@@ -105,12 +115,14 @@ public class Viewer extends Application {
                 a.setLayoutY(y*SQUARE_SIZE);
             }
             if (orientation==1||orientation==3){
-                a.setLayoutX(x*SQUARE_SIZE);
-                a.setLayoutY(y*SQUARE_SIZE);
+                //center rotation should be transformed
+
+                a.setLayoutX(x*SQUARE_SIZE - (width-height)*SQUARE_SIZE/2);
+                a.setLayoutY(y*SQUARE_SIZE + (width-height)*SQUARE_SIZE/2);
             }
 
-            System.out.println(x*SQUARE_SIZE);
-            System.out.println(y*SQUARE_SIZE);
+            //System.out.println(x*SQUARE_SIZE);
+            //System.out.println(y*SQUARE_SIZE);
 
             root.getChildren().add(a);
 
