@@ -1,4 +1,5 @@
 package comp1110.ass2.gui;
+import comp1110.ass2.FocusGame;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -52,7 +53,10 @@ public class Viewer extends Application {
         // each piece by the orientation,type, location we obtained from the 4 characters string(each piece) --> put it on
         //javaFX stage
 
-
+        //judge whether the placement string is valid
+        if (!FocusGame.isPlacementStringWellFormed(placement)){
+            PopWindow.display("Alert","wrong placement");
+        }
 
         //divided the placement string in each 4 characters string
 
@@ -74,7 +78,6 @@ public class Viewer extends Application {
 
             Image image=new Image(Viewer.class.getResource(URI_BASE + type + ".png").toString());
             ImageView a = new ImageView(image);
-
 
             //set height and width
             if (type=='f'){
@@ -104,9 +107,7 @@ public class Viewer extends Application {
                 a.setFitWidth(4*SQUARE_SIZE);
             }
 
-
             a.setRotate(90*orientation);
-
             //Rotate rotate = new Rotate(90*orientation, 0, 0);
             //a.getTransforms().addAll(rotate);
 
@@ -116,14 +117,9 @@ public class Viewer extends Application {
             }
             if (orientation==1||orientation==3){
                 //center rotation should be transformed
-
                 a.setLayoutX(x*SQUARE_SIZE - (width-height)*SQUARE_SIZE/2);
                 a.setLayoutY(y*SQUARE_SIZE + (width-height)*SQUARE_SIZE/2);
             }
-
-            //System.out.println(x*SQUARE_SIZE);
-            //System.out.println(y*SQUARE_SIZE);
-
             root.getChildren().add(a);
 
         }
