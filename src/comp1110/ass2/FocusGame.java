@@ -130,15 +130,14 @@ public class FocusGame {
         Potentially it's own Class/Enum in the future.
         */
         Colors[][] initialBoard = {
-                /*
-                Every value begins as null because it's an empty board state
-                If the black colours are overwritten as the method progresses, then false will return.
-                */
+
+                //Every value begins as null because it's an empty board state
+
                 {null, null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null},
-                {Colors.BLACK, null, null, null, null, null, null, null, Colors.BLACK}
+                {null, null, null, null, null, null, null, null, null}
 
         };
 
@@ -175,14 +174,13 @@ public class FocusGame {
 
                 x++; // Ensures that a new vertical board co-ord is being accessed each loop
 
-
             }
-
-
-
-
         }
 
+        // These co-ords exist as null for the array, but are the indented, non existent corners in the actual board
+        if(initialBoard[4][0] != null || initialBoard[4][9] != null){
+            return false;
+        }
 
 
         return true;
