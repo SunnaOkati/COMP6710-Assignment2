@@ -106,10 +106,10 @@ public class FocusGame {
 
 
     // This is just the piece C at orientation 0, this is chosen to pass the offBoardA test
-    // This way I don't have to create the information for every single piece before I can test my method
+    // This way I don't have to create the information for every single piece before the method can be tested
     public static Colors[][] pieceC030 = {
-            {null,null, Colors.GREEN,null},
-            {Colors.RED,Colors.RED,Colors.WHITE,Colors.BLUE}
+            {null, null, Colors.GREEN, null},
+            {Colors.RED, Colors.RED, Colors.WHITE, Colors.BLUE}
     };
 
     public static boolean isPlacementStringValid(String placement) {
@@ -147,8 +147,9 @@ public class FocusGame {
             // These will be replaced by getX & getY in future
             // x & y are for the board
             // a & b are for the piece
-            int x = placement.charAt(1);
-            int y = placement.charAt(2);
+
+            int x = Character.getNumericValue(placement.charAt(1));
+            int y = Character.getNumericValue(placement.charAt(2));
             int a = 0;
             int b = 0;
 
@@ -157,22 +158,22 @@ public class FocusGame {
                 // If that location on the board has previously been written to
                 // This also catches on the colors.BLACK tiles
                 // This check happens multiple times.
-//                if(initialBoard[x][y] != null){
-//                    return false;
-//                }
+                if(initialBoard[x][y] != null){
+                    return false;
+                }
 
                 initialBoard[x][y] = pieceC030[i][b];
 
                 // Nested for loop that iterates sideways through the board
-//                for(int j = 0; j < pieceC030[0].length ; j++){
-//                    if(initialBoard[x][y] != null){
-//                        return false;
-//                    }
-//                    initialBoard[x][y] = pieceC030[a][j];
-//                    y++; // This line ensures that a new board co-ord is being accessed each for loop
-//                }
+                for(int j = 0; j < pieceC030[0].length ; j++){
+                    if(initialBoard[x][y] != null){
+                        return false;
+                    }
+                    initialBoard[x][y] = pieceC030[a][j];
+                    y++; // Ensures that a new horizontal board co-ord is being accessed each loop
+                }
 
-                x++;
+                x++; // Ensures that a new vertical board co-ord is being accessed each loop
 
 
             }
