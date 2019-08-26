@@ -113,12 +113,24 @@ public class FocusGame {
         */
 
 
-        if(isPlacementStringWellFormed(placement)) // Checks for the first condition
-        {
+        if(isPlacementStringWellFormed(placement)){ // checks condition 1)
+
+
+
+
+
 
         }
-        return false;
+
+
+
+
+
+        return true;
+
     }
+
+
 
     /**
      * Given a string describing a placement of pieces and a string describing
