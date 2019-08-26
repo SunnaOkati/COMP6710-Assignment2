@@ -24,6 +24,7 @@ public enum PieceType {
      */
 
     private static Colors[][] statemap = {
+
     };
 
     public Colors stateFromOffset(int xoff, int yoff, Orientation orientation){

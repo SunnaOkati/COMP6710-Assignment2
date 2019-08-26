@@ -1,5 +1,8 @@
 package comp1110.ass2;
 
+import com.sun.prism.paint.Color;
+
+import java.awt.*;
 import java.util.Set;
 
 /**
@@ -100,6 +103,15 @@ public class FocusGame {
      * @param placement A placement string
      * @return True if the placement sequence is valid
      */
+
+
+    // This is just the piece C at orientation 0, this is chosen to pass the offBoardA test
+    // This way I don't have to create the information for every single piece before I can test my method
+    public static Colors[][] pieceC030 = {
+            {null,null, Colors.GREEN,null},
+            {Colors.RED,Colors.RED,Colors.WHITE,Colors.BLUE}
+    };
+
     public static boolean isPlacementStringValid(String placement) {
         // FIXME Task 5: determine whether a placement string is valid
         
@@ -112,17 +124,63 @@ public class FocusGame {
             and verify that current set of placement co-ordinates doesn't have any color associated with it already.
         */
 
+        /*
+        Board is set up here for the function, this should
+        be initialised somewhere else as the project progresses
+        Potentially it's own Class/Enum in the future.
+        */
+        Colors[][] initialBoard = {
+                /*
+                Every value begins as null because it's an empty board state
+                If the black colours are overwritten as the method progresses, then false will return.
+                */
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {Colors.BLACK, null, null, null, null, null, null, null, Colors.BLACK}
+
+        };
 
         if(isPlacementStringWellFormed(placement)){ // checks condition 1)
 
+            // These will be replaced by getX & getY in future
+            // x & y are for the board
+            // a & b are for the piece
+            int x = placement.charAt(1);
+            int y = placement.charAt(2);
+            int a = 0;
+            int b = 0;
 
+            // Iterates vertically through the board
+            for(int i = 0; i < pieceC030[1].length ; i++){
+                // If that location on the board has previously been written to
+                // This also catches on the colors.BLACK tiles
+                // This check happens multiple times.
+//                if(initialBoard[x][y] != null){
+//                    return false;
+//                }
+
+                initialBoard[x][y] = pieceC030[i][b];
+
+                // Nested for loop that iterates sideways through the board
+//                for(int j = 0; j < pieceC030[0].length ; j++){
+//                    if(initialBoard[x][y] != null){
+//                        return false;
+//                    }
+//                    initialBoard[x][y] = pieceC030[a][j];
+//                    y++; // This line ensures that a new board co-ord is being accessed each for loop
+//                }
+
+                x++;
+
+
+            }
 
 
 
 
         }
-
-
 
 
 

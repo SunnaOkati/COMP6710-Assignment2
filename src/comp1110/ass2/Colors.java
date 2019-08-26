@@ -4,5 +4,6 @@ public enum Colors {
     WHITE, // White color
     RED,   // Red color
     GREEN, // Green color
-    BLUE   // Blue color
+    BLUE,   // Blue color
+    BLACK   // This is for board initialisation
 }
