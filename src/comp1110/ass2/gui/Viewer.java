@@ -1,15 +1,25 @@
 package comp1110.ass2.gui;
-
+import comp1110.ass2.FocusGame;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.transform.Rotate;
+
+
+
+
+//import com.sun.prism.Image;
 
 /**
  * A very simple viewer for piece placements in the IQ-Focus game.
@@ -31,6 +41,7 @@ public class Viewer extends Application {
     private final Group controls = new Group();
     private TextField textField;
 
+
     /**
      * Draw a placement in the window, removing any previously drawn one
      *
@@ -41,6 +52,78 @@ public class Viewer extends Application {
         //idea: divided the placement string in each 4 characters string(each piece)-->choose the pictures（/gui/assets/a.png） corresponding to
         // each piece by the orientation,type, location we obtained from the 4 characters string(each piece) --> put it on
         //javaFX stage
+
+        //judge whether the placement string is valid
+        if (!FocusGame.isPlacementStringWellFormed(placement)){
+            PopWindow.display("Alert","wrong placement");
+        }
+
+        //divided the placement string in each 4 characters string
+
+        String piece[]=new String[10];
+        for (int i=0;i<placement.length();i=i+4){
+            piece[i/4]=placement.substring(i,i+4);
+
+        }
+
+        //set location of every piece
+        for(int i=0;i<10;i++){
+            System.out.println(piece[i]);
+            char type=piece[i].charAt(0);
+            int x=piece[i].charAt(1)-48;
+            int y=piece[i].charAt(2)-48;
+            int orientation=piece[i].charAt(3)-48;
+            int height=0,width=0;
+            //String delivery="file:assets"+String.valueOf(type)+".png";
+
+            Image image=new Image(Viewer.class.getResource(URI_BASE + type + ".png").toString());
+            ImageView a = new ImageView(image);
+
+            //set height and width
+            if (type=='f'){
+                height=1;
+                width=3;
+                a.setFitHeight(1*SQUARE_SIZE);
+                a.setFitWidth(3*SQUARE_SIZE);
+            }else if (type=='h'){
+                height=3;
+                width=3;
+                a.setFitHeight(3*SQUARE_SIZE);
+                a.setFitWidth(3*SQUARE_SIZE);
+            }else if (type=='i'){
+                height=2;
+                width=2;
+                a.setFitHeight(2*SQUARE_SIZE);
+                a.setFitWidth(2*SQUARE_SIZE);
+            }else if(type=='a'||type=='d'||type=='e'||type=='g'){
+                height=2;
+                width=3;
+                a.setFitHeight(2*SQUARE_SIZE);
+                a.setFitWidth(3*SQUARE_SIZE);
+            }else {
+                height=2;
+                width=4;
+                a.setFitHeight(2*SQUARE_SIZE);
+                a.setFitWidth(4*SQUARE_SIZE);
+            }
+
+            a.setRotate(90*orientation);
+            //Rotate rotate = new Rotate(90*orientation, 0, 0);
+            //a.getTransforms().addAll(rotate);
+
+            if (orientation==0||orientation==2){
+                a.setLayoutX(x*SQUARE_SIZE);
+                a.setLayoutY(y*SQUARE_SIZE);
+            }
+            if (orientation==1||orientation==3){
+                //center rotation should be transformed
+                a.setLayoutX(x*SQUARE_SIZE - (width-height)*SQUARE_SIZE/2);
+                a.setLayoutY(y*SQUARE_SIZE + (width-height)*SQUARE_SIZE/2);
+            }
+            root.getChildren().add(a);
+
+        }
+
     }
 
     /**
