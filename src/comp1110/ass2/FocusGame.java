@@ -100,6 +100,46 @@ public class FocusGame {
      * @param placement A placement string
      * @return True if the placement sequence is valid
      */
+    public static Colors[][] pieceA = {
+            {Colors.GREEN, Colors.WHITE, Colors.RED},
+            {null, Colors.RED, null}
+    };
+    public static Colors[][] pieceB = {
+            {null, Colors.BLUE, Colors.GREEN, Colors.GREEN},
+            {Colors.WHITE, Colors.WHITE, null, null}
+    };
+    public static Colors[][] pieceC = {
+            {null, null, Colors.GREEN, null},
+            {Colors.RED, Colors.RED, Colors.WHITE, Colors.BLUE}
+    };
+    public static Colors[][] pieceD = {
+            {Colors.RED, Colors.RED, Colors.RED},
+            {null, null, Colors.BLUE}
+    };
+    public static Colors[][] pieceE = {
+            {Colors.BLUE, Colors.BLUE, Colors.BLUE},
+            {null, Colors.RED, Colors.RED}
+    };
+    public static Colors[][] pieceF = {
+            {Colors.WHITE, Colors.WHITE, Colors.WHITE}
+    };
+    public static Colors[][] pieceG = {
+            {Colors.WHITE, Colors.BLUE, null},
+            {null, Colors.BLUE, Colors.WHITE}
+    };
+    public static Colors[][] pieceH = {
+            {Colors.RED, Colors.GREEN, Colors.GREEN},
+            {Colors.WHITE, null, null},
+            {Colors.WHITE, null, null}
+    };
+    public static Colors[][] pieceI = {
+            {Colors.BLUE, Colors.BLUE},
+            {null, Colors.WHITE}
+    };
+    public static Colors[][] pieceJ = {
+            {Colors.GREEN, Colors.GREEN, Colors.WHITE, Colors.RED},
+            {Colors.GREEN, null, null, null}
+    };
     public static boolean isPlacementStringValid(String placement) {
         // FIXME Task 5: determine whether a placement string is valid
         
@@ -112,12 +152,108 @@ public class FocusGame {
             and verify that current set of placement co-ordinates doesn't have any color associated with it already.
         */
 
+        Colors[][] initialBoard = {
+                //Every value begins as null because it's an empty board state
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
 
-        if(isPlacementStringWellFormed(placement)) // Checks for the first condition
-        {
+        };
+
+        // If the placement string shouldn't even exist in the first place.
+        if (!isPlacementStringWellFormed(placement)) {
+            return false;
+        }
+
+
+        //Just an arbitrarily chosen default starting piece for creating the variable
+        //      Colors[][] piece
+
+        Colors[][] piece = pieceA;
+        int p = 0;
+        int q = 4;
+        String currentPiece = "";
+        // For every piece in the string placement
+        for (int pieceCounter = 0; pieceCounter < (placement.length() / 4); pieceCounter++) {
+
+            // This extracts singular pieces out of placement at a time
+            if (isPiecePlacementWellFormed(placement.substring(p, q))) {
+                currentPiece = placement.substring(p, q);
+            }
+
+            // The neatest way we could think of to designate the piece type
+            switch (currentPiece.charAt(0)) {
+                case 'a':
+                    piece = pieceA;
+                case 'b':
+                    piece = pieceB;
+                case 'c':
+                    piece = pieceC;
+                case 'd':
+                    piece = pieceD;
+                case 'e':
+                    piece = pieceE;
+                case 'f':
+                    piece = pieceF;
+                case 'g':
+                    piece = pieceG;
+                case 'h':
+                    piece = pieceH;
+                case 'i':
+                    piece = pieceI;
+                case 'j':
+                    piece = pieceJ;
+            }
+
+            // These will be replaced by getX & getY in future
+            // x & y are for the board
+            // a & b are for the piece
+
+            int x = Character.getNumericValue(currentPiece.charAt(1));
+            int y = Character.getNumericValue(currentPiece.charAt(2));
+            int a = 0;
+            int b = 0;
+
+            // Iterates vertically through the board
+            for (int i = 0; i < piece[1].length; i++) {
+                // If that location on the board has previously been written to
+                // This also catches on the colors.BLACK tiles
+                // This check happens multiple times.
+                if (initialBoard[x][y] != null) {
+                    return false;
+                }
+
+                initialBoard[x][y] = piece[i][b];
+
+                // Nested for loop that iterates sideways through the board
+                for (int j = 0; j < piece[0].length; j++) {
+                    if (initialBoard[x][y] != null) {
+                        return false;
+                    }
+                    initialBoard[x][y] = piece[a][j];
+                    y++; // Ensures that a new horizontal board co-ord is being accessed each loop
+                }
+
+                x++; // Ensures that a new vertical board co-ord is being accessed each loop
+
+            }
+
+
+            // These coOrds exist as null for the board, but are the indented, non existent corners in the actual board
+            if (initialBoard[4][0] != null || initialBoard[4][9] != null) {
+                return false;
+            }
+
+
+
+            p = p + 4;
+            q = q + 4;
 
         }
-        return false;
+
+        return true;
     }
 
     /**
