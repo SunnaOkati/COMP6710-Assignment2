@@ -28,14 +28,14 @@ public class FocusGame {
         /* Seperate 4 characters from "piecePlacement" by using String.charAt() and check whether
          each lie within the above specified limits.
         */
-        if (piecePlacement.length()!=4)
+        if (piecePlacement.length() != 4)
             return false;
 
         Location location = Piece.placementToLocation(piecePlacement);
         Orientation orientation = Piece.placementToOrientation(piecePlacement);
         PieceType type = Piece.placementToPieceType(piecePlacement);
 
-        if ( (type!= null) && (location.getX()>=0) && (location.getX()<9) && (location.getY()>=0) && (location.getY()<5) && (orientation != null)){
+        if ((type != null) && (location.getX() >= 0) && (location.getX() < 9) && (location.getY() >= 0) && (location.getY() < 5) && (orientation != null)) {
             return true;
         }
         return false;
@@ -66,19 +66,18 @@ public class FocusGame {
          */
 
         String dupCheck = "";
-        if (placement.length() % 4 == 0 && placement.length()!=0){
-            for (int i = 0; i < placement.length(); i = i + 4){
+        if (placement.length() % 4 == 0 && placement.length() != 0) {
+            for (int i = 0; i < placement.length(); i = i + 4) {
                 // Check whether the substrings are well formed
-                if(!isPiecePlacementWellFormed(placement.substring(i, i+ 4))){
+                if (!isPiecePlacementWellFormed(placement.substring(i, i + 4))) {
                     return false;
-                }
-                else{
+                } else {
                     // Redundancy check
-                    for (int j = 0; j < dupCheck.length(); j++){
-                        if (dupCheck.charAt(j) == placement.substring(i, i+4).charAt(0))
+                    for (int j = 0; j < dupCheck.length(); j++) {
+                        if (dupCheck.charAt(j) == placement.substring(i, i + 4).charAt(0))
                             return false;
                     }
-                            dupCheck += placement.substring(i, i+4).charAt(0);
+                    dupCheck += placement.substring(i, i + 4).charAt(0);
                 }
             }
             return true;
@@ -93,13 +92,15 @@ public class FocusGame {
      * To be valid, the placement string must be:
      * - well-formed, and
      * - each piece placement must be a valid placement according to the
-     *   rules of the game:
-     *   - pieces must be entirely on the board
-     *   - pieces must not overlap each other
+     * rules of the game:
+     * - pieces must be entirely on the board
+     * - pieces must not overlap each other
      *
      * @param placement A placement string
      * @return True if the placement sequence is valid
      */
+
+
     public static Colors[][] pieceA = {
             {Colors.GREEN, Colors.WHITE, Colors.RED},
             {null, Colors.RED, null}
@@ -140,6 +141,8 @@ public class FocusGame {
             {Colors.GREEN, Colors.GREEN, Colors.WHITE, Colors.RED},
             {Colors.GREEN, null, null, null}
     };
+
+
     public static boolean isPlacementStringValid(String placement) {
         // FIXME Task 5: determine whether a placement string is valid
         
@@ -150,6 +153,12 @@ public class FocusGame {
             a) Find possible boxes(co-ordinates) for a particular piece placement and check whether 0 <= row < 5 and 0 <= column < 10.
             b) Use the boardstates which contains the colors associated with each square(block) 
             and verify that current set of placement co-ordinates doesn't have any color associated with it already.
+        */
+
+        /*
+        Board is set up here for the function, this should
+        be initialised somewhere else as the project progresses
+        Potentially it's own Class/Enum in the future.
         */
 
         Colors[][] initialBoard = {
@@ -256,6 +265,7 @@ public class FocusGame {
         return true;
     }
 
+
     /**
      * Given a string describing a placement of pieces and a string describing
      * a challenge, return a set of all possible next viable piece placements
@@ -277,8 +287,8 @@ public class FocusGame {
      *                  - 'B' = Blue square
      *                  - 'G' = Green square
      *                  - 'W' = White square
-     * @param col      The cell's column.
-     * @param row      The cell's row.
+     * @param col       The cell's column.
+     * @param row       The cell's row.
      * @return A set of viable piece placements, or null if there are none.
      */
     static Set<String> getViablePiecePlacements(String placement, String challenge, int col, int row) {
@@ -312,7 +322,7 @@ public class FocusGame {
      * must:
      * - Order the placement sequence by piece IDs
      * - If a piece exhibits rotational symmetry, only return the lowest
-     *   orientation value (0 or 1)
+     * orientation value (0 or 1)
      *
      * @param challenge A challenge string.
      * @return A placement string describing a canonical encoding of the solution to
