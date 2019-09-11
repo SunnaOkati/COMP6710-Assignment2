@@ -10,6 +10,9 @@ import java.util.Set;
  */
 public class FocusGame {
 
+
+
+
     /**
      * Determine whether a piece placement is well-formed according to the
      * following criteria:
@@ -101,165 +104,343 @@ public class FocusGame {
      */
 
 
-    public static Colors[][] pieceA = {
-            {Colors.GREEN, Colors.WHITE, Colors.RED},
-            {null, Colors.RED, null}
-    };
-    public static Colors[][] pieceB = {
-            {null, Colors.BLUE, Colors.GREEN, Colors.GREEN},
-            {Colors.WHITE, Colors.WHITE, null, null}
-    };
-    public static Colors[][] pieceC = {
-            {null, null, Colors.GREEN, null},
-            {Colors.RED, Colors.RED, Colors.WHITE, Colors.BLUE}
-    };
-    public static Colors[][] pieceD = {
-            {Colors.RED, Colors.RED, Colors.RED},
-            {null, null, Colors.BLUE}
-    };
-    public static Colors[][] pieceE = {
-            {Colors.BLUE, Colors.BLUE, Colors.BLUE},
-            {null, Colors.RED, Colors.RED}
-    };
-    public static Colors[][] pieceF = {
-            {Colors.WHITE, Colors.WHITE, Colors.WHITE}
-    };
-    public static Colors[][] pieceG = {
-            {Colors.WHITE, Colors.BLUE, null},
-            {null, Colors.BLUE, Colors.WHITE}
-    };
-    public static Colors[][] pieceH = {
-            {Colors.RED, Colors.GREEN, Colors.GREEN},
-            {Colors.WHITE, null, null},
-            {Colors.WHITE, null, null}
-    };
-    public static Colors[][] pieceI = {
-            {Colors.BLUE, Colors.BLUE},
-            {null, Colors.WHITE}
-    };
-    public static Colors[][] pieceJ = {
-            {Colors.GREEN, Colors.GREEN, Colors.WHITE, Colors.RED},
-            {Colors.GREEN, null, null, null}
-    };
-
-
     public static boolean isPlacementStringValid(String placement) {
         // FIXME Task 5: determine whether a placement string is valid
-        
-        /*
-        To be valid it has to satisfy two conditions
-        1) Use isPlacementStringWellFormed(), we can say whether "placement" is well formed
-        2) Rules:
-            a) Find possible boxes(co-ordinates) for a particular piece placement and check whether 0 <= row < 5 and 0 <= column < 10.
-            b) Use the boardstates which contains the colors associated with each square(block) 
-            and verify that current set of placement co-ordinates doesn't have any color associated with it already.
-        */
+        if (isPlacementStringWellFormed(placement)==false){
+            return false;
+        }
+        boolean sig=true;
+        //verify whether pieces are entirely on the board
+        for (int i = 0; i < placement.length(); i = i + 4) {
+            char type=placement.charAt(i);
+            int x=(int)placement.charAt(i+1)-48;
+            int y=(int)placement.charAt(i+2)-48;
+            int orientation=placement.charAt(i+3)-48;
+            switch (type){
+                case 'a':
+                    if (orientation==0){
+                        if (x>6||y>3){
+                            sig=false;
+                        }
+                    }else if (orientation==2){
+                        if (x>6||(y>2&&(x==0||x==6))){
+                            sig=false;
+                        }
+                    }else if (orientation==1){
+                        if (x==8||(x==7&&y==2)||y>2){
+                            sig=false;
+                        }
+                    }else {
+                        if (x==8||(x==0&&y==2)||y>2){
+                            sig=false;
+                        }
+                    }
+                    break;
+                case 'b':
+                    if (orientation==0||orientation==2){
+                        if (x>5||y>3){
+                            sig=false;
+                        }
+                    } else if (orientation==1||orientation==3){
+                        if (x>7||y>1||(x==7&&y==1)){
+                            sig=false;
+                        }
+                    }
+                    break;
+                case 'c':
+                    if (orientation==0){
+                        if (x>5||y>3||(x==0&&y==3)||(x==5&&y==3)){
+                            sig=false;
+                        }
+                    } else if (orientation==2){
+                        if (x>5||y>3){
+                            sig=false;
+                        }
+                    } else if (orientation==1){
+                        if (x>7||y>1||(x==0&&y==1)){
+                            sig=false;
+                        }
+                    }else if(orientation==3){
+                        if (x>7||y>1||(x==7&&y==1)){
+                            sig=false;
+                        }
+                    }
+                    break;
+                case 'd':
+                    if (orientation==0){
+                        if (x>6||y>3||(x==6&&y==3)){
+                            sig=false;
+                        }
+                    }else if (orientation==2){
+                        if (x>6||y>3||(x==6&&y==3)||(x==0&&y==3)){
+                            sig=false;
+                        }
+                    }else if (orientation==1){
+                        if (x>7||y>2||(x==0&&y==2)||(x==7&&y==2)){
+                            sig=false;
+                        }
+                    }else if (orientation==3){
+                        if (x>7||y>2||(x==0&&y==2)){
+                            sig=false;
+                        }
+                    }
+                    break;
+                case 'e':
+                    if (orientation==0){
+                        if (x>6||y>3||(x==0&&y==3)){
+                            sig=false;
+                        }
+                    }else if (orientation==2){
+                        if (x>6||y>3||(x==0&&y==3)||(x==6&&y==3)){
+                            sig=false;
+                        }
+                    }else if (orientation==1){
+                        if (x>7||y>2||(x==7&&y==2)){
+                            sig=false;
+                        }
+                    }else if (orientation==3){
+                    if (x>7||y>2||(x==7&&y==2)||(x==0&&y==2)){
+                        sig=false;
+                    }
+                }
+                    break;
+                case 'f':
+                    if (orientation==0||orientation==2){
+                        if (x>6||(x==0&&y==4)||(x==6&&y==4)){
+                            sig=false;
+                        }
+                    }else if (orientation==1||orientation==3){
+                        if (y>2||(x==0&&y==2)||(x==8&&y==2)){
+                            sig=false;
+                        }
+                    }
+                    break;
+                case 'g':
+                    if (orientation==0||orientation==2){
+                        if (x>6||y>3||(x==6&&y==3)){
+                            sig=false;
+                        }
+                    }else if (orientation==1||orientation==3){
+                        if (x>7||y>2||(x==0&&y==2)){
+                            sig=false;
+                        }
+                    }
+                    break;
+                case 'h':
+                    if (orientation==0){
+                        if (x>6||y>2||(x==0&&y==2)){
+                            sig=false;
+                        }
+                    }else if (orientation==2||orientation==3){
+                        if (x>6||y>2||(x==0&&y==2)||(x==6&&y==2)){
+                            sig=false;
+                        }
+                    }else if (orientation==1){
+                        if (x>6||y>2||(x==6&&y==2)){
+                            sig=false;
+                        }
+                    }
+                    break;
+                case 'i':
+                    if (orientation==0){
+                        if (x>7||y>3||(x==7&&y==3)){
+                            sig=false;
+                        }
+                    }else if (orientation==2||orientation==1){
+                        if (x>7||y>3||(x==7&&y==3)||(x==0&&y==3)){
+                            sig=false;
+                        }
+                    }else if (orientation==3){
+                        if (x>7||y>3||(x==0&&y==3)){
+                            sig=false;
+                        }
+                    }
+                    break;
+                case 'j':
+                    if (orientation==0){
+                        if (x>5||y>3||(x==0&&y==3)){
+                            sig=false;
+                        }
+                    }else if (orientation==2){
+                        if (x>5||y>3||(x==0&&y==3)||(x==5&&y==3)){
+                            sig=false;
+                        }
+                    }else if (orientation==1){
+                        if (x>7||y>1||(x==7&&y==1)){
+                            sig=false;
+                        }
+                    }else if (orientation==3){
+                        if (x>7||y>1||(x==7&&y==1)||(x==0&&y==1)){
+                            sig=false;
+                        }
+                    }
+                    break;
+            }
+        }
 
-        /*
-        Board is set up here for the function, this should
-        be initialised somewhere else as the project progresses
-        Potentially it's own Class/Enum in the future.
-        */
-
-        Colors[][] initialBoard = {
-                //Every value begins as null because it's an empty board state
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
-
-        };
-
-        // If the placement string shouldn't even exist in the first place.
-        if (!isPlacementStringWellFormed(placement)) {
+        if (sig==false){
             return false;
         }
 
+        boolean sig2=true;
+        Colors[][] boardState = new Colors[5][9];
 
-        //Just an arbitrarily chosen default starting piece for creating the variable
-        //      Colors[][] piece
+        //verify whether pieces are overlap
+        for (int i = 0; i < placement.length(); i = i + 4) {
+            char type=placement.charAt(i);
+            int x=(int)placement.charAt(i+1)-48;
+            int y=(int)placement.charAt(i+2)-48;
+            int orientation=placement.charAt(i+3)-48;
+            int length;
+            int width;
 
-        Colors[][] piece = pieceA;
-        int p = 0;
-        int q = 4;
-        String currentPiece = "";
-        // For every piece in the string placement
-        for (int pieceCounter = 0; pieceCounter < (placement.length() / 4); pieceCounter++) {
-
-            // This extracts singular pieces out of placement at a time
-            if (isPiecePlacementWellFormed(placement.substring(p, q))) {
-                currentPiece = placement.substring(p, q);
-            }
-
-            // The neatest way we could think of to designate the piece type
-            switch (currentPiece.charAt(0)) {
+            switch (type){
                 case 'a':
-                    piece = pieceA;
-                case 'b':
-                    piece = pieceB;
-                case 'c':
-                    piece = pieceC;
-                case 'd':
-                    piece = pieceD;
-                case 'e':
-                    piece = pieceE;
-                case 'f':
-                    piece = pieceF;
-                case 'g':
-                    piece = pieceG;
-                case 'h':
-                    piece = pieceH;
-                case 'i':
-                    piece = pieceI;
-                case 'j':
-                    piece = pieceJ;
-            }
-
-            // These will be replaced by getX & getY in future
-            // x & y are for the board
-            // a & b are for the piece
-
-            int x = Character.getNumericValue(currentPiece.charAt(1));
-            int y = Character.getNumericValue(currentPiece.charAt(2));
-            int a = 0;
-            int b = 0;
-
-            // Iterates vertically through the board
-            for (int i = 0; i < piece[1].length; i++) {
-                // If that location on the board has previously been written to
-                // This also catches on the colors.BLACK tiles
-                // This check happens multiple times.
-                if (initialBoard[x][y] != null) {
-                    return false;
-                }
-
-                initialBoard[x][y] = piece[i][b];
-
-                // Nested for loop that iterates sideways through the board
-                for (int j = 0; j < piece[0].length; j++) {
-                    if (initialBoard[x][y] != null) {
-                        return false;
+                    length=PieceType.pieceA[0].length;
+                    width=PieceType.pieceA.length;
+                    for (int j=0;j<width;j++){
+                        for (int k=0;k<length;k++){
+                            Location rotateLoc=PieceType.rotateXY(k,j,length,width,orientation);
+                            if (PieceType.pieceA[j][k]!=null && boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]!=null){
+                                sig2=false;
+                            }else if (PieceType.pieceA[j][k]!=null){
+                                boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]=PieceType.pieceA[j][k];
+                            }
+                        }
                     }
-                    initialBoard[x][y] = piece[a][j];
-                    y++; // Ensures that a new horizontal board co-ord is being accessed each loop
-                }
+                    break;
+                case 'b':
+                    length=PieceType.pieceB[0].length;
+                    width=PieceType.pieceB.length;
+                    for (int j=0;j<width;j++){
+                        for (int k=0;k<length;k++){
+                            Location rotateLoc=PieceType.rotateXY(k,j,length,width,orientation);
+                            if (PieceType.pieceB[j][k]!=null && boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]!=null){
+                                sig2=false;
+                            }else if (PieceType.pieceB[j][k]!=null){
+                                boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]=PieceType.pieceB[j][k];
+                            }
+                        }
+                    }
+                    break;
+                case 'c':
+                    length=PieceType.pieceC[0].length;
+                    width=PieceType.pieceC.length;
+                    for (int j=0;j<width;j++){
+                        for (int k=0;k<length;k++){
+                            Location rotateLoc=PieceType.rotateXY(k,j,length,width,orientation);
+                            if (PieceType.pieceC[j][k]!=null && boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]!=null){
+                                sig2=false;
+                            }else if (PieceType.pieceC[j][k]!=null){
+                                boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]=PieceType.pieceC[j][k];
+                            }
+                        }
+                    }
+                    break;
+                case 'd':
+                    length=PieceType.pieceD[0].length;
+                    width=PieceType.pieceD.length;
+                    for (int j=0;j<width;j++){
+                        for (int k=0;k<length;k++){
+                            Location rotateLoc=PieceType.rotateXY(k,j,length,width,orientation);
+                            if (PieceType.pieceD[j][k]!=null && boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]!=null){
+                                sig2=false;
+                            }else if (PieceType.pieceD[j][k]!=null){
+                                boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]=PieceType.pieceD[j][k];
+                            }
+                        }
+                    }
+                    break;
+                case 'e':
+                    length=PieceType.pieceE[0].length;
+                    width=PieceType.pieceE.length;
+                    for (int j=0;j<width;j++){
+                        for (int k=0;k<length;k++){
+                            Location rotateLoc=PieceType.rotateXY(k,j,length,width,orientation);
+                            if (PieceType.pieceE[j][k]!=null && boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]!=null){
+                                sig2=false;
+                            }else if (PieceType.pieceE[j][k]!=null){
+                                boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]=PieceType.pieceE[j][k];
+                            }
+                        }
+                    }
+                    break;
+                case 'f':
+                    length=PieceType.pieceF[0].length;
+                    width=PieceType.pieceF.length;
+                    for (int j=0;j<width;j++){
+                        for (int k=0;k<length;k++){
+                            Location rotateLoc=PieceType.rotateXY(k,j,length,width,orientation);
+                            if (PieceType.pieceF[j][k]!=null && boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]!=null){
+                                sig2=false;
+                            }else if (PieceType.pieceF[j][k]!=null){
+                                boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]=PieceType.pieceF[j][k];
+                            }
+                        }
+                    }
+                    break;
+                case 'g':
+                    length=PieceType.pieceG[0].length;
+                    width=PieceType.pieceG.length;
+                    for (int j=0;j<width;j++){
+                        for (int k=0;k<length;k++){
+                            Location rotateLoc=PieceType.rotateXY(k,j,length,width,orientation);
+                            if (PieceType.pieceG[j][k]!=null && boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]!=null){
+                                sig2=false;
+                            }else if (PieceType.pieceG[j][k]!=null){
+                                boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]=PieceType.pieceG[j][k];
+                            }
+                        }
+                    }
+                    break;
+                case 'h':
 
-                x++; // Ensures that a new vertical board co-ord is being accessed each loop
-
+                    length=PieceType.pieceH[0].length;
+                    width=PieceType.pieceH.length;
+                    for (int j=0;j<width;j++){
+                        for (int k=0;k<length;k++){
+                            Location rotateLoc=PieceType.rotateXY(k,j,length,width,orientation);
+                            if (PieceType.pieceH[j][k]!=null && boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]!=null){
+                                sig2=false;
+                            }else if (PieceType.pieceH[j][k]!=null){
+                                boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]=PieceType.pieceH[j][k];
+                            }
+                        }
+                    }
+                    break;
+                case 'i':
+                    length=PieceType.pieceI[0].length;
+                    width=PieceType.pieceI.length;
+                    for (int j=0;j<width;j++){
+                        for (int k=0;k<length;k++){
+                            Location rotateLoc=PieceType.rotateXY(k,j,length,width,orientation);
+                            if (PieceType.pieceI[j][k]!=null && boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]!=null){
+                                sig2=false;
+                            }else if (PieceType.pieceI[j][k]!=null){
+                                boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]=PieceType.pieceI[j][k];
+                            }
+                        }
+                    }
+                    break;
+                case 'j':
+                    length=PieceType.pieceJ[0].length;
+                    width=PieceType.pieceJ.length;
+                    for (int j=0;j<width;j++){
+                        for (int k=0;k<length;k++){
+                            Location rotateLoc=PieceType.rotateXY(k,j,length,width,orientation);
+                            if (PieceType.pieceJ[j][k]!=null && boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]!=null){
+                                sig2=false;
+                            }else if (PieceType.pieceJ[j][k]!=null){
+                                boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]=PieceType.pieceJ[j][k];
+                            }
+                        }
+                    }
+                    break;
             }
+        }
 
-
-            // These coOrds exist as null for the board, but are the indented, non existent corners in the actual board
-            if (initialBoard[4][0] != null || initialBoard[4][9] != null) {
-                return false;
-            }
-
-
-
-            p = p + 4;
-            q = q + 4;
-
+        if (sig2==false){
+            return false;
         }
 
         return true;
