@@ -59,7 +59,6 @@ public class Viewer extends Application {
         }
 
         //divided the placement string in each 4 characters string
-
         String piece[]=new String[10];
         for (int i=0;i<placement.length();i=i+4){
             piece[i/4]=placement.substring(i,i+4);
@@ -121,7 +120,6 @@ public class Viewer extends Application {
                 a.setLayoutY(y*SQUARE_SIZE + (width-height)*SQUARE_SIZE/2);
             }
             root.getChildren().add(a);
-
         }
 
     }
