@@ -25,20 +25,24 @@ public class FocusGame {
      * @param piecePlacement A string describing a piece placement
      * @return True if the piece placement is well-formed
      */
+
     static boolean isPiecePlacementWellFormed(String piecePlacement) {
         // FIXME Task 2: determine whether a piece placement is well-formed
         
         /* Seperate 4 characters from "piecePlacement" by using String.charAt() and check whether
          each lie within the above specified limits.
         */
-        if (piecePlacement.length() != 4)
+        if (piecePlacement.length() != 4) //Check whether the length of the string = 4
             return false;
 
         Location location = Piece.placementToLocation(piecePlacement);
         Orientation orientation = Piece.placementToOrientation(piecePlacement);
         PieceType type = Piece.placementToPieceType(piecePlacement);
 
-        if ((type != null) && (location.getX() >= 0) && (location.getX() < 9) && (location.getY() >= 0) && (location.getY() < 5) && (orientation != null)) {
+        if ((type != null) && (orientation != null) && //Check whether type and orientation are valid
+                (location.getX() >= 0) && (location.getX() < 9) && //Check whether x lies within 0 to 8.
+                (location.getY() >= 0) && (location.getY() < 5) ) //Check whether y lies within 0 to 4.
+        {
             return true;
         }
         return false;
@@ -69,17 +73,23 @@ public class FocusGame {
          */
 
         String dupCheck = "";
+
+        //Check whether it contains N four character piece placements
         if (placement.length() % 4 == 0 && placement.length() != 0) {
             for (int i = 0; i < placement.length(); i = i + 4) {
-                // Check whether the substrings are well formed
+
+                //Check whether each substrings are well formed
                 if (!isPiecePlacementWellFormed(placement.substring(i, i + 4))) {
                     return false;
                 } else {
-                    // Redundancy check
                     for (int j = 0; j < dupCheck.length(); j++) {
+
+                        //Check whether the piece has been placed already
                         if (dupCheck.charAt(j) == placement.substring(i, i + 4).charAt(0))
                             return false;
                     }
+
+                    //Add the piece if it doesnt exist already.
                     dupCheck += placement.substring(i, i + 4).charAt(0);
                 }
             }
