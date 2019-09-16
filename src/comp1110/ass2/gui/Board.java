@@ -2,6 +2,7 @@ package comp1110.ass2.gui;
 
 import comp1110.ass2.FocusGame;
 import comp1110.ass2.gittest.Main;
+import java.io.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -30,6 +31,10 @@ import javafx.stage.Stage;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.regex.*;
+
+
 
 public class Board extends Application {
 
@@ -74,6 +79,63 @@ public class Board extends Application {
         --> Verify whether a solution exists using getSolution() 
         --> If exists, repeat task 8.
     */
+
+    // https://www.youtube.com/watch?v=s_PfopWcMwI
+    // This regex checker is added just to clean up the fileScraper method
+    public static String regexChecker(String regex, String checkString){
+        Pattern checkRegex = Pattern.compile(regex);
+
+        Matcher regexMatcher = checkRegex.matcher(checkString);
+
+        // While searching through the string
+        while(regexMatcher.find()){
+            // Ensures that no empty strings are passed through
+            if(regexMatcher.group().length() != 0){
+                // Just for debugging, if there is a match print it out to terminal
+                System.out.println(regexMatcher.group());
+
+            }
+        }
+        return regexMatcher.group();
+    }
+
+    //https://caveofprogramming.com/java/java-file-reading-and-writing-files-in-java.html
+    // Scrapes the TestUtility.java file
+    public static void fileScraper(String fileName){
+        // References each line 1 by 1
+        String line = null;
+
+        try {
+            FileReader fileReader = new FileReader(fileName);
+
+            // BufferedReader is here for good practice
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            while ((line = bufferedReader.readLine()) != null) {
+                // While the line isn't empty, if it is one of the solutions,
+                // which will be found out using the regex method
+                // then print it to the terminal for testing
+                if (regexChecker("[A,Z]{9}", line) != null) {
+                    System.out.println(regexChecker("[A,Z]{9}", line));
+                }
+            }
+
+            bufferedReader.close();
+        }
+        // These catches were taken straight from the source material
+        // FileReader does not compile without exception handling
+        catch(FileNotFoundException ex) {
+            System.out.println(
+                    "Unable to open file '" +
+                            fileName + "'");
+        }
+        catch(IOException ex) {
+            System.out.println(
+                    "Error reading file '"
+                            + fileName + "'");
+
+        }
+    }
 
 
     private Parent createContent(){
@@ -131,8 +193,16 @@ public class Board extends Application {
 
 
         // Challenge button
+        // Random is just added for testing
+        Random rand = new Random();
         Button challengeButton = new Button("Different Challenge");
-        challengeButton.setOnAction(e-> System.out.println("BEEP BOOP"));
+        String challenges[];
+
+
+        // This just verifies that the challenge button is being pressed
+        // In the future it will be using the fileScraper method to return an appropriate value
+        challengeButton.setOnAction(e-> System.out.println(rand.nextInt(5)));
+
 
         chosenPiece.setSpacing(10);
 
@@ -157,8 +227,8 @@ public class Board extends Application {
         // Looks like vertically aligns playButton, chosenPiece and challenge
         VBox vboxRight = new VBox();
         //vboxRight.setPrefSize(600,700);
-        // Admittedly I(Victor) did just shove challenge button into here and call it a night, but it worked and I wanted to collab
-        // with Ranjth in person to complete this and align it to make sure I don't break anything
+        // Victor added the challenge button into here because he wanted to collaborate
+        // with Ranjth in person to complete this and align it to make sure he didn't break anything
         vboxRight.getChildren().addAll( playButton, chosenPiece, challenge, challengeButton);
         // Looks like horizontally aligns paneBoard and vboxRight
         HBox hboxTop = new HBox();
