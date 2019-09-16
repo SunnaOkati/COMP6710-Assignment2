@@ -39,6 +39,7 @@ public class Board extends Application {
     private boolean isPlaced = true;
     private int orientation = 0;
     private String piece = "";
+    private String boardState = "";
 
     private ArrayList<Tile> boardArray = new ArrayList<>();
     // FIXME Task 7: Implement a basic playable Focus Game in JavaFX that only allows pieces to be placed in valid places
@@ -83,6 +84,15 @@ public class Board extends Application {
 
         //Creating the play button
         Button playButton = new Button("Play");
+        playButton.setStyle("-fx-base:#bcd4e6; -fx-font: 24 arial");
+        playButton.setPrefSize(100,50);
+        Button resetButton = new Button("Reset");
+        resetButton.setStyle("-fx-base:#bcd4e6; -fx-font: 24 arial");
+        resetButton.setPrefSize(100,50);
+
+        HBox buttons = new HBox();
+        buttons.setSpacing(20);
+        buttons.getChildren().addAll(playButton,resetButton);
 
         GridPane paneBoard = new GridPane();
         paneBoard.setStyle(" -fx-background-color: gray;" +" -fx-padding: 10;" + "-fx-border-style: solid;"
@@ -113,7 +123,15 @@ public class Board extends Application {
         HBox chosenPiece = new HBox();
 
         //Creating the stop button
+        Image imageRotate = new Image(Board.class.getResource("assets/rotate.png" ).toString());
         Button rotateButton = new Button("Rotate");
+        ImageView imageRotateView = new ImageView();
+        imageRotateView.setFitWidth(10);
+        imageRotateView.setFitHeight(10);
+        imageRotateView.setImage(imageRotate);
+        rotateButton.setGraphic(imageRotateView);
+        rotateButton.setStyle("-fx-font: 12 arial; -fx-base: #bcd4e6;");
+
         ImageView chosenPieceImage = new ImageView();
         chosenPieceImage.setFitWidth(100);
         chosenPieceImage.setFitHeight(100);
@@ -129,7 +147,7 @@ public class Board extends Application {
         rotateButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                orientation++;
+                 orientation = (orientation+ 1 )% 4;
                 chosenPieceImage.setRotate(90 * orientation);
             }
         });
@@ -145,7 +163,7 @@ public class Board extends Application {
 
         VBox vboxRight = new VBox();
         //vboxRight.setPrefSize(600,700);
-        vboxRight.getChildren().addAll( playButton, chosenPiece, challenge);
+        vboxRight.getChildren().addAll( buttons, chosenPiece, challenge);
 
         HBox hboxTop = new HBox();
         hboxTop.setSpacing(paneBoard.getMaxWidth());
@@ -165,7 +183,7 @@ public class Board extends Application {
         pane.setHgap(10);
         pane.setVgap(10);
         for (int i = 0; i < pieces.length; i++){
-            Image img = new Image(Viewer.class.getResource("assets/"+pieces[i]+".png" ).toString());
+            Image img = new Image(Board.class.getResource("assets/"+pieces[i]+".png" ).toString());
             ImageView view = new ImageView();
             view.setImage(img);
             view.setCache(true);
@@ -228,13 +246,15 @@ public class Board extends Application {
                 rect.setEffect(null);
                 String placement = piece + posY + posX + orientation;
                 System.out.println(placement);
-                if(!isPlaced){
+                if((!isPlaced) && (FocusGame.isPlacementStringValid(placement))){
+                    //boardState += placement;
                     Image img = new Image(Viewer.class.getResource("assets/"+ piece +".png" ).toString());
                     ImageView view = new ImageView();
                     view.setImage(img);
                     view.setCache(true);
                     view.setFitHeight(img.getHeight() * 0.7);
                     view.setFitWidth(img.getWidth() * 0.7);
+                    view.setRotate( 90 * orientation);
                     rect.getChildren().add(view);
                 /*
                 for ( Node check : boardArray){
@@ -257,6 +277,7 @@ public class Board extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setScene(new Scene(createContent()));
+        primaryStage.setTitle("IQ-Focus");
         primaryStage.show();
     }
 }
