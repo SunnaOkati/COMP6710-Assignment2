@@ -81,7 +81,6 @@ public class Board extends Application {
         --> If exists, repeat task 8.
     */
 
-    // https://www.youtube.com/watch?v=s_PfopWcMwI
     // This regex checker is added just to clean up the fileScraper method
     public static String regexChecker(String regex, String checkString){
         Pattern checkRegex = Pattern.compile(regex);
@@ -100,7 +99,6 @@ public class Board extends Application {
         return regexMatcher.group();
     }
 
-    //https://caveofprogramming.com/java/java-file-reading-and-writing-files-in-java.html
     // Scrapes the TestUtility.java file
     public static void fileScraper(String fileName){
         // References each line 1 by 1
