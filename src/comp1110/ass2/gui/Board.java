@@ -78,6 +78,7 @@ public class Board extends Application {
 
     private Parent createContent(){
 
+
         DropShadow ds = new DropShadow( 20, Color.AQUA );
         String[] pieces = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
 
@@ -96,6 +97,8 @@ public class Board extends Application {
             boardArray.add(tile);
         }
          */
+
+        // Looks like creates the board or at least its 2d array
         for (int i = 0; i< 5 ; i++){
             for (int j = 0; j < 9 ; j++){
                 if (((i == 4) && (j == 0)) || ((i == 4) && (j == 8))){
@@ -112,6 +115,7 @@ public class Board extends Application {
 
         HBox chosenPiece = new HBox();
 
+        // FIXME should this say rotate button instead of stop button?
         //Creating the stop button
         Button rotateButton = new Button("Rotate");
         ImageView chosenPieceImage = new ImageView();
@@ -124,8 +128,15 @@ public class Board extends Application {
                 + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
 
+
+
+        // Challenge button
+        Button challengeButton = new Button("Different Challenge");
+        challengeButton.setOnAction(e-> System.out.println("BEEP BOOP"));
+
         chosenPiece.setSpacing(10);
 
+        // Looks like when event occurs, use maths to change orientation of piece
         rotateButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -136,17 +147,20 @@ public class Board extends Application {
         chosenPiece.getChildren().addAll(chosenPieceImage, rotateButton);
         chosenPiece.setAlignment(Pos.CENTER);
 
-
+        // Looks like it sets up a window just for the 3x3 challenge grid
         Pane challenge = new Pane();
         challenge.setPrefSize(200,200);
         challenge.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;"
                 + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
 
+        // Looks like vertically aligns playButton, chosenPiece and challenge
         VBox vboxRight = new VBox();
         //vboxRight.setPrefSize(600,700);
-        vboxRight.getChildren().addAll( playButton, chosenPiece, challenge);
-
+        // Admittedly I(Victor) did just shove challenge button into here and call it a night, but it worked and I wanted to collab
+        // with Ranjth in person to complete this and align it to make sure I don't break anything
+        vboxRight.getChildren().addAll( playButton, chosenPiece, challenge, challengeButton);
+        // Looks like horizontally aligns paneBoard and vboxRight
         HBox hboxTop = new HBox();
         hboxTop.setSpacing(paneBoard.getMaxWidth());
         //hboxTop.setPrefSize(1800,700);
@@ -160,10 +174,13 @@ public class Board extends Application {
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
         //Pane pane = new HBox();
 
+        // Looks like this creates the grey grid
         GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER_LEFT);
         pane.setHgap(10);
         pane.setVgap(10);
+
+        // Looks like the pieces are all accessed and printed through this for loop
         for (int i = 0; i < pieces.length; i++){
             Image img = new Image(Viewer.class.getResource("assets/"+pieces[i]+".png" ).toString());
             ImageView view = new ImageView();

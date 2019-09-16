@@ -68,10 +68,10 @@ public class Viewer extends Application {
         //set location of every piece
         for(int i=0;i<10;i++){
             System.out.println(piece[i]);
-            char type=piece[i].charAt(0);
-            int x=piece[i].charAt(1)-48;
-            int y=piece[i].charAt(2)-48;
-            int orientation=piece[i].charAt(3)-48;
+            char type=piece[i].charAt(0);           // Finds which piece it is
+            int x=piece[i].charAt(1)-48;            // Finds x location of the piece
+            int y=piece[i].charAt(2)-48;            // Finds y location of the piece
+            int orientation=piece[i].charAt(3)-48;  // Finds orientation of piece
             int height=0,width=0;
             //String delivery="file:assets"+String.valueOf(type)+".png";
 
@@ -79,6 +79,8 @@ public class Viewer extends Application {
             ImageView a = new ImageView(image);
 
             //set height and width
+            // Because it's a png it can have "empty" pixels so that overlapping can occur without problem
+            //   This is why these tiles can be set up as rectangles.
             if (type=='f'){
                 height=1;
                 width=3;
@@ -106,7 +108,7 @@ public class Viewer extends Application {
                 a.setFitWidth(4*SQUARE_SIZE);
             }
 
-            a.setRotate(90*orientation);
+            a.setRotate(90*orientation);    // Uses setRotate to rotate the piece, the 90* converts into degrees
             //Rotate rotate = new Rotate(90*orientation, 0, 0);
             //a.getTransforms().addAll(rotate);
 
