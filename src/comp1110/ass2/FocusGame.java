@@ -1,6 +1,8 @@
 package comp1110.ass2;
 
 import java.util.Set;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * This class provides the text interface for the IQ Focus Game
@@ -123,7 +125,7 @@ public class FocusGame {
                             sig=false;
                         }
                     }else if (orientation==2){
-                        if (x>6||(y>2&&(x==0||x==6))){
+                        if (x>6||y>3||(x==0&&y==3||x==6&&y==3)){
                             sig=false;
                         }
                     }else if (orientation==1){
@@ -298,9 +300,11 @@ public class FocusGame {
                 case 'a':
                     length=PieceType.pieceA[0].length;
                     width=PieceType.pieceA.length;
+                    //System.out.println(width);
                     for (int j=0;j<width;j++){
                         for (int k=0;k<length;k++){
                             Location rotateLoc=PieceType.rotateXY(k,j,length,width,orientation);
+                            //System.out.println("x"+(x+rotateLoc.getX())+"y"+(y+rotateLoc.getY()));
                             if (PieceType.pieceA[j][k]!=null && boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]!=null){
                                 sig2=false;
                             }else if (PieceType.pieceA[j][k]!=null){
@@ -394,7 +398,6 @@ public class FocusGame {
                     }
                     break;
                 case 'h':
-
                     length=PieceType.pieceH[0].length;
                     width=PieceType.pieceH.length;
                     for (int j=0;j<width;j++){
@@ -474,23 +477,90 @@ public class FocusGame {
      */
     static Set<String> getViablePiecePlacements(String placement, String challenge, int col, int row) {
         // FIXME Task 6: determine the set of all viable piece placements given existing placements and a challenge
-        /*
-            Regarding the placement string, if it results in having pieces that satisfy the challenge then allow that
-                placement
+        Colors[][] boardState = new Colors[5][9];
+        //fill the challenge
+        int count=0;
+        for (int i=0;i<3;i++){
+            for (int j=0;j<3;j++){
+                Colors constrain=Colors.getColors(challenge.charAt(count));
+                count++;
+                boardState[1+i][3+j]=constrain;
+            }
+        }
+        Set<String> viablePiece=new HashSet<String>();;
 
-            Checking each individual piece for each of its tiles to see if they're within the 3*3 challenge square
-                will be sufficient for this function
+        for (int t=0;t<10;t++){
+            for (int x=0;x<9;x++){
+                for (int y=0;y<5;y++){
+                    for (int d=0;d<4;d++){
+                        String tempPlace=""+((char)(t+97))+x+y+d;
+                        String newPlacement=placement.concat(tempPlace);
+                        //System.out.println(newPlacement);
+                        if (isPlacementStringValid(newPlacement)==false){
+                            continue;
+                        }
+                        Colors[][] tempPiece=null;
+                        switch ((char)(t+97)){
+                            case 'a':
+                                tempPiece=PieceType.pieceA;
+                                break;
+                            case 'b':
+                                tempPiece=PieceType.pieceB;
+                                break;
+                            case 'c':
+                                tempPiece=PieceType.pieceC;
+                                break;
+                            case 'd':
+                                tempPiece=PieceType.pieceD;
+                                break;
+                            case 'e':
+                                tempPiece=PieceType.pieceE;
+                                break;
+                            case 'f':
+                                tempPiece=PieceType.pieceF;
+                                break;
+                            case 'g':
+                                tempPiece=PieceType.pieceG;
+                                break;
+                            case 'h':
+                                tempPiece=PieceType.pieceH;
+                                break;
+                            case 'i':
+                                tempPiece=PieceType.pieceI;
+                                break;
+                            case 'j':
+                                tempPiece=PieceType.pieceJ;
+                                break;
+                        }
+                        int length=tempPiece[0].length;
+                        int width=tempPiece.length;
+                        boolean sig=true;
+                        boolean sig2=false;
+                        for (int j=0;j<width;j++){
+                            for (int k=0;k<length;k++){
+                                Location rotateLoc=PieceType.rotateXY(k,j,length,width,d);
+                                if ((y+rotateLoc.getY()<=3 && y+rotateLoc.getY()>=1)&&(x+rotateLoc.getX()<=5 && x+rotateLoc.getX()>=3)){
+                                    if (boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]!=tempPiece[j][k]&& tempPiece[j][k]!=null){
+                                        sig=false;
+                                    }
+                                }
+                                if (y+rotateLoc.getY()==row && x+rotateLoc.getX()==col && tempPiece[j][k]!=null){
+                                    sig2=true;
+                                }
+                            }
+                        }
+                        if (sig==true && sig2==true){
+                            viablePiece.add(tempPlace);
+                        }
+                    }
+                }
+            }
+        }
 
-            Along with checking the range of each tile, this function will also check the colour of the tiles within
-                the 3*3 range to see if they're the correctly coloured tiles.
-
-            To tidy this method up and for documentation purposes, there will be a method to see each individual
-                pieces tiles, and another function to see match that against the challenge square.
-
-            The first method may have to be hardcoded, the second method will check the just to see if the correct
-                colours are present, with respect to the challenge.
-         */
-        return null;
+        if (viablePiece.isEmpty()==true){
+            return null;
+        }
+        return viablePiece;
     }
 
     /**
@@ -511,19 +581,84 @@ public class FocusGame {
      */
     public static String getSolution(String challenge) {
         // FIXME Task 9: determine the solution to the game, given a particular challenge
-        /*
-            The methods from task 5 & 6 will be used within this task, as they can check whether certain strings will
-                be suitable for the board & the challenge respectively.
+        Colors[][] boardState = new Colors[5][9];
+        String placement="";
+        for (int j=0;j<9;j++){
+            for (int i=0;i<5;i++){
+                //find the placement of current coordinate
+                Set<String> viablePiece=getViablePiecePlacements(placement,challenge,j,i);
+                if (viablePiece==null){
+                    continue;
+                }
+                Iterator<String> iter=viablePiece.iterator();
+                String tempPlacement="";
+                while (iter.hasNext()){
+                    tempPlacement=iter.next();
+                    char type;
+                    if (placement.length()==0){
+                            placement=tempPlacement;
+                    }else {
+                        type=placement.charAt(placement.length()-4);
+                        if (tempPlacement.charAt(0)==(char)(type+1)){
+                            placement=placement.concat(tempPlacement);
+                            break;
+                        }else {
+                            continue;
+                        }
+                    }
+                }
 
-            Right now, with a limited understanding of the nuance of the game, the current approach is to brute force
+                //filled the boardState based tempPlacement
+                Colors[][] tempPiece=null;
+                char type=tempPlacement.charAt(0);
+                int x=(int)tempPlacement.charAt(1)-48;
+                int y=(int)tempPlacement.charAt(2)-48;
+                int orientation=tempPlacement.charAt(3)-48;
+                switch (type){
+                    case 'a':
+                        tempPiece=PieceType.pieceA;
+                        break;
+                    case 'b':
+                        tempPiece=PieceType.pieceB;
+                        break;
+                    case 'c':
+                        tempPiece=PieceType.pieceC;
+                        break;
+                    case 'd':
+                        tempPiece=PieceType.pieceD;
+                        break;
+                    case 'e':
+                        tempPiece=PieceType.pieceE;
+                        break;
+                    case 'f':
+                        tempPiece=PieceType.pieceF;
+                        break;
+                    case 'g':
+                        tempPiece=PieceType.pieceG;
+                        break;
+                    case 'h':
+                        tempPiece=PieceType.pieceH;
+                        break;
+                    case 'i':
+                        tempPiece=PieceType.pieceI;
+                        break;
+                    case 'j':
+                        tempPiece=PieceType.pieceJ;
+                        break;
+                }
+                int length=tempPiece[0].length;
+                int width=tempPiece.length;
+                for (int r=0;r<width;r++){
+                    for (int c=0;c<length;c++){
+                        Location rotateLoc=PieceType.rotateXY(c,r,length,width,orientation);
+                            if (tempPiece[r][c]!=null){
+                                boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]=tempPiece[r][c];
+                    }
+                    }
+                }
+            }
+        }
 
-            Brute forcing can be done by using task 5 to find all the string placements that are allowed to exist on
-                the board, these strings can then be stored in a separate file under "all viable strings"
-
-            All of the strings from "all viable strings" can then be input into the methods from task 6 to find
-                the one string that satisfies the challenge. This will become the output for task 9.
-
-         */
-        return null;
+        return placement;
     }
 }
