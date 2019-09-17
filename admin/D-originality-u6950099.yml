@@ -37,9 +37,15 @@ declaration: >-
 #
 # Add as many "url+licence+comment" entries as necessary
 # (or remove it altogether if you haven't used any external assets)
-
+code:
+  - comment: I used this tutorial to figure out how to scrape another file in the package
+    url: https://caveofprogramming.com/java/java-file-reading-and-writing-files-in-java.html
+    licence: free and open source
+  - comment: I used this tutorial to figure out how to use regex in java
+    url: https://www.youtube.com/watch?v=s_PfopWcMwI
+    licence: free and open source
 
 # sign *your* name and uid here
-name: Rong Hu
-uid: u6975662
+name: Victor Horvat
+uid: u6950099
 
