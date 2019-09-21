@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 
 public class SolutionsTest {
     @Rule
-    public Timeout globalTimeout = Timeout.millis(120000);
+    public Timeout globalTimeout = Timeout.millis(1200000);
 
 
     private void test(String objective, Set<String> expected) {

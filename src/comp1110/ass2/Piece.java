@@ -102,4 +102,43 @@ public class Piece {
         }
     }
 
+    public static  Colors[][] placementToPieceArray(String placement){
+        // Use switch case
+        char t = placement.charAt(0);
+        Colors[][] tempPiece=null;
+        switch (t){
+            case 'a':
+                tempPiece=PieceType.pieceA;
+                break;
+            case 'b':
+                tempPiece=PieceType.pieceB;
+                break;
+            case 'c':
+                tempPiece=PieceType.pieceC;
+                break;
+            case 'd':
+                tempPiece=PieceType.pieceD;
+                break;
+            case 'e':
+                tempPiece=PieceType.pieceE;
+                break;
+            case 'f':
+                tempPiece=PieceType.pieceF;
+                break;
+            case 'g':
+                tempPiece=PieceType.pieceG;
+                break;
+            case 'h':
+                tempPiece=PieceType.pieceH;
+                break;
+            case 'i':
+                tempPiece=PieceType.pieceI;
+                break;
+            case 'j':
+                tempPiece=PieceType.pieceJ;
+                break;
+        }
+        return tempPiece;
+    }
+
 }

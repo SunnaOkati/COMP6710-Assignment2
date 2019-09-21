@@ -1,8 +1,7 @@
 package comp1110.ass2;
 
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
+
 
 /**
  * This class provides the text interface for the IQ Focus Game
@@ -11,7 +10,7 @@ import java.util.Iterator;
  * (https://www.smartgames.eu/uk/one-player-games/iq-focus)
  */
 public class FocusGame {
-
+    Colors[][] boardState = new Colors[5][9];
 
 
 
@@ -589,86 +588,281 @@ public class FocusGame {
      * @return A placement string describing a canonical encoding of the solution to
      * the challenge.
      */
+
     public static String getSolution(String challenge) {
         // FIXME Task 9: determine the solution to the game, given a particular challenge
         Colors[][] boardState = new Colors[5][9];
         String placement="";
-        for (int j=0;j<9;j++){
-            for (int i=0;i<5;i++){
-                //find the placement of current coordinate
-                Set<String> viablePiece=getViablePiecePlacements(placement,challenge,j,i);
-                if (viablePiece==null){
-                    continue;
+        boolean sig=false;
+        List<Set<String>> solutionStep = new ArrayList<Set<String>>();        //store the possibility in every step solutionStep
+        while (sig==false){
+            String tempPlacement="";
+            placement=findPossible(solutionStep,placement,challenge,3,5,1,3);
+            placement=findPossible(solutionStep,placement,challenge,0,8,0,4);
+            /*---------------------------------------------------------------
+            //verify whether the solution contain all piece
+            for (int i=0;i<9;i++){
+                for (int j=0;j<4;j++){
+                    if (boardState[j][i]==null){
+                        sig=false;
+                    }
                 }
-                Iterator<String> iter=viablePiece.iterator();
-                String tempPlacement="";
-                while (iter.hasNext()){
-                    tempPlacement=iter.next();
-                    char type;
-                    if (placement.length()==0){
-                            placement=tempPlacement;
-                    }else {
-                        type=placement.charAt(placement.length()-4);
-                        if (tempPlacement.charAt(0)==(char)(type+1)){
-                            placement=placement.concat(tempPlacement);
-                            break;
-                        }else {
-                            continue;
+            }
+             ---------------------------------------------------------------*/
+            if (placement.length()==40){
+                sig=true;
+            }
+            //if the solution not contain all pieces, remove the latest step and try another solution
+            if (sig==false){
+                //System.out.println(tempPlacement);
+                boolean change=false;
+                while (change==false) {
+                    System.out.println(placement);
+                    Set<String> placementSet = solutionStep.get(solutionStep.size() - 1);
+                    String lastPiece = placement.substring(placement.length() - 4);
+                    placementSet.remove(lastPiece);
+                    placement = placement.substring(0, placement.length() - 4);
+                    //if last step has other choice, try it
+                    if (placementSet.isEmpty() != true) {
+                        Iterator<String> iter = placementSet.iterator();
+                        placement = placement + iter.next();
+                        change=true;
+                        //System.out.println(placement);
+                    } else {
+                        solutionStep.remove(solutionStep.size() - 1);
+                    }
+                    /*---------------------------------------------------------------------------
+                    else {
+                        //if last step doesn't have other choice, delete it
+                        solutionStep.remove(solutionStep.size() - 1);
+
+                        tempPlacement = placement.substring(placement.length() - 4);
+                        solutionStep.get(solutionStep.size() - 1).remove(tempPlacement);
+                        placementSet = solutionStep.get(solutionStep.size() - 1);
+                        placement = placement.substring(0, placement.length() - 8);
+                        Iterator<String> iter = placementSet.iterator();
+                        if (iter.hasNext()) {
+                            placement = placement + iter.next();
+                            change=true;
                         }
+                    }
+                    ---------------------------------------------------------------------------*/
+                }
+            }else {
+                break;
+            }
+        }
+        //return null;
+        return placement;
+    }
+
+    //get the solution of a specific area
+    public static String findPossible(List<Set<String>> solutionStep, String placement, String challenge, int startX, int endX, int startY, int endY) {
+        String tempPlacement="";
+        for (int j = startX; j <=endX; j++) {
+            for (int i = startY; i <=endY; i++) {
+                //find the placement of current coordinate
+                Set<String> viablePiece = getViablePiecePlacements2(placement, challenge, j, i);
+                if (viablePiece == null) {
+                    continue;
+                } else {
+                    solutionStep.add(viablePiece);
+                }
+                Iterator<String> iter = viablePiece.iterator();
+                while (iter.hasNext()) {
+                    tempPlacement = iter.next();
+                    if (placement.length() == 0) {
+                        placement = tempPlacement;
+                        break;
+                    } else {
+                        placement = placement + tempPlacement;
+                        break;
                     }
                 }
 
-                //filled the boardState based tempPlacement
-                Colors[][] tempPiece=null;
-                char type=tempPlacement.charAt(0);
-                int x=(int)tempPlacement.charAt(1)-48;
-                int y=(int)tempPlacement.charAt(2)-48;
-                int orientation=tempPlacement.charAt(3)-48;
-                switch (type){
-                    case 'a':
-                        tempPiece=PieceType.pieceA;
-                        break;
-                    case 'b':
-                        tempPiece=PieceType.pieceB;
-                        break;
-                    case 'c':
-                        tempPiece=PieceType.pieceC;
-                        break;
-                    case 'd':
-                        tempPiece=PieceType.pieceD;
-                        break;
-                    case 'e':
-                        tempPiece=PieceType.pieceE;
-                        break;
-                    case 'f':
-                        tempPiece=PieceType.pieceF;
-                        break;
-                    case 'g':
-                        tempPiece=PieceType.pieceG;
-                        break;
-                    case 'h':
-                        tempPiece=PieceType.pieceH;
-                        break;
-                    case 'i':
-                        tempPiece=PieceType.pieceI;
-                        break;
-                    case 'j':
-                        tempPiece=PieceType.pieceJ;
-                        break;
+            }
+        }
+        return placement;
+    }
+
+    //veryfy whether the placement of the piece will produce dead cell, such as (0,0) of a001
+    public static boolean isDeadCell(String placement){
+        boolean sig=false;
+        char type=placement.charAt(0);
+        int x=(int)placement.charAt(1)-48;
+        int y=(int)placement.charAt(2)-48;
+        int orientation=placement.charAt(3)-48;
+        String xy=String.valueOf(x)+String.valueOf(y);
+        switch (xy){
+            case "00":
+                if (orientation==0&&(type=='c'||type=='b')){
+                    sig=true;
+                }else if (orientation==1&&(type=='a'||type=='b'||type=='d'||type=='g'||type=='i'||type=='j')){
+                    sig=true;
+                }else if (orientation==2&&(type=='a'||type=='b'||type=='e'||type=='j')){
+                    sig=true;
+                }else if(orientation==3&&(type=='c'||type=='g'||type=='b')){
+                    sig=true;
                 }
-                int length=tempPiece[0].length;
-                int width=tempPiece.length;
-                for (int r=0;r<width;r++){
-                    for (int c=0;c<length;c++){
-                        Location rotateLoc=PieceType.rotateXY(c,r,length,width,orientation);
-                            if (tempPiece[r][c]!=null){
-                                boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]=tempPiece[r][c];
-                    }
+                break;
+            case "50":
+                if (orientation==0&&type=='c'){
+                    sig=true;
+                }
+                break;
+            case "60":
+                if (orientation==2&&(type=='a'||type=='d'||type=='g')){
+                    sig=true;
+                }else if (orientation==0&&type=='g'){
+                    sig=true;
+                }
+                break;
+            case "70":
+                if (orientation==1&&(type=='b'||type=='c')){
+                    sig=true;
+                }else if (orientation==2&&type=='i'){
+                    sig=true;
+                }else if (orientation==3&&(type=='a'||type=='b'||type=='e'||type=='j')){
+                    sig=true;
+                }
+                break;
+            case "53":
+                if (orientation==0&&(type=='b'||type=='j')){
+                    sig=true;
+                }else if(orientation==2&&type=='c'){
+                    sig=true;
+                }
+                break;
+            case "01":
+                if (orientation==1 && (type=='a'||type=='b'||type=='e'||type=='j')){
+                    sig=true;
+                }else if(orientation==3 && type=='c'){
+                    sig=true;
+                }
+                break;
+            case "02":
+                if (orientation==0&&(type=='g'||type=='i'||type=='a')){
+                    sig=true;
+                }else if (orientation==2&&(type=='c'||type=='g')){
+                    sig=true;
+                }
+                break;
+            case "03":
+                if (orientation==0&&type=='d'){
+                    sig=true;
+                }
+                break;
+            case "71":
+                if (type=='g'&&(orientation==1||orientation==3)){
+                    sig=true;
+                }
+                break;
+            case "72":
+                if (orientation==3&&(type=='a'||type=='d'||type=='i')){
+                    sig=true;
+                }
+                break;
+            case "62":
+                if (orientation==0&&type=='a'){
+                    sig=true;
+                }
+                break;
+            case "52":
+                if (orientation==2&&type=='b'){
+                    sig=true;
+                }
+                break;
+        }
+            return sig;
+    }
+
+    //find all possible occasions based on task 9 request
+    static Set<String> getViablePiecePlacements2(String placement, String challenge, int col, int row) {
+        //System.out.println(challenge);
+        Colors[][] boardState = new Colors[5][9];
+        //fill the challenge
+        int count=0;
+        for (int i=0;i<3;i++){
+            for (int j=0;j<3;j++){
+                Colors constrain=Colors.getColors(challenge.charAt(count));
+                count++;
+                boardState[1+i][3+j]=constrain;
+            }
+        }
+        Set<String> viablePiece=new HashSet<String>();;
+
+        for (int t=0;t<10;t++){
+            for (int x=0;x<9;x++){
+                for (int y=0;y<5;y++){
+                    for (int d=0;d<4;d++){
+                        String tempPlace=""+((char)(t+97))+x+y+d;
+                        String newPlacement=placement.concat(tempPlace);
+                        //System.out.println(newPlacement);
+                        if (isPlacementStringValid(newPlacement)==false){
+                            continue;
+                        }
+                        Colors[][] tempPiece=null;
+                        switch ((char)(t+97)){
+                            case 'a':
+                                tempPiece=PieceType.pieceA;
+                                break;
+                            case 'b':
+                                tempPiece=PieceType.pieceB;
+                                break;
+                            case 'c':
+                                tempPiece=PieceType.pieceC;
+                                break;
+                            case 'd':
+                                tempPiece=PieceType.pieceD;
+                                break;
+                            case 'e':
+                                tempPiece=PieceType.pieceE;
+                                break;
+                            case 'f':
+                                tempPiece=PieceType.pieceF;
+                                break;
+                            case 'g':
+                                tempPiece=PieceType.pieceG;
+                                break;
+                            case 'h':
+                                tempPiece=PieceType.pieceH;
+                                break;
+                            case 'i':
+                                tempPiece=PieceType.pieceI;
+                                break;
+                            case 'j':
+                                tempPiece=PieceType.pieceJ;
+                                break;
+                        }
+                        int length=tempPiece[0].length;
+                        int width=tempPiece.length;
+                        boolean sig=true;
+                        boolean sig2=false;
+                        for (int j=0;j<width;j++){
+                            for (int k=0;k<length;k++){
+                                Location rotateLoc=PieceType.rotateXY(k,j,length,width,d);
+                                if ((y+rotateLoc.getY()<=3 && y+rotateLoc.getY()>=1)&&(x+rotateLoc.getX()<=5 && x+rotateLoc.getX()>=3)){
+                                    if (boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]!=tempPiece[j][k]&& tempPiece[j][k]!=null){
+                                        sig=false;
+                                    }
+                                }
+                                if (y+rotateLoc.getY()==row && x+rotateLoc.getX()==col && tempPiece[j][k]!=null){
+                                    sig2=true;
+                                }
+                            }
+                        }
+                        if (sig==true && sig2==true && isDeadCell(tempPlace)==false){
+                            viablePiece.add(tempPlace);
+                        }
                     }
                 }
             }
         }
 
-        return placement;
+        if (viablePiece.isEmpty()==true){
+            return null;
+        }
+        return viablePiece;
     }
+
 }
