@@ -639,6 +639,8 @@ public class FocusGame {
                    newPlacement=newPlacement+subPlacement.substring(0,3)+'0';
                }else if (subPlacement.charAt(3)=='3'){
                    newPlacement=newPlacement+subPlacement.substring(0,3)+'1';
+               }else{
+                   newPlacement=newPlacement+subPlacement;
                }
            }else {
                newPlacement=newPlacement+subPlacement;
@@ -947,5 +949,30 @@ public class FocusGame {
         return boardState;
     }
 
+    static public String minOrientation(String placement){
+        char type=placement.charAt(0);
+        int x=(int)placement.charAt(1)-48;
+        int y=(int)placement.charAt(2)-48;
+        int orientation=placement.charAt(3)-48;
+        String newPlacement=placement;
+        switch (type){
+            case 'f':
+                if (orientation==2){
+                    newPlacement=""+type+x+y+0;
+                }else if (orientation==3){
+                    newPlacement=""+type+x+y+1;
+                }
+                break;
+            case 'g':
+                if (orientation==2){
+                    newPlacement=""+type+x+y+0;
+                }else if (orientation==3){
+                    newPlacement=""+type+x+y+1;
+                }
+                break;
+
+        }
+        return newPlacement;
+    }
 
 }
