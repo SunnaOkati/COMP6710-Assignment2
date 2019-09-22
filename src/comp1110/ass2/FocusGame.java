@@ -1,5 +1,6 @@
 package comp1110.ass2;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 
@@ -11,8 +12,6 @@ import java.util.*;
  */
 public class FocusGame {
     Colors[][] boardState = new Colors[5][9];
-
-
 
     /**
      * Determine whether a piece placement is well-formed according to the
@@ -597,18 +596,8 @@ public class FocusGame {
         List<Set<String>> solutionStep = new ArrayList<Set<String>>();        //store the possibility in every step solutionStep
         while (sig==false){
             String tempPlacement="";
-            placement=findPossible(solutionStep,placement,challenge,3,5,1,3);
-            placement=findPossible(solutionStep,placement,challenge,0,8,0,4);
-            /*---------------------------------------------------------------
-            //verify whether the solution contain all piece
-            for (int i=0;i<9;i++){
-                for (int j=0;j<4;j++){
-                    if (boardState[j][i]==null){
-                        sig=false;
-                    }
-                }
-            }
-             ---------------------------------------------------------------*/
+            placement=findPossible(boardState,solutionStep,placement,challenge,3,5,1,3);
+            placement=findPossible(boardState,solutionStep,placement,challenge,0,8,0,4);
             if (placement.length()==40){
                 sig=true;
             }
@@ -621,47 +610,54 @@ public class FocusGame {
                     Set<String> placementSet = solutionStep.get(solutionStep.size() - 1);
                     String lastPiece = placement.substring(placement.length() - 4);
                     placementSet.remove(lastPiece);
+                    boardState=FocusGame.removeBoard(lastPiece,boardState);
                     placement = placement.substring(0, placement.length() - 4);
                     //if last step has other choice, try it
                     if (placementSet.isEmpty() != true) {
                         Iterator<String> iter = placementSet.iterator();
-                        placement = placement + iter.next();
+                        tempPlacement=iter.next();
+                        placement = placement + tempPlacement;
+                        boardState=FocusGame.fillBoard(tempPlacement,boardState);
                         change=true;
                         //System.out.println(placement);
                     } else {
                         solutionStep.remove(solutionStep.size() - 1);
                     }
-                    /*---------------------------------------------------------------------------
-                    else {
-                        //if last step doesn't have other choice, delete it
-                        solutionStep.remove(solutionStep.size() - 1);
-
-                        tempPlacement = placement.substring(placement.length() - 4);
-                        solutionStep.get(solutionStep.size() - 1).remove(tempPlacement);
-                        placementSet = solutionStep.get(solutionStep.size() - 1);
-                        placement = placement.substring(0, placement.length() - 8);
-                        Iterator<String> iter = placementSet.iterator();
-                        if (iter.hasNext()) {
-                            placement = placement + iter.next();
-                            change=true;
-                        }
-                    }
-                    ---------------------------------------------------------------------------*/
                 }
             }else {
                 break;
             }
         }
+
+        //If a piece exhibits rotational symmetry, only return the lowest
+        // orientation value (0 or 1)
+        String newPlacement="";
+        for (int i=0;i<40;i=i+4){
+            String subPlacement=placement.substring(i,i+4);
+           if (subPlacement.charAt(0)=='g'||subPlacement.charAt(0)=='f'){
+               if (subPlacement.charAt(3)=='2'){
+                   newPlacement=newPlacement+subPlacement.substring(0,3)+'0';
+               }else if (subPlacement.charAt(3)=='3'){
+                   newPlacement=newPlacement+subPlacement.substring(0,3)+'1';
+               }
+           }else {
+               newPlacement=newPlacement+subPlacement;
+           }
+        }
+        System.out.println(newPlacement);
         //return null;
-        return placement;
+        return newPlacement;
     }
 
     //get the solution of a specific area
-    public static String findPossible(List<Set<String>> solutionStep, String placement, String challenge, int startX, int endX, int startY, int endY) {
+    public static String findPossible(Colors[][] boardState, List<Set<String>> solutionStep, String placement, String challenge, int startX, int endX, int startY, int endY) {
         String tempPlacement="";
         for (int j = startX; j <=endX; j++) {
             for (int i = startY; i <=endY; i++) {
                 //find the placement of current coordinate
+                if (boardState[i][j]!=null){
+                    continue;
+                }
                 Set<String> viablePiece = getViablePiecePlacements2(placement, challenge, j, i);
                 if (viablePiece == null) {
                     continue;
@@ -673,9 +669,11 @@ public class FocusGame {
                     tempPlacement = iter.next();
                     if (placement.length() == 0) {
                         placement = tempPlacement;
+                        boardState=FocusGame.fillBoard(tempPlacement,boardState);
                         break;
                     } else {
                         placement = placement + tempPlacement;
+                        boardState=FocusGame.fillBoard(tempPlacement,boardState);
                         break;
                     }
                 }
@@ -727,7 +725,7 @@ public class FocusGame {
                 }
                 break;
             case "53":
-                if (orientation==0&&(type=='b'||type=='j')){
+                if (orientation==0&&(type=='b'||type=='j'|| type=='e')){
                     sig=true;
                 }else if(orientation==2&&type=='c'){
                     sig=true;
@@ -758,20 +756,62 @@ public class FocusGame {
                 }
                 break;
             case "72":
-                if (orientation==3&&(type=='a'||type=='d'||type=='i')){
+                if (orientation==3 &&(type=='a'||type=='d'||type=='i')){
                     sig=true;
                 }
                 break;
             case "62":
-                if (orientation==0&&type=='a'){
+                if (orientation==0 && type=='a'){
+                    sig=true;
+                }else if (orientation==3 && ( type=='a'|| type=='g')){
+                    sig=true;
+                }else if (orientation==1 && type=='g'){
                     sig=true;
                 }
                 break;
             case "52":
-                if (orientation==2&&type=='b'){
+                if (orientation==2 && type=='b'){
                     sig=true;
                 }
                 break;
+            case "13":
+                if (orientation == 0 &&(type=='a'||type== 'd'||type=='g'||type=='i')) {
+                    sig=true;
+                }else if (orientation=='2'&&(type=='c'||type=='g')){
+                    sig=true;
+                }
+                break;
+            case "63":
+                if (orientation==0 && type=='a'){
+                    sig=true;
+                }else if (orientation==3 &&type=='i'){
+                    sig=true;
+                }
+                break;
+            case "12":
+                if (orientation==1 && (type=='a'|| type=='e')){
+                    sig=true;
+                }
+                break;
+            case "43":
+                if ((orientation==0||orientation==2) && type=='b'){
+                    sig=true;
+
+                }else if (orientation==3 && type=='c'){
+                    sig=true;
+                }
+                break;
+            case "11":
+                if (orientation==3 && type=='b'){
+                    sig=true;
+                }
+                break;
+            case "61":
+                if (orientation==1 && type=='c'){
+                    sig=true;
+                }
+                break;
+
         }
             return sig;
     }
@@ -863,6 +903,72 @@ public class FocusGame {
             return null;
         }
         return viablePiece;
+    }
+
+    //fill the cells based on the input placement string(4 characters)
+    static public Colors[][] fillBoard(String placement,Colors[][] boardState){
+        char type=placement.charAt(0);
+        int x=(int)placement.charAt(1)-48;
+        int y=(int)placement.charAt(2)-48;
+        int orientation=placement.charAt(3)-48;
+        Colors[][] tempPiece=Piece.placementToPieceArray(placement);
+        int length=tempPiece[0].length;
+        int width=tempPiece.length;
+        for (int j=0;j<width;j++){
+            for (int k=0;k<length;k++){
+                Location rotateLoc=PieceType.rotateXY(k,j,length,width,orientation);
+                if (tempPiece[j][k]!=null){
+                    boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]=tempPiece[j][k];
+                }
+            }
+        }
+        return boardState;
+    }
+
+    //remove the cells based on the input placement string(4 characters)
+    static public Colors[][] removeBoard(String placement,Colors[][] boardState){
+        char type=placement.charAt(0);
+        int x=(int)placement.charAt(1)-48;
+        int y=(int)placement.charAt(2)-48;
+        int orientation=placement.charAt(3)-48;
+        Colors[][] tempPiece=Piece.placementToPieceArray(placement);
+        int length=tempPiece[0].length;
+        int width=tempPiece.length;
+        for (int j=0;j<width;j++){
+            for (int k=0;k<length;k++){
+                Location rotateLoc=PieceType.rotateXY(k,j,length,width,orientation);
+                if (tempPiece[j][k]!=null){
+                    boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]=null;
+                }
+            }
+        }
+        return boardState;
+    }
+
+    static public String minOrientation(String placement){
+        char type=placement.charAt(0);
+        int x=(int)placement.charAt(1)-48;
+        int y=(int)placement.charAt(2)-48;
+        int orientation=placement.charAt(3)-48;
+        String newPlacement=placement;
+        switch (type){
+            case 'f':
+                if (orientation==2){
+                    newPlacement=""+type+x+y+0;
+                }else if (orientation==3){
+                    newPlacement=""+type+x+y+1;
+                }
+                break;
+            case 'g':
+                if (orientation==2){
+                    newPlacement=""+type+x+y+0;
+                }else if (orientation==3){
+                    newPlacement=""+type+x+y+1;
+                }
+                break;
+
+        }
+        return newPlacement;
     }
 
 }
