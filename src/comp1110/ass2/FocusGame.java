@@ -639,14 +639,18 @@ public class FocusGame {
                    newPlacement=newPlacement+subPlacement.substring(0,3)+'0';
                }else if (subPlacement.charAt(3)=='3'){
                    newPlacement=newPlacement+subPlacement.substring(0,3)+'1';
+               }else{
+                   newPlacement=newPlacement+subPlacement;
                }
            }else {
                newPlacement=newPlacement+subPlacement;
            }
         }
-        System.out.println(newPlacement);
+
+        System.out.println("newplacement: "+newPlacement);
+        System.out.println("placement: "+placement);
         //return null;
-        return newPlacement;
+        return placement;
     }
 
     //get the solution of a specific area
