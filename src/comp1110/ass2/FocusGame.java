@@ -639,8 +639,6 @@ public class FocusGame {
                    newPlacement=newPlacement+subPlacement.substring(0,3)+'0';
                }else if (subPlacement.charAt(3)=='3'){
                    newPlacement=newPlacement+subPlacement.substring(0,3)+'1';
-               }else{
-                   newPlacement=newPlacement+subPlacement;
                }
            }else {
                newPlacement=newPlacement+subPlacement;
