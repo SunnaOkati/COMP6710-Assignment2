@@ -29,7 +29,8 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-import java.awt.*;
+
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.regex.*;
@@ -88,17 +89,31 @@ public class Board extends Application {
 
         Matcher regexMatcher = checkRegex.matcher(checkString);
 
+        // I'm unsure how regex groups work, but this makes sure that the output is a String
+        String myStr = null;
+
         // While searching through the string
         while(regexMatcher.find()){
             // Ensures that no empty strings are passed through
             if(regexMatcher.group().length() != 0){
-                // Just for debugging, if there is a match print it out to terminal
-                System.out.println(regexMatcher.group());
+
+                // If the string is empty give it a value, else add to its previous value
+                if(myStr == null){
+                    myStr = regexMatcher.group();
+                }else{
+                    myStr = myStr + regexMatcher.group();
+                }
 
             }
         }
-        return regexMatcher.group();
+
+        // Just for debugging
+        System.out.println("myStr final " + myStr);
+        return myStr;
     }
+
+
+
 
     // Scrapes the TestUtility.java file
     public static void fileScraper(String fileName){
