@@ -97,25 +97,19 @@ public class Board extends Application {
             // Ensures that no empty strings are passed through
             if(regexMatcher.group().length() != 0){
 
+                // If the string is empty give it a value, else add to its previous value
                 if(myStr == null){
                     myStr = regexMatcher.group();
                 }else{
                     myStr = myStr + regexMatcher.group();
                 }
 
-                //System.out.println("myStr " + myStr);
-
-
-//                while(regexMatcher.find()) {
-//                    System.out.println("found: " + myStr);
-//                }
-
             }
         }
 
+        // Just for debugging
         System.out.println("myStr final " + myStr);
         return myStr;
-//        return regexMatcher.group();
     }
 
 
