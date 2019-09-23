@@ -89,16 +89,33 @@ public class Board extends Application {
 
         Matcher regexMatcher = checkRegex.matcher(checkString);
 
+        // I'm unsure how regex groups work, but this makes sure that the output is a String
+        String myStr = null;
+
         // While searching through the string
         while(regexMatcher.find()){
             // Ensures that no empty strings are passed through
             if(regexMatcher.group().length() != 0){
-                // Just for debugging, if there is a match print it out to terminal
-                System.out.println(regexMatcher.group());
+
+                if(myStr == null){
+                    myStr = regexMatcher.group();
+                }else{
+                    myStr = myStr + regexMatcher.group();
+                }
+
+                //System.out.println("myStr " + myStr);
+
+
+//                while(regexMatcher.find()) {
+//                    System.out.println("found: " + myStr);
+//                }
 
             }
         }
-        return regexMatcher.group();
+
+        System.out.println("myStr final " + myStr);
+        return myStr;
+//        return regexMatcher.group();
     }
 
 
