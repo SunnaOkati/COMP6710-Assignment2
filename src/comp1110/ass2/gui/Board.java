@@ -30,6 +30,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 
+
 import java.util.*;
 import java.util.ArrayList;
 import java.util.Random;
@@ -160,9 +161,44 @@ public class Board extends Application {
         return output;
     }
 
+    // Just a series of if statements that decide which square is chosen
+    public static String squareColour(Character square){
+        if(square == 'B') {
+            return "comp1110/ass2/gui/assets/sq-b.png";
+        }
+        if(square == 'G') {
+            return "comp1110/ass2/gui/assets/sq-g.png";
+        }
+        if(square == 'R') {
+            return "comp1110/ass2/gui/assets/sq-r.png";
+        }
+        if(square == 'W'){
+            return "comp1110/ass2/gui/assets/sq-w.png";
+        }else{
+            System.out.println(square);
+            System.out.println("Invalid input, learn how to throw errors");
+            return null;
+        }
+    }
+
+    public static void challengeGridVisualiser(String encodedChallenge){
+// Image imageRotate = new Image(Board.class.getResource("assets/rotate.png" ).toString());
+        // For every character in the encodedChallenge, get its associated .png
+        for(int i = 0; i < encodedChallenge.length(); i++){
+            Image square = new Image (squareColour(encodedChallenge.charAt(i)));
+            ImageView view = new ImageView();
+            // TODO ask Ranjth for help with this by Friday I suppose
+            // Victor
+            view.setImage(square);
+            }
+
+        }
+
+
 
 
     private Parent createContent(){
+
 
         DropShadow ds = new DropShadow( 20, Color.AQUA );
         String[] pieces = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};

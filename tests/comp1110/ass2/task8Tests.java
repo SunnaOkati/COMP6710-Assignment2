@@ -25,10 +25,11 @@ public class task8Tests {
     }
 
     @Test
-    public void testFileScraper(){
-
+    public void testSquareColour(){
+        assertTrue("Didn't return red square location",Board.squareColour('R').equals("comp1110/ass2/gui/assets/sq-r.png"));
+        assertTrue("Didn't return green square location",Board.squareColour('G').equals("comp1110/ass2/gui/assets/sq-g.png"));
+        assertFalse("Returned wrong square colour",Board.squareColour('B').equals("comp1110/ass2/gui/assets/sq-g.png"));
     }
-
 
 
 
