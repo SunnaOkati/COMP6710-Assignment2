@@ -83,7 +83,6 @@ public class Board extends Application {
     */
 
     // This regex checker is added just to clean up the fileScraper method
-
     public static String regexChecker(String regex, String checkString){
         Pattern checkRegex = Pattern.compile(regex);
 
@@ -114,11 +113,13 @@ public class Board extends Application {
 
 
 
-
     // Scrapes the TestUtility.java file
-    public static void fileScraper(String fileName){
+    public static String fileScraper(String fileName){
         // References each line 1 by 1
         String line = null;
+
+        String output = null;
+
 
         try {
             FileReader fileReader = new FileReader(fileName);
@@ -132,8 +133,14 @@ public class Board extends Application {
                 // then print it to the terminal for testing
                 if (regexChecker("[A,Z]{9}", line) != null) {
                     System.out.println(regexChecker("[A,Z]{9}", line));
+                    if(output == null){
+                        output = regexChecker("[A,Z]{9}", line);
+                    }else{
+                        output = output + regexChecker("[A,Z]{9}", line);
+                    }
                 }
             }
+
 
             bufferedReader.close();
         }
@@ -150,7 +157,9 @@ public class Board extends Application {
                             + fileName + "'");
 
         }
+        return output;
     }
+
 
 
     private Parent createContent(){
