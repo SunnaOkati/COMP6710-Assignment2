@@ -82,6 +82,7 @@ public class Board extends Application {
     */
 
     // This regex checker is added just to clean up the fileScraper method
+
     public static String regexChecker(String regex, String checkString){
         Pattern checkRegex = Pattern.compile(regex);
 
@@ -246,7 +247,8 @@ public class Board extends Application {
         // with Ranjth in person to complete this and align it to make sure he didn't break anything
         vboxRight.getChildren().addAll( playButton, chosenPiece, challenge, challengeButton);
         // Looks like horizontally aligns paneBoard and vboxRight
-        vboxRight.getChildren().addAll( buttons, chosenPiece, challenge);
+        // FIXME do we need the line beneath this? it looks like it copies the line right above it @Ranjth ~Victor
+        // vboxRight.getChildren().addAll( buttons, chosenPiece, challenge);
 
         HBox hboxTop = new HBox();
         hboxTop.setSpacing(paneBoard.getMaxWidth());
