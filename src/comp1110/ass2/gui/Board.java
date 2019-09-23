@@ -29,7 +29,8 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-import java.awt.*;
+
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.regex.*;
@@ -99,6 +100,9 @@ public class Board extends Application {
         }
         return regexMatcher.group();
     }
+
+
+
 
     // Scrapes the TestUtility.java file
     public static void fileScraper(String fileName){
