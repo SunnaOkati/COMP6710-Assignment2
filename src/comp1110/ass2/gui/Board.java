@@ -206,20 +206,6 @@ public class Board extends Application {
                 + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
 
-
-
-        // Challenge button
-        // Random is just added for testing
-        Random rand = new Random();
-        Button challengeButton = new Button("Different Challenge");
-        String challenges[];
-
-
-        // This just verifies that the challenge button is being pressed
-        // In the future it will be using the fileScraper method to return an appropriate value
-        challengeButton.setOnAction(e-> System.out.println(rand.nextInt(5)));
-
-
         chosenPiece.setSpacing(10);
 
         // Looks like when event occurs, use maths to change orientation of piece
@@ -234,18 +220,28 @@ public class Board extends Application {
         chosenPiece.setAlignment(Pos.CENTER);
 
         // Looks like it sets up a window just for the 3x3 challenge grid
-        Pane challenge = new Pane();
+        VBox challenge = new VBox();
         challenge.setPrefSize(200,200);
         challenge.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;"
                 + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
 
+        // Challenge button
+        // Random is just added for testing
+        Random rand = new Random();
+        Button challengeButton = new Button("Different Challenge");
+        challengeButton.setStyle("-fx-font: 12 arial; -fx-base: #bcd4e6;");
+        String challenges[];
+
+        // This just verifies that the challenge button is being pressed
+        // In the future it will be using the fileScraper method to return an appropriate value
+        challengeButton.setOnAction(e-> System.out.println(rand.nextInt(5)));
+
+        challenge.getChildren().add(challengeButton);
         // Looks like vertically aligns playButton, chosenPiece and challenge
         VBox vboxRight = new VBox();
         //vboxRight.setPrefSize(600,700);
-        // Victor added the challenge button into here because he wanted to collaborate
-        // with Ranjth in person to complete this and align it to make sure he didn't break anything
-        vboxRight.getChildren().addAll( playButton, chosenPiece, challenge, challengeButton);
+        vboxRight.getChildren().addAll( playButton, chosenPiece, challenge);
         // Looks like horizontally aligns paneBoard and vboxRight
         // FIXME do we need the line beneath this? it looks like it copies the line right above it @Ranjth ~Victor
         // vboxRight.getChildren().addAll( buttons, chosenPiece, challenge);
@@ -333,15 +329,26 @@ public class Board extends Application {
             setOnMouseReleased(event -> {
                 rect.setEffect(null);
                 String placement = piece + posY + posX + orientation;
-                System.out.println(placement);
+                //System.out.println(placement);
                 if((!isPlaced) && (FocusGame.isPlacementStringValid(placement))){
                     //boardState += placement;
                     Image img = new Image(Viewer.class.getResource("assets/"+ piece +".png" ).toString());
                     ImageView view = new ImageView();
                     view.setImage(img);
-                    view.setCache(true);
+                    view.setCache(false);
                     view.setFitHeight(img.getHeight() * 0.7);
                     view.setFitWidth(img.getWidth() * 0.7);
+                    if(img.getHeight()!=img.getWidth() && (orientation %2 != 0))
+                    {
+                        if((img.getWidth() == 300) &&(img.getHeight()==200)){
+                            view.setX(-35);
+                            view.setY(35);
+                        }
+                        else{
+                            view.setX(-70);
+                            view.setY(70);
+                        }
+                    }
                     view.setRotate( 90 * orientation);
                     rect.getChildren().add(view);
                 /*
