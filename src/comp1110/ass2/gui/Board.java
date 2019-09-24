@@ -29,7 +29,9 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-import java.awt.*;
+
+
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.regex.*;
@@ -87,22 +89,38 @@ public class Board extends Application {
 
         Matcher regexMatcher = checkRegex.matcher(checkString);
 
+        // I'm unsure how regex groups work, but this makes sure that the output is a String
+        String myStr = null;
+
         // While searching through the string
         while(regexMatcher.find()){
             // Ensures that no empty strings are passed through
             if(regexMatcher.group().length() != 0){
-                // Just for debugging, if there is a match print it out to terminal
-                System.out.println(regexMatcher.group());
+
+                // If the string is empty give it a value, else add to its previous value
+                if(myStr == null){
+                    myStr = regexMatcher.group();
+                }else{
+                    myStr = myStr + regexMatcher.group();
+                }
 
             }
         }
-        return regexMatcher.group();
+
+        // Just for debugging
+        System.out.println("myStr final " + myStr);
+        return myStr;
     }
 
+
+
     // Scrapes the TestUtility.java file
-    public static void fileScraper(String fileName){
+    public static String fileScraper(String fileName){
         // References each line 1 by 1
         String line = null;
+
+        String output = null;
+
 
         try {
             FileReader fileReader = new FileReader(fileName);
@@ -116,8 +134,14 @@ public class Board extends Application {
                 // then print it to the terminal for testing
                 if (regexChecker("[A,Z]{9}", line) != null) {
                     System.out.println(regexChecker("[A,Z]{9}", line));
+                    if(output == null){
+                        output = regexChecker("[A,Z]{9}", line);
+                    }else{
+                        output = output + regexChecker("[A,Z]{9}", line);
+                    }
                 }
             }
+
 
             bufferedReader.close();
         }
@@ -134,10 +158,47 @@ public class Board extends Application {
                             + fileName + "'");
 
         }
+        return output;
     }
+
+    // Just a series of if statements that decide which square is chosen
+    public static String squareColour(Character square){
+        if(square == 'B') {
+            return "comp1110/ass2/gui/assets/sq-b.png";
+        }
+        if(square == 'G') {
+            return "comp1110/ass2/gui/assets/sq-g.png";
+        }
+        if(square == 'R') {
+            return "comp1110/ass2/gui/assets/sq-r.png";
+        }
+        if(square == 'W'){
+            return "comp1110/ass2/gui/assets/sq-w.png";
+        }else{
+            System.out.println(square);
+            System.out.println("Invalid input, learn how to throw errors");
+            return null;
+        }
+    }
+
+    public static void challengeGridVisualiser(String encodedChallenge){
+// Image imageRotate = new Image(Board.class.getResource("assets/rotate.png" ).toString());
+        // For every character in the encodedChallenge, get its associated .png
+        for(int i = 0; i < encodedChallenge.length(); i++){
+            Image square = new Image (squareColour(encodedChallenge.charAt(i)));
+            ImageView view = new ImageView();
+            // TODO ask Ranjth for help with this by Friday I suppose
+            // Victor
+            view.setImage(square);
+            }
+
+        }
+
+
 
 
     private Parent createContent(){
+
 
         DropShadow ds = new DropShadow( 20, Color.AQUA );
         String[] pieces = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
@@ -205,20 +266,6 @@ public class Board extends Application {
                 + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
 
-
-
-        // Challenge button
-        // Random is just added for testing
-        Random rand = new Random();
-        Button challengeButton = new Button("Different Challenge");
-        String challenges[];
-
-
-        // This just verifies that the challenge button is being pressed
-        // In the future it will be using the fileScraper method to return an appropriate value
-        challengeButton.setOnAction(e-> System.out.println(rand.nextInt(5)));
-
-
         chosenPiece.setSpacing(10);
 
         // Looks like when event occurs, use maths to change orientation of piece
@@ -233,20 +280,31 @@ public class Board extends Application {
         chosenPiece.setAlignment(Pos.CENTER);
 
         // Looks like it sets up a window just for the 3x3 challenge grid
-        Pane challenge = new Pane();
+        VBox challenge = new VBox();
         challenge.setPrefSize(200,200);
         challenge.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;"
                 + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
 
+        // Challenge button
+        // Random is just added for testing
+        Random rand = new Random();
+        Button challengeButton = new Button("Different Challenge");
+        challengeButton.setStyle("-fx-font: 12 arial; -fx-base: #bcd4e6;");
+        String challenges[];
+
+        // This just verifies that the challenge button is being pressed
+        // In the future it will be using the fileScraper method to return an appropriate value
+        challengeButton.setOnAction(e-> System.out.println(rand.nextInt(5)));
+
+        challenge.getChildren().add(challengeButton);
         // Looks like vertically aligns playButton, chosenPiece and challenge
         VBox vboxRight = new VBox();
         //vboxRight.setPrefSize(600,700);
-        // Victor added the challenge button into here because he wanted to collaborate
-        // with Ranjth in person to complete this and align it to make sure he didn't break anything
-        vboxRight.getChildren().addAll( playButton, chosenPiece, challenge, challengeButton);
+        vboxRight.getChildren().addAll( playButton, chosenPiece, challenge);
         // Looks like horizontally aligns paneBoard and vboxRight
-        vboxRight.getChildren().addAll( buttons, chosenPiece, challenge);
+        // FIXME do we need the line beneath this? it looks like it copies the line right above it @Ranjth ~Victor
+        // vboxRight.getChildren().addAll( buttons, chosenPiece, challenge);
 
         HBox hboxTop = new HBox();
         hboxTop.setSpacing(paneBoard.getMaxWidth());
@@ -331,15 +389,26 @@ public class Board extends Application {
             setOnMouseReleased(event -> {
                 rect.setEffect(null);
                 String placement = piece + posY + posX + orientation;
-                System.out.println(placement);
+                //System.out.println(placement);
                 if((!isPlaced) && (FocusGame.isPlacementStringValid(placement))){
                     //boardState += placement;
                     Image img = new Image(Viewer.class.getResource("assets/"+ piece +".png" ).toString());
                     ImageView view = new ImageView();
                     view.setImage(img);
-                    view.setCache(true);
+                    view.setCache(false);
                     view.setFitHeight(img.getHeight() * 0.7);
                     view.setFitWidth(img.getWidth() * 0.7);
+                    if(img.getHeight()!=img.getWidth() && (orientation %2 != 0))
+                    {
+                        if((img.getWidth() == 300) &&(img.getHeight()==200)){
+                            view.setX(-35);
+                            view.setY(35);
+                        }
+                        else{
+                            view.setX(-70);
+                            view.setY(70);
+                        }
+                    }
                     view.setRotate( 90 * orientation);
                     rect.getChildren().add(view);
                 /*
