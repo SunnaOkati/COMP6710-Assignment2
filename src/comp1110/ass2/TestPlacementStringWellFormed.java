@@ -17,6 +17,8 @@ public class TestPlacementStringWellFormed {
     //Check whether the function accepts strings which are of length not divisible by 4.
     public void nSubStrings(){
         String proper = "a000";
+        String complete = "";
+
         Random random = new Random(1234);
         test("", false);
         for (int x = 0 ; x < 10 ; x++)
@@ -24,17 +26,14 @@ public class TestPlacementStringWellFormed {
                 for (int j = 0; j< 5;j++) {
                     for (int k = 0; k < 4; k++){
                         proper = Character.toString('a' + x) + i + j + k;
+                        complete += proper;
                         test(proper,true);
                         test(proper + "a", false);
                         test(proper+ random.nextInt(),false);
                     }
                 }
             }
-    }
-
-    @Test
-    public void subStringsWellFormed(){
-
+        test(complete + "k001", false);
     }
 
     @Test
@@ -48,7 +47,7 @@ public class TestPlacementStringWellFormed {
         }
         test(placement,true);
 
-        placement += "a" + random.nextInt(9) + random.nextInt(5)+ random.nextInt(4);
+        placement += Character.toString('a' + random.nextInt(4)) + random.nextInt(9) + random.nextInt(5)+ random.nextInt(4);
         test(placement,false);
     }
 }
