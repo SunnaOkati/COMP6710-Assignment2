@@ -148,7 +148,7 @@ public class FocusGame {
                     break;
                 case 'b':
                     if (orientation==0||orientation==2){
-                        if (x>5||y>3){
+                        if (x>5||y>3||(x==0 && y==3)){
                             sig=false;
                         }
                     } else if (orientation==1||orientation==3){
@@ -495,7 +495,7 @@ public class FocusGame {
                 boardState[1+i][3+j]=constrain;
             }
         }
-        Set<String> viablePiece=new HashSet<String>();;
+        Set<String> viablePiece=new HashSet<String>();
 
         for (int t=0;t<10;t++){
             for (int x=0;x<9;x++){
@@ -588,17 +588,182 @@ public class FocusGame {
      * the challenge.
      */
 
+
+    public static String getSolution(String challenge) {
+        // FIXME Task 9: determine the solution to the game, given a particular challenge
+        String placement="";
+        Colors[][] boardState = new Colors[5][9];
+        List<Set<String>> solutionStep = new ArrayList<Set<String>>();        //store the possibility in every step solutionStep
+
+        //start first step at (4,2)
+        Set<String> firstStep=getViablePiecePlacements(placement,challenge,4,2);
+        solutionStep.add(firstStep);
+        Iterator<String> iter=firstStep.iterator();
+        placement=iter.next();
+        boardState=FocusGame.fillBoard(placement,boardState);
+
+        while (placement.length()<40){
+            //get the possible solution of the empty square
+            //System.out.println(placement);
+            Location empty=FocusGame.findEmpty(boardState);
+            Set<String> viablePiece=getViablePiecePlacements(placement,challenge,empty.getX(),empty.getY());
+
+
+            //if the empty square have solution, add it to solutionStep and placement string
+            if (viablePiece!=null){
+                solutionStep.add(viablePiece);
+                iter=viablePiece.iterator();
+                String nextStep=iter.next();
+                placement=placement+nextStep;
+                boardState=FocusGame.fillBoard(nextStep,boardState);
+            } else {
+                /*
+                boolean change=false;
+                //if the empty square do not have solution, check the laststep from solutionStep
+                Set<String> lastStepSolution=solutionStep.get(solutionStep.size()-1);
+                //if last step has only one choice, remove it
+                while (change==false){
+                    if (lastStepSolution.size()==1){
+                        while (solutionStep.get(solutionStep.size()-1).size()==1 ){
+                            solutionStep.remove(solutionStep.size()-1);
+                            boardState=FocusGame.removeBoard(placement.substring(placement.length()-4),boardState);
+                            placement=placement.substring(0,placement.length()-4);
+                        }
+                    } else {
+                        //if last step has another choice, remove the original and try the other
+                        String removePiece=placement.substring(placement.length()-4);
+                        boardState=FocusGame.removeBoard(removePiece,boardState);
+                        placement=placement.substring(0,placement.length()-4);
+                        lastStepSolution.remove(removePiece);
+                        iter=lastStepSolution.iterator();
+                        String nextStep=iter.next();
+                        placement=placement+nextStep;
+                        boardState=FocusGame.fillBoard(nextStep,boardState);
+                        change=true;
+                    }
+                }
+                 */
+                boolean change=false;
+                String tempPlacement="";
+                while (change==false) {
+                    //remove the former last step
+                    Set<String> placementSet = solutionStep.get(solutionStep.size() - 1);
+                    String lastPiece = placement.substring(placement.length() - 4);
+                    placementSet.remove(lastPiece);
+                    boardState=FocusGame.removeBoard(lastPiece,boardState);
+                    placement = placement.substring(0, placement.length() - 4);
+                    //if last step has other choice, try it
+                    if (placementSet.isEmpty() != true) {
+                        iter = placementSet.iterator();
+                        tempPlacement=iter.next();
+                        placement = placement + tempPlacement;
+                        boardState=FocusGame.fillBoard(tempPlacement,boardState);
+                        change=true;
+                        break;
+                        //if last step do not has other choice, reduce one step and update the former step
+                    } else {
+                        solutionStep.remove(solutionStep.size() - 1);
+                    }
+                }
+            }
+        }
+
+        String newPlacement="";
+        for (int i=0;i<40;i=i+4){
+            String subPlacement=placement.substring(i,i+4);
+            if ((subPlacement.charAt(0)=='g'||subPlacement.charAt(0)=='f')&&(subPlacement.charAt(3)=='2'||subPlacement.charAt(3)=='3')){
+                if (subPlacement.charAt(3)=='2'){
+                    newPlacement=newPlacement+subPlacement.substring(0,3)+"0";
+                }else if (subPlacement.charAt(3)=='3'){
+                    newPlacement=newPlacement+subPlacement.substring(0,3)+"1";
+                }
+            }else {
+                newPlacement=newPlacement+subPlacement;
+            }
+        }
+
+        System.out.println("newplacement: "+newPlacement);
+        //System.out.println("placement: "+placement);
+        //return null;
+        placement=newPlacement;
+        return placement;
+    }
+
+
+    public static Location findEmpty(Colors[][] boardState){
+        int x,y;
+        Location empty=null;
+        boolean quit=true;
+        for (x=0;x<9 && quit;x++){
+            for (y=0;y<5&&quit;y++){
+                if ((x==0 && y==4)||(x==8 && y==4)){
+                    continue;
+                }else if (boardState[y][x]==null){
+                    empty=new Location(x,y);
+                    quit=false;
+                }
+            }
+        }
+        return empty;
+    }
+
+
+
+/*
     public static String getSolution(String challenge) {
         // FIXME Task 9: determine the solution to the game, given a particular challenge
         System.out.println(challenge);
+        Colors[][] challengeBoard = new Colors[5][9];
+        int count=0;
+        for (int i=0;i<3;i++){
+            for (int j=0;j<3;j++){
+                Colors constrain=Colors.getColors(challenge.charAt(count));
+                count++;
+                challengeBoard[1+i][3+j]=constrain;
+            }
+        }
+
         Colors[][] boardState = new Colors[5][9];
         String placement="";
-        boolean sig=false;
         List<Set<String>> solutionStep = new ArrayList<Set<String>>();        //store the possibility in every step solutionStep
         while (placement.length()<40){
+            System.out.println(placement);
             String tempPlacement="";
-            placement=findPossible(boardState,solutionStep,placement,challenge,3,5,1,3);
-            placement=findPossible(boardState,solutionStep,placement,challenge,0,8,0,4);
+            for (int j = 0; j <9; j++) {
+                for (int i = 0; i <5; i++) {
+                    //find the placement of current coordinate
+                    if (boardState[i][j]!=null){
+                        continue;
+                    }
+                    Set<String> viablePiece = getViablePiecePlacements2(placement, challengeBoard, j, i);
+                    if (viablePiece == null) {
+                        continue;
+                    } else {
+                        solutionStep.add(viablePiece);
+                    }
+                    Iterator<String> iter = viablePiece.iterator();
+                    tempPlacement = iter.next();
+                    placement = placement + tempPlacement;
+                    boardState=FocusGame.fillBoard(tempPlacement,boardState);
+                    */
+/*
+                    while (iter.hasNext()) {
+                        tempPlacement = iter.next();
+                        if (placement.length() == 0) {
+                            placement = tempPlacement;
+                            boardState=FocusGame.fillBoard(tempPlacement,boardState);
+                            break;
+                        } else {
+                            placement = placement + tempPlacement;
+                            boardState=FocusGame.fillBoard(tempPlacement,boardState);
+                            break;
+                        }
+                    }
+                     *//*
+
+
+                }
+            }
             //System.out.println(placement);
             if (placement.length()==40){
                 break;
@@ -608,7 +773,6 @@ public class FocusGame {
             //System.out.println(tempPlacement);
             boolean change=false;
             while (change==false) {
-
                 //remove the former last step
                 Set<String> placementSet = solutionStep.get(solutionStep.size() - 1);
                 String lastPiece = placement.substring(placement.length() - 4);
@@ -622,6 +786,7 @@ public class FocusGame {
                     placement = placement + tempPlacement;
                     boardState=FocusGame.fillBoard(tempPlacement,boardState);
                     change=true;
+                    break;
                     //if last step do not has other choice, reduce one step and update the former step
                 } else {
                     solutionStep.remove(solutionStep.size() - 1);
@@ -652,6 +817,10 @@ public class FocusGame {
         return placement;
     }
 
+*/
+
+
+    /*
     //get the solution of a specific area
     public static String findPossible(Colors[][] boardState, List<Set<String>> solutionStep, String placement, String challenge, int startX, int endX, int startY, int endY) {
         String tempPlacement="";
@@ -685,6 +854,7 @@ public class FocusGame {
         }
         return placement;
     }
+     */
 
     //veryfy whether the placement of the piece will produce dead cell, such as (0,0) of a001
     public static boolean isDeadCell(String placement){
@@ -816,24 +986,13 @@ public class FocusGame {
                 break;
 
         }
-            return sig;
+        return sig;
     }
 
     //find all possible occasions based on task 9 request
-    static Set<String> getViablePiecePlacements2(String placement, String challenge, int col, int row) {
+    static Set<String> getViablePiecePlacements2(String placement, Colors[][] challengeBoard, int col, int row) {
         //System.out.println(challenge);
-        Colors[][] boardState = new Colors[5][9];
-        //fill the challenge
-        int count=0;
-        for (int i=0;i<3;i++){
-            for (int j=0;j<3;j++){
-                Colors constrain=Colors.getColors(challenge.charAt(count));
-                count++;
-                boardState[1+i][3+j]=constrain;
-            }
-        }
         Set<String> viablePiece=new HashSet<String>();;
-
         for (int t=0;t<10;t++){
             for (int x=0;x<9;x++){
                 for (int y=0;y<5;y++){
@@ -885,7 +1044,7 @@ public class FocusGame {
                             for (int k=0;k<length;k++){
                                 Location rotateLoc=PieceType.rotateXY(k,j,length,width,d);
                                 if ((y+rotateLoc.getY()<=3 && y+rotateLoc.getY()>=1)&&(x+rotateLoc.getX()<=5 && x+rotateLoc.getX()>=3)){
-                                    if (boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]!=tempPiece[j][k]&& tempPiece[j][k]!=null){
+                                    if (challengeBoard[y+rotateLoc.getY()][x+rotateLoc.getX()]!=tempPiece[j][k]&& tempPiece[j][k]!=null){
                                         sig=false;
                                     }
                                 }
