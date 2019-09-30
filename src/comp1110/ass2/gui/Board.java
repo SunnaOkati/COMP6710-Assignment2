@@ -6,6 +6,7 @@ import java.io.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.css.Style;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -49,6 +50,7 @@ public class Board extends Application {
     private String boardState = "";
 
     private ArrayList<Tile> boardArray = new ArrayList<>();
+
     // FIXME Task 7: Implement a basic playable Focus Game in JavaFX that only allows pieces to be placed in valid places
     /*use javafx to create gui and event operating code in start()
      -->when the player put a new pieces:event
@@ -120,9 +122,7 @@ public class Board extends Application {
     public static String fileScraper(String fileName){
         // References each line 1 by 1
         String line = null;
-
         String output = null;
-
 
         try {
             FileReader fileReader = new FileReader(fileName);
@@ -243,41 +243,47 @@ public class Board extends Application {
 
     }
 
+        class button extends Button{
 
+        public button(String style, String text, int[] size){
+            this.setStyle(style);
+            this.setText(text);
+            this.setPrefSize(size[0], size[1]);
+        }
 
+        public button(String style, String text){
+            this.setStyle(style);
+            this.setText(text);
+        }
+    }
 
+    //Author: Ranjth Raj
+    //Task 7
     private Parent createContent(){
-
-
         DropShadow ds = new DropShadow( 20, Color.AQUA );
         String[] pieces = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
 
-        //Creating the play button
-        Button playButton = new Button("Play");
-        playButton.setStyle("-fx-base:#bcd4e6; -fx-font: 24 arial");
-        playButton.setPrefSize(100,50);
-        Button resetButton = new Button("Reset");
-        resetButton.setStyle("-fx-base:#bcd4e6; -fx-font: 24 arial");
-        resetButton.setPrefSize(100,50);
+        //Button style and size
+        String buttonStyle = "-fx-base:#bcd4e6; -fx-font: 24 arial";
+        int[] buttonSize = {100,50};
 
+        //Creating the play and reset buttons using "button" class
+        button playButton = new button(buttonStyle, "Play", buttonSize);
+        button resetButton = new button(buttonStyle, "Reset", buttonSize);
+
+        //Creating a horizontal box with play and reset buttons
         HBox buttons = new HBox();
         buttons.setSpacing(20);
         buttons.getChildren().addAll(playButton,resetButton);
 
+        //Creating a grid pane to place the tiles in 2-D fashion (left->right; top->bottom)
         GridPane paneBoard = new GridPane();
         paneBoard.setStyle(" -fx-background-color: gray;" +" -fx-padding: 10;" + "-fx-border-style: solid;"
                 + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-background-radius: 10;" + "-fx-background-insets: 5 ");
-        //vboxLeft.setPrefSize(1200,720);
 
-        /*
-        for (int t = 0; t < (9 * 5); t ++){
-            Tile tile = new Tile(t/9,t%9);
-            boardArray.add(tile);
-        }
-         */
 
-        // Looks like creates the board or at least its 2d array
+        //Creating a 2-D board of tiles using the "Tile" class
         for (int i = 0; i< 5 ; i++){
             for (int j = 0; j < 9 ; j++){
                 if (((i == 4) && (j == 0)) || ((i == 4) && (j == 8))){
@@ -292,32 +298,29 @@ public class Board extends Application {
             }
         }
 
-        HBox chosenPiece = new HBox();
-
-        // FIXME should this say rotate button instead of stop button?
-        //Creating the stop button
+        //Creating the rotate button with "rotate.png" image beside the text
+        button rotateButton = new button("-fx-font: 12 arial; -fx-base: #bcd4e6;", "Rotate");
         Image imageRotate = new Image(Board.class.getResource("assets/rotate.png" ).toString());
-        Button rotateButton = new Button("Rotate");
         ImageView imageRotateView = new ImageView();
         imageRotateView.setFitWidth(10);
         imageRotateView.setFitHeight(10);
         imageRotateView.setImage(imageRotate);
         rotateButton.setGraphic(imageRotateView);
-        rotateButton.setStyle("-fx-font: 12 arial; -fx-base: #bcd4e6;");
 
-        ImageView chosenPieceImage = new ImageView();
-        chosenPieceImage.setFitWidth(100);
-        chosenPieceImage.setFitHeight(100);
+        //Creating an image view to display the selected piece
+        ChosenPieceImage chosenPieceImage = new ChosenPieceImage();
+
+        //Creating a horizontal box to display the chosen piece and rotate button
+        HBox chosenPiece = new HBox();
         chosenPiece.setCache(false);
-
-        //chosenPiece.setPrefSize(200,200);
         chosenPiece.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;"
                 + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
-
         chosenPiece.setSpacing(10);
+        chosenPiece.getChildren().addAll(chosenPieceImage, rotateButton);
+        chosenPiece.setAlignment(Pos.CENTER);
 
-        // Looks like when event occurs, use maths to change orientation of piece
+        //Captures "rotate" button click event and uses math to change orientation of piece
         rotateButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -325,10 +328,11 @@ public class Board extends Application {
                 chosenPieceImage.setRotate(90 * orientation);
             }
         });
-        chosenPiece.getChildren().addAll(chosenPieceImage, rotateButton);
-        chosenPiece.setAlignment(Pos.CENTER);
 
-        // Looks like it sets up a window just for the 3x3 challenge grid
+
+
+
+        //Creating a vertical box to display the "challenge" button and the Challenge.
         VBox challenge = new VBox();
         challenge.setPrefSize(200,200);
         challenge.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;"
@@ -340,9 +344,17 @@ public class Board extends Application {
         // Lines from random generation to challenge.Button inclusive
         // Challenge Virtual
         Random rand = new Random();
-        Button challengeButton = new Button("Different Challenge");
-        challengeButton.setStyle("-fx-font: 12 arial; -fx-base: #bcd4e6;");
+        // Challenge button
+        // Random is just added for testing
+        button challengeButton = new button("-fx-font: 12 arial; -fx-base: #bcd4e6;", "Different Challenge");
+
+        // This just verifies that the challenge button is being pressed
+        // In the future it will be using the fileScraper method to return an appropriate value
+        challengeButton.setOnAction(e-> System.out.println(rand.nextInt(5)));
+
         challenge.getChildren().add(challengeButton);
+
+        //Vertically aligns buttons, chosenPiece and challenge
         // A test sample of challenges
         String[] challengesList = {"RRRBWBBRB","RRBBBBGGB","RRRRRWRWW","RRRBWBBRB"};
 
@@ -356,32 +368,21 @@ public class Board extends Application {
 
         // Looks like vertically aligns playButton, chosenPiece and challenge
         VBox vboxRight = new VBox();
-        //vboxRight.setPrefSize(600,700);
-        vboxRight.getChildren().addAll( playButton, chosenPiece, challenge);
-        // Looks like horizontally aligns paneBoard and vboxRight
-        // FIXME do we need the line beneath this? it looks like it copies the line right above it @Ranjth ~Victor
-        // vboxRight.getChildren().addAll( buttons, chosenPiece, challenge);
+        vboxRight.getChildren().addAll( buttons, chosenPiece, challenge);
 
+        //Horizontally aligns board and the above vertically aligned box.
         HBox hboxTop = new HBox();
         hboxTop.setSpacing(paneBoard.getMaxWidth());
-        //hboxTop.setPrefSize(1800,700);
         hboxTop.setSpacing(50);
         hboxTop.getChildren().addAll(paneBoard, vboxRight);
 
-        VBox vboxPieces = new VBox();
-        //vboxPieces.setPrefSize(1800,500);
-        vboxPieces.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;"
-                + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
-                + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
-        //Pane pane = new HBox();
-
-        // Looks like this creates the grey grid
+        //Creates a grid to hold the pieces
         GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER_LEFT);
         pane.setHgap(10);
         pane.setVgap(10);
 
-        // Looks like the pieces are all accessed and printed through this for loop
+        //Creating the piece's image as a image view and adding it in a grid
         for (int i = 0; i < pieces.length; i++){
             Image img = new Image(Board.class.getResource("assets/"+pieces[i]+".png" ).toString());
             ImageView view = new ImageView();
@@ -391,13 +392,11 @@ public class Board extends Application {
             view.setFitHeight(img.getHeight()/2);
             view.setFitWidth(img.getWidth()/2);
             String message = pieces[i];
+
+            //Captures mouse click event and replaces chosen piece image in chose piece image view.
             view.setOnMouseClicked(( MouseEvent event ) ->
-            {
-                if (isPlaced) {
-                    //view.setEffect(ds);
+            { if (isPlaced) {
                     piece = message;
-                    //chosenPieceImage.setFitHeight(img.getHeight()/2);
-                    //chosenPieceImage.setFitWidth(img.getWidth()/2);
                     chosenPieceImage.setImage(img);
                     isPlaced = false;
                 }
@@ -409,32 +408,71 @@ public class Board extends Application {
 
             pane.add(view, i %5, i/5,1,1);
         }
+
+        //Creating a vertical box to hold the ten different pieces which are set in a grid.
+        VBox vboxPieces = new VBox();
+        vboxPieces.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;"
+                + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
+                + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
         vboxPieces.getChildren().add(pane);
+
 
         HBox hboxBottom = new HBox();
         hboxBottom.setSpacing(10);
-        //hboxBottom.setPrefSize(1800,500);
         hboxBottom.getChildren().addAll(vboxPieces);
 
-        //Creating a Group object
+        //Creating a root node and aligning vertically the "hboxTop" and "hboxBottom".
         Group root = new Group();
         root.getChildren().add(new VBox(hboxTop, hboxBottom));
         return root;
     }
 
+    //Author: Ranjth Raj
+    //Task 7
+    private class ChosenPieceImage extends ImageView{
+        private double mouseX;
+        private double mouseY;
+
+        public ChosenPieceImage(){
+            setFitWidth(100);
+            setFitHeight(100);
+
+            setOnMousePressed(event->{
+                mouseX = event.getSceneX();
+                mouseY = event.getSceneY();
+                System.out.println("Mouse pressed at " + event.getSceneX() + " * " + event.getSceneY());
+            });
+            setOnMouseDragged(event->{
+                double disX = event.getSceneX() - mouseX;
+                double disY = event.getSceneY() - mouseY;
+                setFitWidth(getImage().getWidth() * 0.7);
+                setFitHeight(getImage().getHeight() * 0.7);
+                this.setTranslateX(disX);
+                this.setTranslateY(disY);
+            });
+
+        }
+    }
+
+    //Author: Ranjth Raj
+    //Task 7
+    //Class Tile to create tiles.
     private class  Tile extends StackPane{
         private int posX = 0;
         private int posY = 0;
+
         public Tile(int x, int y){
             posX = x;
             posY = y;
 
+            //Creating a Pane to visualize a rectangle.
             Pane rect = new Pane();
-            //rect.setStyle("-fx-background-color: grey; -fx-border-style: solid; -fx-border-width: 5; -fx-border-color: darkgrey; -fx-min-width: 70; -fx-min-height:70; -fx-max-width:70; -fx-max-height: 70");
             rect.setStyle("-fx-border-style: solid; -fx-min-width: 70; -fx-min-height:70; -fx-max-width:70; -fx-max-height: 70");
+
+            //Captures mouse press event and highlights the tile green if a piece is selected otherwise red
             setOnMousePressed(event ->{
+
                 if(!isPlaced){
-                    //if(FocusGame.isPlacementStringValid())
                     rect.setEffect(new DropShadow( 20, Color.GREEN));
                 }
                 else {
@@ -442,12 +480,12 @@ public class Board extends Application {
                 }
             });
 
+            //Captures mouse release event and verifies whether the placement is valid and proceeds with the placement in the board.
             setOnMouseReleased(event -> {
                 rect.setEffect(null);
                 String placement = piece + posY + posX + orientation;
                 //System.out.println(placement);
                 if((!isPlaced) && (FocusGame.isPlacementStringValid(placement))){
-                    //boardState += placement;
                     Image img = new Image(Viewer.class.getResource("assets/"+ piece +".png" ).toString());
                     ImageView view = new ImageView();
                     view.setImage(img);
@@ -467,17 +505,6 @@ public class Board extends Application {
                     }
                     view.setRotate( 90 * orientation);
                     rect.getChildren().add(view);
-                /*
-                for ( Node check : boardArray){
-                    if (check != rect){
-                        if (check.getBoundsInParent().intersects(view.getBoundsInLocal())){
-                            System.out.println(GridPane.getRowIndex(check) + " " + GridPane.getColumnIndex(check) );
-                            //System.out.println("Enter");
-                            //((Tile) check).getChildren().add(view);
-                    }
-                    }
-                }
-                */
                 isPlaced = true;
                 }
 
