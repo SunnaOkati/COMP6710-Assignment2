@@ -190,13 +190,25 @@ public class Board extends Application {
         HBox rowMid = new HBox(HBOXWIDTH);
         HBox rowBot = new HBox(HBOXWIDTH);
 
+        // Makes the invisible grid layout for each colour
+        /*
+        ____________________
+        |       rowTop
+        |___________________
+        |       rowMid
+        |___________________
+        |       rowBot
+        |___________________
+        */
         box.getChildren().addAll(rowTop,rowMid,rowBot);
+
         /*
         For every character in the encodedChallenge, get its associated img and add it to the vBox required
         i is the index of the grid co-ordinate
-        9 is the limit because the grid always consists of 9 colours
+        9 is the limit because the grid always consists of 9 squares
+        Each while loop makes each row by
+            getting the appropriate square image, setting its size and then adding it to the appropriate Hbox
         */
-
         for(int i = 0; i < 9; i++){
             // First row
             // Get the square img, set it to size and then add it to the appropriate box
@@ -325,8 +337,8 @@ public class Board extends Application {
         challengeButton.setStyle("-fx-font: 12 arial; -fx-base: #bcd4e6;");
 
         // A test sample of challenges
-        String[] challengesList = {"RWBRWBRWB","RGBRGBRGB"};
-        String encodedChallenge = challengesList[1];
+        String[] challengesList = {"RRRBWBBRB","RRBBBBGGB","RRRRRWRWW","RRRBWBBRB"};
+        String encodedChallenge = challengesList[0];
 
 //        challengeButton.setOnAction(e-> System.out.println(challengesList[rand.nextInt(challengesList.length)]));
         challengeButton.setOnAction(e-> System.out.println(challengesList[rand.nextInt(challengesList.length)]));
