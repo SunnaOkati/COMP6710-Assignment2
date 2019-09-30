@@ -289,21 +289,25 @@ public class Board extends Application {
                 + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
 
-        // Challenge button
-        // Random is just added for testing
+        // Challenge Virtual
         Random rand = new Random();
         Button challengeButton = new Button("Different Challenge");
         challengeButton.setStyle("-fx-font: 12 arial; -fx-base: #bcd4e6;");
-
-
+        String[] challengesList = {"RWBRWBRWB","RGBRGBRGB"};
         // This just verifies that the challenge button is being pressed
         // In the future it will be using the fileScraper method to return an appropriate value
-        challengeButton.setOnAction(e-> System.out.println(rand.nextInt(5)));
+        challengeButton.setOnAction(e-> System.out.println(challengesList[rand.nextInt(challengesList.length)]));
 
         // This line adds the challengeButton to the challenge box
         //challenge.getChildren().add(challengeButton);
         challenge.getChildren().add(challengeButton);
-        challenge.getChildren().add(new ImageView(challengeGridVisualiser("BB")));
+
+        String encodedChallenge = challengesList[0];
+
+        for(int challengeGrid = 0; challengeGrid < encodedChallenge.length(); challengeGrid++){
+            challenge.getChildren().add(new ImageView(challengeGridVisualiser(encodedChallenge)));
+        }
+        //challenge.getChildren().add(new ImageView(challengeGridVisualiser("BB")));
 
 
         // Looks like vertically aligns playButton, chosenPiece and challenge
