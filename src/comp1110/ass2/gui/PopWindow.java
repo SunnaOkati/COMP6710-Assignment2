@@ -18,7 +18,8 @@ import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-
+//pop window with title and message
+//@author Rong Hu
 public class PopWindow {
     public static void display(String title, String message){
         Stage window=new Stage();

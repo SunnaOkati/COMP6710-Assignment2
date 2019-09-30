@@ -102,6 +102,8 @@ public class Piece {
         }
     }
 
+    //find the corresponding array of different type
+    //@author Rong Hu
     public static  Colors[][] placementToPieceArray(String placement){
         // Use switch case
         char t = placement.charAt(0);

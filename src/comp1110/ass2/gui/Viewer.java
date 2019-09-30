@@ -47,6 +47,7 @@ public class Viewer extends Application {
      *
      * @param placement A valid placement string
      */
+    //@author Rong Hu
     void makePlacement(String placement) {
         // FIXME Task 4: implement the simple placement viewer
         //idea: divided the placement string in each 4 characters string(each piece)-->choose the pictures（/gui/assets/a.png） corresponding to
