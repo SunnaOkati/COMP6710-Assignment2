@@ -338,7 +338,6 @@ public class Board extends Application {
         challenge.getChildren().add(challengeButton);
         // A test sample of challenges
         String[] challengesList = {"RRRBWBBRB","RRBBBBGGB","RRRRRWRWW","RRRBWBBRB"};
-        String encodedChallenge = challengesList[0];
 
         // This challenge button generates a new challenge grid on mouseclick
         challengeButton.setOnAction(e-> {
@@ -346,14 +345,6 @@ public class Board extends Application {
             challenge.getChildren().add(challengeButton);
             challengeGridVisualiser((challengesList[rand.nextInt(challengesList.length)]),challenge);
             });
-
-
-
-
-
-        // This draws the grid to the challenge vBox
-//        challengeGridVisualiser(encodedChallenge,challenge);
-        //challengeGridVisualiser((challengesList[rand.nextInt(challengesList.length)]),challenge)
 
 
         // Looks like vertically aligns playButton, chosenPiece and challenge
