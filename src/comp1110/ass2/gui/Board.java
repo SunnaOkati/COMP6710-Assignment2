@@ -335,18 +335,25 @@ public class Board extends Application {
         Random rand = new Random();
         Button challengeButton = new Button("Different Challenge");
         challengeButton.setStyle("-fx-font: 12 arial; -fx-base: #bcd4e6;");
-
+        challenge.getChildren().add(challengeButton);
         // A test sample of challenges
         String[] challengesList = {"RRRBWBBRB","RRBBBBGGB","RRRRRWRWW","RRRBWBBRB"};
         String encodedChallenge = challengesList[0];
 
-//        challengeButton.setOnAction(e-> System.out.println(challengesList[rand.nextInt(challengesList.length)]));
-        challengeButton.setOnAction(e-> System.out.println(challengesList[rand.nextInt(challengesList.length)]));
-        challenge.getChildren().add(challengeButton);
+        // This challenge button generates a new challenge grid on mouseclick
+        challengeButton.setOnAction(e-> {
+            challenge.getChildren().clear();
+            challenge.getChildren().add(challengeButton);
+            challengeGridVisualiser((challengesList[rand.nextInt(challengesList.length)]),challenge);
+            });
+
+
+
+
 
         // This draws the grid to the challenge vBox
-        challengeGridVisualiser(encodedChallenge,challenge);
-
+//        challengeGridVisualiser(encodedChallenge,challenge);
+        //challengeGridVisualiser((challengesList[rand.nextInt(challengesList.length)]),challenge)
 
 
         // Looks like vertically aligns playButton, chosenPiece and challenge
