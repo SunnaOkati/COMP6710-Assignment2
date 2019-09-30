@@ -181,16 +181,19 @@ public class Board extends Application {
         }
     }
 
-    public static void challengeGridVisualiser(String encodedChallenge){
+    public static Image challengeGridVisualiser(String encodedChallenge){
 // Image imageRotate = new Image(Board.class.getResource("assets/rotate.png" ).toString());
         // For every character in the encodedChallenge, get its associated .png
-        for(int i = 0; i < encodedChallenge.length(); i++){
-            Image square = new Image (squareColour(encodedChallenge.charAt(i)));
-            ImageView view = new ImageView();
-            // TODO ask Ranjth for help with this by Friday I suppose
-            // Victor
-            view.setImage(square);
-            }
+
+        return new Image (squareColour(encodedChallenge.charAt(0)));
+
+//        for(int i = 0; i < encodedChallenge.length(); i++){
+//            Image square = new Image (squareColour(encodedChallenge.charAt(i)));
+//            ImageView view = new ImageView();
+//            // TODO ask Ranjth for help with this by Friday I suppose
+//            // Victor
+//            view.setImage(square);
+//            }
 
         }
 
@@ -291,13 +294,18 @@ public class Board extends Application {
         Random rand = new Random();
         Button challengeButton = new Button("Different Challenge");
         challengeButton.setStyle("-fx-font: 12 arial; -fx-base: #bcd4e6;");
-        String challenges[];
+
 
         // This just verifies that the challenge button is being pressed
         // In the future it will be using the fileScraper method to return an appropriate value
         challengeButton.setOnAction(e-> System.out.println(rand.nextInt(5)));
 
+        // This line adds the challengeButton to the challenge box
+        //challenge.getChildren().add(challengeButton);
         challenge.getChildren().add(challengeButton);
+        challenge.getChildren().add(new ImageView(challengeGridVisualiser("BB")));
+
+
         // Looks like vertically aligns playButton, chosenPiece and challenge
         VBox vboxRight = new VBox();
         //vboxRight.setPrefSize(600,700);
