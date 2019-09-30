@@ -181,18 +181,63 @@ public class Board extends Application {
         }
     }
 
-    public static void challengeGridVisualiser(String encodedChallenge){
-// Image imageRotate = new Image(Board.class.getResource("assets/rotate.png" ).toString());
-        // For every character in the encodedChallenge, get its associated .png
-        for(int i = 0; i < encodedChallenge.length(); i++){
-            Image square = new Image (squareColour(encodedChallenge.charAt(i)));
-            ImageView view = new ImageView();
-            // TODO ask Ranjth for help with this by Friday I suppose
-            // Victor
-            view.setImage(square);
-            }
+    // Vbox because that's what the challenge box is
+    public static void challengeGridVisualiser(String encodedChallenge, VBox box){
 
+        double HBOXWIDTH = 20.0;
+        double SQUARESIZE = 60.0;
+        HBox rowTop = new HBox(HBOXWIDTH);
+        HBox rowMid = new HBox(HBOXWIDTH);
+        HBox rowBot = new HBox(HBOXWIDTH);
+
+        // Makes the invisible grid layout for each colour
+        /*
+        ____________________
+        |       rowTop
+        |___________________
+        |       rowMid
+        |___________________
+        |       rowBot
+        |___________________
+        */
+        box.getChildren().addAll(rowTop,rowMid,rowBot);
+
+        /*
+        For every character in the encodedChallenge, get its associated img and add it to the vBox required
+        i is the index of the grid co-ordinate
+        9 is the limit because the grid always consists of 9 squares
+        Each while loop makes each row by
+            getting the appropriate square image, setting its size and then adding it to the appropriate Hbox
+        */
+        for(int i = 0; i < 9; i++){
+            // First row
+            // Get the square img, set it to size and then add it to the appropriate box
+            while(i < 3){
+                ImageView img = new ImageView(squareColour(encodedChallenge.charAt(i)));
+                img.setFitHeight(SQUARESIZE);
+                img.setFitWidth(SQUARESIZE);
+                rowTop.getChildren().add(img);
+                i++;
+            }
+            // Second row
+            while(i < 6){
+                ImageView img = new ImageView(squareColour(encodedChallenge.charAt(i)));
+                img.setFitHeight(SQUARESIZE);
+                img.setFitWidth(SQUARESIZE);
+                rowMid.getChildren().add(img);
+                i++;
+            }
+            // Third row
+            while(i < 9){
+                ImageView img = new ImageView(squareColour(encodedChallenge.charAt(i)));
+                img.setFitHeight(SQUARESIZE);
+                img.setFitWidth(SQUARESIZE);
+                rowBot.getChildren().add(img);
+                i++;
+            }
         }
+
+    }
 
 
 
@@ -286,18 +331,22 @@ public class Board extends Application {
                 + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
 
-        // Challenge button
-        // Random is just added for testing
+        // Challenge Virtual
         Random rand = new Random();
         Button challengeButton = new Button("Different Challenge");
         challengeButton.setStyle("-fx-font: 12 arial; -fx-base: #bcd4e6;");
-        String challenges[];
-
-        // This just verifies that the challenge button is being pressed
-        // In the future it will be using the fileScraper method to return an appropriate value
-        challengeButton.setOnAction(e-> System.out.println(rand.nextInt(5)));
-
         challenge.getChildren().add(challengeButton);
+        // A test sample of challenges
+        String[] challengesList = {"RRRBWBBRB","RRBBBBGGB","RRRRRWRWW","RRRBWBBRB"};
+
+        // This challenge button generates a new challenge grid on mouseclick
+        challengeButton.setOnAction(e-> {
+            challenge.getChildren().clear();
+            challenge.getChildren().add(challengeButton);
+            challengeGridVisualiser((challengesList[rand.nextInt(challengesList.length)]),challenge);
+            });
+
+
         // Looks like vertically aligns playButton, chosenPiece and challenge
         VBox vboxRight = new VBox();
         //vboxRight.setPrefSize(600,700);
