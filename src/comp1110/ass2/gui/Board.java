@@ -83,6 +83,8 @@ public class Board extends Application {
         --> If exists, repeat task 8.
     */
 
+    // Author: Victor
+    // Task 8
     // This regex checker is added just to clean up the fileScraper method
     public static String regexChecker(String regex, String checkString){
         Pattern checkRegex = Pattern.compile(regex);
@@ -112,8 +114,8 @@ public class Board extends Application {
         return myStr;
     }
 
-
-
+    // Author: Victor
+    // Task 8
     // Scrapes the TestUtility.java file
     public static String fileScraper(String fileName){
         // References each line 1 by 1
@@ -181,6 +183,8 @@ public class Board extends Application {
         }
     }
 
+    // Author: Victor
+    // Task 8
     // Vbox because that's what the challenge box is
     public static void challengeGridVisualiser(String encodedChallenge, VBox box){
 
@@ -331,6 +335,9 @@ public class Board extends Application {
                 + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
 
+        // Author: Victor
+        // Task 8
+        // Lines from random generation to challenge.Button inclusive
         // Challenge Virtual
         Random rand = new Random();
         Button challengeButton = new Button("Different Challenge");
