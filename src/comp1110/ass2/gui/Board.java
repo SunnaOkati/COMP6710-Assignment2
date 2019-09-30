@@ -184,8 +184,8 @@ public class Board extends Application {
     // Vbox because that's what the challenge box is
     public static void challengeGridVisualiser(String encodedChallenge, VBox box){
 
-        double HBOXWIDTH = 40.0;
-        double SQUARESIZE = 40.0;
+        double HBOXWIDTH = 20.0;
+        double SQUARESIZE = 60.0;
         HBox rowTop = new HBox(HBOXWIDTH);
         HBox rowMid = new HBox(HBOXWIDTH);
         HBox rowBot = new HBox(HBOXWIDTH);
@@ -196,28 +196,28 @@ public class Board extends Application {
         i is the index of the grid co-ordinate
         9 is the limit because the grid always consists of 9 colours
         */
-        // TODO add Hbox's to form the grid
+
         for(int i = 0; i < 9; i++){
-            // For the first row
+            // First row
+            // Get the square img, set it to size and then add it to the appropriate box
             while(i < 3){
                 ImageView img = new ImageView(squareColour(encodedChallenge.charAt(i)));
-                // These values need to be changed just to fit better in the challenge box
                 img.setFitHeight(SQUARESIZE);
                 img.setFitWidth(SQUARESIZE);
                 rowTop.getChildren().add(img);
                 i++;
             }
+            // Second row
             while(i < 6){
                 ImageView img = new ImageView(squareColour(encodedChallenge.charAt(i)));
-                // These values need to be changed just to fit better in the challenge box
                 img.setFitHeight(SQUARESIZE);
                 img.setFitWidth(SQUARESIZE);
                 rowMid.getChildren().add(img);
                 i++;
             }
+            // Third row
             while(i < 9){
                 ImageView img = new ImageView(squareColour(encodedChallenge.charAt(i)));
-                // These values need to be changed just to fit better in the challenge box
                 img.setFitHeight(SQUARESIZE);
                 img.setFitWidth(SQUARESIZE);
                 rowBot.getChildren().add(img);
