@@ -90,7 +90,6 @@ public class  Board extends Application {
     // This regex checker is added just to clean up the fileScraper method
     public static String regexChecker(String regex, String checkString){
         Pattern checkRegex = Pattern.compile(regex);
-
         Matcher regexMatcher = checkRegex.matcher(checkString);
 
         // I'm unsure how regex groups work, but this makes sure that the output is a String
@@ -260,6 +259,7 @@ public class  Board extends Application {
 
     //Author: Ranjth Raj
     //Task 7
+    //component:play/reset buttons
     private Parent createContent(){
         DropShadow ds = new DropShadow( 20, Color.AQUA );
         String[] pieces = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
@@ -430,6 +430,7 @@ public class  Board extends Application {
 
     //Author: Ranjth Raj
     //Task 7
+    //Ron: should add setOnMouseReleased() event to make the piece place in the nearest location
     private class ChosenPieceImage extends ImageView{
         private double mouseX;
         private double mouseY;
@@ -472,7 +473,6 @@ public class  Board extends Application {
 
             //Captures mouse press event and highlights the tile green if a piece is selected otherwise red
             setOnMousePressed(event ->{
-
                 if(!isPlaced){
                     rect.setEffect(new DropShadow( 20, Color.GREEN));
                 }
