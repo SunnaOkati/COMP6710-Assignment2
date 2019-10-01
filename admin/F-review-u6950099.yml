@@ -6,12 +6,10 @@ reviewer:
 
 # Write the name of the author of the code here.
 #
-author: Task 4
-  name: Rong Hu
+author:
+  name: Ranjth Raj Kandasamy Senthil Kumar Task (2,3) Rong Hu (4)
   uid: u6975662
-author2: Tasks 2,3
-  name: Ranjth Raj Kandasamy Senthil Kumar
-  uid: u7004474
+
 
 # Write the class or method being reviewed here.
 #
