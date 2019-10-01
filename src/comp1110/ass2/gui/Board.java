@@ -93,6 +93,7 @@ public class  Board extends Application {
         Matcher regexMatcher = checkRegex.matcher(checkString);
 
         // I'm unsure how regex groups work, but this makes sure that the output is a String
+        // Git commit comment
         String myStr = null;
 
         // While searching through the string

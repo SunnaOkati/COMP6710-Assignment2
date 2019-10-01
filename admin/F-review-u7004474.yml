@@ -16,23 +16,23 @@ component: Task 5 & 6
 
 # Write a list of review comments here.
 #
-comments:
+comments: Below comments answer the 5 questions.
 
-What are the best features of this code?
-Task 5 - It has individual conditional statements demonstrating sufficient conditional checks for each orientation and the piecetype considered. Implementation of rotateXY method is another best feature. 
-Task 6 - It is very well structured.
+#What are the best features of this code?
+#Task 5 - It has individual conditional statements demonstrating sufficient conditional checks for each orientation and the piecetype considered. Implementation of rotateXY method is another best feature. 
+#Task 6 - It is very well structured.
 
-Is the code well-documented?
-Task 5 & 6 - Yes, classes and methods implemented for these tasks contains comments which explains the working procedure. But it could have been much better, if the code blocks inside methods and classes where also documented. 
+#Is the code well-documented?
+#Task 5 & 6 - Yes, classes and methods implemented for these tasks contains comments which explains the working procedure. But it could have been much better, if the code blocks inside methods and classes where also documented. 
 
-Is the program decomposition (class and method structure) appropriate?
-Task 5 - No, they could be further decomposed. The entire task was brilliantly split into two checks- the first check is whether the piece stays within the board and the second check is whether the piece placement overlaps an existing piece. Further spli inside these checks, led to approx 250+ lines of code, which I feel could be further decomposed.
-Task 6 - Yes, this task is accomplished using appropiate number of methods and classes. 
+#Is the program decomposition (class and method structure) appropriate?
+#Task 5 - No, they could be further decomposed. The entire task was brilliantly split into two checks- the first check is whether the piece stays within the board and the second check is whether the piece placement overlaps an existing piece. Further spli inside these checks, led to approx 250+ lines of code, which I feel could be further decomposed.
+#Task 6 - Yes, this task is accomplished using appropiate number of methods and classes. 
 
-Does it follow Java code conventions (for example, are methods and variables properly named), and is the style consistent throughout?
-Task 5 & 6 - Yes, each fields, methods and classes used for these tasks were named according to the conventions. The style is consistent, which can be seen through the implementation of each condtional checks seperately.
+#Does it follow Java code conventions (for example, are methods and variables properly named), and is the style consistent throughout?
+#Task 5 & 6 - Yes, each fields, methods and classes used for these tasks were named according to the conventions. The style is consistent, which can be seen through the implementation of each condtional checks seperately.
 
-If you suspect an error in the code, suggest a particular situation in which the program will not function correctly.
-Task 5 & 6 - Both tasks pass all the test cases. But they are not the optimal solution.
+#If you suspect an error in the code, suggest a particular situation in which the program will not function correctly.
+#Task 5 & 6 - Both tasks pass all the test cases. But they are not the optimal solution.
 
 
