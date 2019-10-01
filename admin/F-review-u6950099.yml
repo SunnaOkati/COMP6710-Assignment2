@@ -18,10 +18,10 @@ component: Tasks 2,3 and 4
 # Write a list of review comments here.
 #
 comments:
-  q[]: What are the best features of this code?
-#  Task 2 - It is concise and well formed, the variable names are excellent.
-#  Task 3 - Useful comments and variable names appear throughout
-#  Task 4 -  Well structured
+- What are the best features of this code?
+  - Task 2 It is concise and well formed, the variable names are excellent.
+  - Task 3 Useful comments and variable names appear throughout
+  - Task 4 Well structured
 
 #Is the code well-documented?
 #Task 2 - Yes, it essentially consists of one if statement and each condition in the if statement has its importance explained
