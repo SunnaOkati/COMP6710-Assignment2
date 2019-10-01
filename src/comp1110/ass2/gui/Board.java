@@ -39,7 +39,7 @@ import java.util.regex.*;
 
 
 
-public class Board extends Application {
+public class  Board extends Application {
 
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
