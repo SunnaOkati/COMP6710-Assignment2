@@ -6,9 +6,12 @@ reviewer:
 
 # Write the name of the author of the code here.
 #
-author:
+author: Task 4
   name: Rong Hu
   uid: u6975662
+author2: Tasks 2,3
+  name: Ranjth Raj Kandasamy Senthil Kumar
+  uid: u7004474
 
 # Write the class or method being reviewed here.
 #
@@ -19,20 +22,29 @@ component: Tasks 2,3 and 4
 comments:
 
 What are the best features of this code?
-Task 2 -
-Task 6 - It is very well structured.
+Task 2 - It is concise and well formed, the variable names are excellent.
+Task 3 - Useful comments and variable names appear throughout
+Task 4 - Well structured
 
 Is the code well-documented?
-Task 5 & 6 - Yes, classes and methods implemented for these tasks contains comments which explains the working procedure. But it could have been much better, if the code blocks inside methods and classes where also documented. 
+Task 2 - Yes, it essentially consists of one if statement and each condition in the if statement has its importance explained
+Task 3 - Yes, the comments are useful and consistent although they should be proofread for the sake of grammar
+Task 4 - Mediocre, comments were originally not very present until I commented through it myself, there is also still lots of code that has been commented out for no obvious reason
 
 Is the program decomposition (class and method structure) appropriate?
-Task 5 - No, they could be further decomposed. The entire task was brilliantly split into two checks- the first check is whether the piece stays within the board and the second check is whether the piece placement overlaps an existing piece. Further spli inside these checks, led to approx 250+ lines of code, which I feel could be further decomposed.
-Task 6 - Yes, this task is accomplished using appropiate number of methods and classes. 
+Task 2 - Yes, the method just needed to check a String's structure against a rigid set of rules and did so with a very comprehensive if statement
+Task 3 - Yes, the method utilised the method created for Task 2 and then used appropriate loops to reach it's goal
+Task 4 - Yes, the majority of it's structure is given thansk to a for loop that has well formed hardcoded statements with consistent structure, there are two methods that are present after that that are also well formed due to their concise nature.
 
 Does it follow Java code conventions (for example, are methods and variables properly named), and is the style consistent throughout?
-Task 5 & 6 - Yes, each fields, methods and classes used for these tasks were named according to the conventions. The style is consistent, which can be seen through the implementation of each condtional checks seperately.
+Task 2 - Yes, methods and variables are well named and no information takes up so much space that it goes off the screen
+Task 3 - Yes, it is essentially an extension of task 2
+Task 4 - Almost, style is clear and consistent, but variables such as "Image a" aren't very helpful. Using "i" for a for loop is fine as it's reasoning is explained in the comment above it.
+
 
 If you suspect an error in the code, suggest a particular situation in which the program will not function correctly.
-Task 5 & 6 - Both tasks pass all the test cases. But they are not the optimal solution.
+Tasks 2 & 3 - There are none, they both appear to be wholly comprehensive if statements.
+Task 4 -  The string "a000b444" simply draws the b piece to the top left corner because it's not well formed, in my opinion the program should instead
+          maintain a blank canvas if the error message "wrong placement" appears
 
 
