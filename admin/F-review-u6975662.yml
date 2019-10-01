@@ -19,23 +19,23 @@ component: Task 7
 comments:
 
   - What are the best features of this code?
-  -Task 7 - implement different component in the different part, make it easy to read
+  - Task 7 - implement different component in the different part, make it easy to read
 
-  -Is the code well-documented?
-  -all class except class ChosenPieceImage - Yes, there some brief commends for each part(step) of the code
-  -class ChosenPieceImage - although there is not any commend, it is easy to understand it
+  - Is the code well-documented?
+  - all class except class ChosenPieceImage - Yes, there some brief commends for each part(step) of the code
+  - class ChosenPieceImage - although there is not any commend, it is easy to understand it
 
-  -Is the program decomposition (class and method structure) appropriate?
-  -method createContent() - so long, about 150 line, inplement different fuctions, maybe can divided into different functions and refer them
-  -others - good structure
+  - Is the program decomposition (class and method structure) appropriate?
+  - method createContent() - so long, about 150 line, inplement different fuctions, maybe can divided into different functions and refer them
+  - others - good structure
 
-  -Does it follow Java code conventions (for example, are methods and variables properly named), and is the style consistent throughout?
-  -Class Tile - No, cannot know what the class is use for from the class name and the short commend, after my
+  - Does it follow Java code conventions (for example, are methods and variables properly named), and is the style consistent throughout?
+  - Class Tile - No, cannot know what the class is use for from the class name and the short commend, after my
 
-  -If you suspect an error in the code, suggest a particular situation in which the program will not function correctly.
-  -class ChosenPieceImage - should add setOnMouseReleased() event to make the piece place in the nearest location
-  -line 323 - setOnAction() can use lambda expression
-  -line 334 - not neccesary to create a vertical box to display the Challenge, we can just show it on the board area
+  - If you suspect an error in the code, suggest a particular situation in which the program will not function correctly.
+  - class ChosenPieceImage - should add setOnMouseReleased() event to make the piece place in the nearest location
+  - line 323 - setOnAction() can use lambda expression
+  - line 334 - not neccesary to create a vertical box to display the Challenge, we can just show it on the board area
 
 
 
