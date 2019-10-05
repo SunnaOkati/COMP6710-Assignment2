@@ -496,6 +496,7 @@ public class FocusGame {
                 boardState[1+i][3+j]=constrain;
             }
         }
+
         Set<String> viablePiece=new HashSet<String>();
 
         for (int t=0;t<10;t++){
@@ -508,53 +509,33 @@ public class FocusGame {
                         if (isPlacementStringValid(newPlacement)==false){
                             continue;
                         }
-                        Colors[][] tempPiece=null;
-                        switch ((char)(t+97)){
-                            case 'a':
-                                tempPiece=PieceType.pieceA;
-                                break;
-                            case 'b':
-                                tempPiece=PieceType.pieceB;
-                                break;
-                            case 'c':
-                                tempPiece=PieceType.pieceC;
-                                break;
-                            case 'd':
-                                tempPiece=PieceType.pieceD;
-                                break;
-                            case 'e':
-                                tempPiece=PieceType.pieceE;
-                                break;
-                            case 'f':
-                                tempPiece=PieceType.pieceF;
-                                break;
-                            case 'g':
-                                tempPiece=PieceType.pieceG;
-                                break;
-                            case 'h':
-                                tempPiece=PieceType.pieceH;
-                                break;
-                            case 'i':
-                                tempPiece=PieceType.pieceI;
-                                break;
-                            case 'j':
-                                tempPiece=PieceType.pieceJ;
-                                break;
-                        }
+
+                        //@Ron, I implemented the below method. I felt implementing this way seemed a bit clean.
+                        Colors[][] tempPiece= Piece.pieceColorArray((char)(t+97));
+
                         int length=tempPiece[0].length;
                         int width=tempPiece.length;
-                        boolean sig=true;
-                        boolean sig2=false;
-                        for (int j=0;j<width;j++){
-                            for (int k=0;k<length;k++){
-                                Location rotateLoc=PieceType.rotateXY(k,j,length,width,d);
-                                if ((y+rotateLoc.getY()<=3 && y+rotateLoc.getY()>=1)&&(x+rotateLoc.getX()<=5 && x+rotateLoc.getX()>=3)){
-                                    if (boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]!=tempPiece[j][k]&& tempPiece[j][k]!=null){
-                                        sig=false;
+                        boolean sig = true;
+                        boolean sig2 = false;
+
+                        for (int j = 0; j < width; j++) {
+                            for (int k = 0; k < length; k++) {
+                                Location rotateLoc = PieceType.rotateXY(k, j, length, width, d);
+                                //@Ron, I created the below two variables, because it is less time consuming if you call Location.getX() once
+                                // and store it for further use,
+                                //rather than calling it each time you need.
+                                int rotatedIndexY = y + rotateLoc.getY();
+                                int rotatedIndexX = x + rotateLoc.getX();
+                                if (tempPiece[j][k] != null) {
+                                    //@Ron, I created a method for the following conditional check.
+                                    if (isWithinChallengeSquare(rotatedIndexX, rotatedIndexY)) {
+                                        if (boardState[rotatedIndexY][rotatedIndexX] != tempPiece[j][k]) {
+                                            sig = false;
+                                        }
                                     }
-                                }
-                                if (y+rotateLoc.getY()==row && x+rotateLoc.getX()==col && tempPiece[j][k]!=null){
-                                    sig2=true;
+                                    if (rotatedIndexY == row && rotatedIndexX == col && sig == true) {
+                                        sig2 = true;
+                                    }
                                 }
                             }
                         }
@@ -566,10 +547,18 @@ public class FocusGame {
             }
         }
 
-        if (viablePiece.isEmpty()==true){
-            return null;
-        }
-        return viablePiece;
+
+        return viablePiece.isEmpty()? null: viablePiece;
+    }
+
+    //Author: Ranjth
+    //Checks whether the co-ordinates within the challenge square(area)
+    public static boolean isWithinChallengeSquare(int x, int y){
+        if ((y <=3 ) && (y >= 1))//Between second and fourth row
+            if ((x <=5 )&&(x >= 3))//Between fourth and sixth column
+                return true;
+
+        return false;
     }
 
     /**
@@ -597,7 +586,7 @@ public class FocusGame {
         List<Set<String>> solutionStep = new ArrayList<Set<String>>();        //store the possibility in every step solutionStep
 
         //start first step at (4,2)
-        Set<String> firstStep=getViablePiecePlacements2(placement,challenge,4,2);
+        Set<String> firstStep = getViablePiecePlacements2(placement,challenge,4,2);
         solutionStep.add(firstStep);
         Iterator<String> iter=firstStep.iterator();
         placement=iter.next();
