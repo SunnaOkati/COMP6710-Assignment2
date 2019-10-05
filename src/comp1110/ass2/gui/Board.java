@@ -18,11 +18,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -46,10 +48,11 @@ public class  Board extends Application {
 
     private boolean isPlaced = true;
     private int orientation = 0;
-    private String piece = "";
+    private int ChosenNum=Integer.MAX_VALUE;
     private String boardState = "";
 
-    private ArrayList<Tile> boardArray = new ArrayList<>();
+    ArrayList<Tile> boardArray = new ArrayList<>();
+    LinkedList<ChosenPieceImage> placedImage=new LinkedList<ChosenPieceImage>();
 
     // FIXME Task 7: Implement a basic playable Focus Game in JavaFX that only allows pieces to be placed in valid places
     /*use javafx to create gui and event operating code in start()
@@ -85,111 +88,15 @@ public class  Board extends Application {
         --> If exists, repeat task 8.
     */
 
-    // Author: Victor
-    // Task 8
-    // This regex checker is added just to clean up the fileScraper method
-    public static String regexChecker(String regex, String checkString){
-        Pattern checkRegex = Pattern.compile(regex);
-        Matcher regexMatcher = checkRegex.matcher(checkString);
 
-        // I'm unsure how regex groups work, but this makes sure that the output is a String
-        // Git commit comment
-        String myStr = null;
-
-        // While searching through the string
-        while(regexMatcher.find()){
-            // Ensures that no empty strings are passed through
-            if(regexMatcher.group().length() != 0){
-
-                // If the string is empty give it a value, else add to its previous value
-                if(myStr == null){
-                    myStr = regexMatcher.group();
-                }else{
-                    myStr = myStr + regexMatcher.group();
-                }
-
-            }
-        }
-
-        // Just for debugging
-        System.out.println("myStr final " + myStr);
-        return myStr;
-    }
-
-    // Author: Victor
-    // Task 8
-    // Scrapes the TestUtility.java file
-    public static String fileScraper(String fileName){
-        // References each line 1 by 1
-        String line = null;
-        String output = null;
-
-        try {
-            FileReader fileReader = new FileReader(fileName);
-
-            // BufferedReader is here for good practice
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            while ((line = bufferedReader.readLine()) != null) {
-                // While the line isn't empty, if it is one of the solutions,
-                // which will be found out using the regex method
-                // then print it to the terminal for testing
-                if (regexChecker("[A,Z]{9}", line) != null) {
-                    System.out.println(regexChecker("[A,Z]{9}", line));
-                    if(output == null){
-                        output = regexChecker("[A,Z]{9}", line);
-                    }else{
-                        output = output + regexChecker("[A,Z]{9}", line);
-                    }
-                }
-            }
-
-
-            bufferedReader.close();
-        }
-        // These catches were taken straight from the source material
-        // FileReader does not compile without exception handling
-        catch(FileNotFoundException ex) {
-            System.out.println(
-                    "Unable to open file '" +
-                            fileName + "'");
-        }
-        catch(IOException ex) {
-            System.out.println(
-                    "Error reading file '"
-                            + fileName + "'");
-
-        }
-        return output;
-    }
-
-    // Just a series of if statements that decide which square is chosen
-    public static String squareColour(Character square){
-        if(square == 'B') {
-            return "comp1110/ass2/gui/assets/sq-b.png";
-        }
-        if(square == 'G') {
-            return "comp1110/ass2/gui/assets/sq-g.png";
-        }
-        if(square == 'R') {
-            return "comp1110/ass2/gui/assets/sq-r.png";
-        }
-        if(square == 'W'){
-            return "comp1110/ass2/gui/assets/sq-w.png";
-        }else{
-            System.out.println(square);
-            System.out.println("Invalid input, learn how to throw errors");
-            return null;
-        }
-    }
 
     // Author: Victor
     // Task 8
     // Vbox because that's what the challenge box is
     public static void challengeGridVisualiser(String encodedChallenge, VBox box){
 
-        double HBOXWIDTH = 20.0;
-        double SQUARESIZE = 60.0;
+        double HBOXWIDTH = 0.0;
+        double SQUARESIZE = 70.0;
         HBox rowTop = new HBox(HBOXWIDTH);
         HBox rowMid = new HBox(HBOXWIDTH);
         HBox rowBot = new HBox(HBOXWIDTH);
@@ -217,7 +124,7 @@ public class  Board extends Application {
             // First row
             // Get the square img, set it to size and then add it to the appropriate box
             while(i < 3){
-                ImageView img = new ImageView(squareColour(encodedChallenge.charAt(i)));
+                ImageView img = new ImageView(Challenge.squareColour(encodedChallenge.charAt(i)));
                 img.setFitHeight(SQUARESIZE);
                 img.setFitWidth(SQUARESIZE);
                 rowTop.getChildren().add(img);
@@ -225,7 +132,7 @@ public class  Board extends Application {
             }
             // Second row
             while(i < 6){
-                ImageView img = new ImageView(squareColour(encodedChallenge.charAt(i)));
+                ImageView img = new ImageView(Challenge.squareColour(encodedChallenge.charAt(i)));
                 img.setFitHeight(SQUARESIZE);
                 img.setFitWidth(SQUARESIZE);
                 rowMid.getChildren().add(img);
@@ -233,7 +140,7 @@ public class  Board extends Application {
             }
             // Third row
             while(i < 9){
-                ImageView img = new ImageView(squareColour(encodedChallenge.charAt(i)));
+                ImageView img = new ImageView(Challenge.squareColour(encodedChallenge.charAt(i)));
                 img.setFitHeight(SQUARESIZE);
                 img.setFitWidth(SQUARESIZE);
                 rowBot.getChildren().add(img);
@@ -257,12 +164,32 @@ public class  Board extends Application {
         }
     }
 
-    //Author: Ranjth Raj
-    //Task 7
-    //component:play/reset buttons
+
+    //---------------------------------Task 7---------------------------------------------------------------------------
+    //Author: Ranjth Raj, Rong HU
+    //find  triangle with the shortest distance to (x,y)
+    Tile findNearestTile(double x, double y){
+        Tile nearTile=null;
+        Iterator<Tile> iterTile=boardArray.iterator();
+        //System.out.println(boardArray.size());
+        double min_dis=Double.MAX_VALUE;
+        while (iterTile.hasNext()){
+            Tile tempTile=iterTile.next();
+            //System.out.println(tempTile.getLayoutX());
+            double temp_dis=tempTile.distance(x,y);
+            if (temp_dis<min_dis){
+                min_dis=temp_dis;
+                nearTile=tempTile;
+            }
+        }
+        return nearTile;
+    }
+
+    //component:play/reset buttons, paneBoard,
     private Parent createContent(){
         DropShadow ds = new DropShadow( 20, Color.AQUA );
         String[] pieces = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
+        Group root = new Group();
 
         //Button style and size
         String buttonStyle = "-fx-base:#bcd4e6; -fx-font: 24 arial";
@@ -309,7 +236,8 @@ public class  Board extends Application {
         rotateButton.setGraphic(imageRotateView);
 
         //Creating an image view to display the selected piece
-        ChosenPieceImage chosenPieceImage = new ChosenPieceImage();
+
+        //ChosenPieceImage chosenPieceImage = new ChosenPieceImage(this);
 
         //Creating a horizontal box to display the chosen piece and rotate button
         HBox chosenPiece = new HBox();
@@ -318,21 +246,23 @@ public class  Board extends Application {
                 + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
         chosenPiece.setSpacing(10);
-        chosenPiece.getChildren().addAll(chosenPieceImage, rotateButton);
+        chosenPiece.getChildren().addAll(rotateButton);
         chosenPiece.setAlignment(Pos.CENTER);
 
+        /*
         //Captures "rotate" button click event and uses math to change orientation of piece
         rotateButton.setOnAction(new EventHandler<ActionEvent>() {
+            ChosenPieceImage selectedPiece=null;
             @Override
             public void handle(ActionEvent actionEvent) {
                  orientation = (orientation+ 1 )% 4;
-                chosenPieceImage.setRotate(90 * orientation);
+                 if (selectedPiece!=null){
+                     selectedPiece.setRotate(90 * orientation);
+                 }
             }
         });
-
-
-
-
+         */
+        VBox challengePiece = new VBox();
         //Creating a vertical box to display the "challenge" button and the Challenge.
         VBox challenge = new VBox();
         challenge.setPrefSize(200,200);
@@ -340,8 +270,9 @@ public class  Board extends Application {
                 + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
 
+
+        // -------------------------------------Task 8------------------------------------------------------------------------
         // Author: Victor
-        // Task 8
         // Lines from random generation to challenge.Button inclusive
         // Challenge Virtual
         Random rand = new Random();
@@ -363,13 +294,17 @@ public class  Board extends Application {
         challengeButton.setOnAction(e-> {
             challenge.getChildren().clear();
             challenge.getChildren().add(challengeButton);
-            challengeGridVisualiser((challengesList[rand.nextInt(challengesList.length)]),challenge);
+            challengePiece.getChildren().clear();
+            challengeGridVisualiser((challengesList[rand.nextInt(challengesList.length)]),challengePiece);
+            challengePiece.setLayoutX(boardArray.get(12).getLayoutX());
+            challengePiece.setLayoutY(boardArray.get(12).getLayoutY());
+            challengePiece.setBlendMode(BlendMode.MULTIPLY);
             });
 
 
         // Looks like vertically aligns playButton, chosenPiece and challenge
         VBox vboxRight = new VBox();
-        vboxRight.getChildren().addAll( buttons, chosenPiece, challenge);
+        vboxRight.getChildren().addAll( buttons,chosenPiece,challenge);
 
         //Horizontally aligns board and the above vertically aligned box.
         HBox hboxTop = new HBox();
@@ -386,19 +321,35 @@ public class  Board extends Application {
         //Creating the piece's image as a image view and adding it in a grid
         for (int i = 0; i < pieces.length; i++){
             Image img = new Image(Board.class.getResource("assets/"+pieces[i]+".png" ).toString());
+            //ChosenPieceImage temp_chosenPieceImage=new ChosenPieceImage(this);
             ImageView view = new ImageView();
             view.setImage(img);
             view.setCache(true);
             view.setPickOnBounds(true);
             view.setFitHeight(img.getHeight()/2);
             view.setFitWidth(img.getWidth()/2);
-            String message = pieces[i];
+            char message = pieces[i].charAt(0);
+
 
             //Captures mouse click event and replaces chosen piece image in chose piece image view.
             view.setOnMouseClicked(( MouseEvent event ) ->
             { if (isPlaced) {
-                    piece = message;
-                    chosenPieceImage.setImage(img);
+                    ChosenNum= (int)message-97;
+                    //chosenPieceImage.imageView.setImage(img);
+                    //chosenPieceImage.imageView.setLayoutX(700);
+                    //chosenPieceImage.imageView.setLayoutY(200);
+                    //chosenPieceImage.imageView.setFitWidth(chosenPieceImage.imageView.getImage().getWidth() * 0.7);
+                    //chosenPieceImage.imageView.setFitHeight(chosenPieceImage.imageView.getImage().getHeight() * 0.7);
+                    ChosenPieceImage temp_chosenPieceImage=new ChosenPieceImage((int)message-97,this);
+                    temp_chosenPieceImage.imageView.setImage(img);
+                    temp_chosenPieceImage.imageView.setLayoutX(700);
+                    temp_chosenPieceImage.imageView.setLayoutY(200);
+                    temp_chosenPieceImage.imageView.setFitWidth(temp_chosenPieceImage.imageView.getImage().getWidth() * 0.7);
+                    temp_chosenPieceImage.imageView.setFitHeight(temp_chosenPieceImage.imageView.getImage().getHeight() * 0.7);
+                    root.getChildren().add(temp_chosenPieceImage.imageView);
+                    root.getChildren().get(1).toFront();
+                    placedImage.add(temp_chosenPieceImage);
+                    //System.out.println(placedImage.size());
                     isPlaced = false;
                 }
                 else{
@@ -423,36 +374,70 @@ public class  Board extends Application {
         hboxBottom.getChildren().addAll(vboxPieces);
 
         //Creating a root node and aligning vertically the "hboxTop" and "hboxBottom".
-        Group root = new Group();
-        root.getChildren().add(new VBox(hboxTop, hboxBottom));
+        //Group root = new Group();
+        challengePiece.toFront();
+        root.getChildren().addAll(new VBox(hboxTop, hboxBottom),challengePiece);
+
         return root;
     }
 
+
+
+    //-----------------------------------------Task 7----------------------------------------------------------------
     //Author: Ranjth Raj
-    //Task 7
     //Ron: should add setOnMouseReleased() event to make the piece place in the nearest location
     private class ChosenPieceImage extends ImageView{
+        int typeNum;
+        Board board;
         private double mouseX;
         private double mouseY;
+        ImageView imageView;
 
-        public ChosenPieceImage(){
-            setFitWidth(100);
-            setFitHeight(100);
+        public ChosenPieceImage(int typeNum,Board board){
+            this.typeNum=typeNum;
+            this.board=board;
+            imageView=new ImageView();
+            imageView.setOnMousePressed(event->{
+                MouseButton button = event.getButton();
+                if (button==MouseButton.PRIMARY){
+                    mouseX = event.getSceneX();
+                    mouseY = event.getSceneY();
+                }else {
+                    double angle=imageView.getRotate();
+                    imageView.setRotate(angle+90);
+                }
 
-            setOnMousePressed(event->{
-                mouseX = event.getSceneX();
-                mouseY = event.getSceneY();
-                System.out.println("Mouse pressed at " + event.getSceneX() + " * " + event.getSceneY());
             });
-            setOnMouseDragged(event->{
-                double disX = event.getSceneX() - mouseX;
-                double disY = event.getSceneY() - mouseY;
-                setFitWidth(getImage().getWidth() * 0.7);
-                setFitHeight(getImage().getHeight() * 0.7);
-                this.setTranslateX(disX);
-                this.setTranslateY(disY);
+            imageView.setOnMouseDragged(event->{
+                //System.out.println(event.getSceneX());
+                //imageView.toFront();
+                double movementX = event.getSceneX() - mouseX;
+                double movementY = event.getSceneY() - mouseY;
+                //imageView.setFitWidth(imageView.getImage().getWidth() * 0.7);
+                //imageView.setFitHeight(imageView.getImage().getHeight() * 0.7);
+                imageView.setLayoutX(imageView.getLayoutX()+movementX);
+                imageView.setLayoutY(imageView.getLayoutY()+movementY);
+                mouseX=event.getSceneX();
+                mouseY=event.getSceneY();
             });
+            imageView.setOnMouseReleased(event -> {
+                MouseButton button = event.getButton();
+                if (button==MouseButton.PRIMARY){
+                    mouseX = imageView.getLayoutX();
+                    mouseY= imageView.getLayoutY();
+                    Tile nearLoc=board.findNearestTile(mouseX,mouseY);
+                    double angle=imageView.getRotate();
+                    if (angle%180==90&&(imageView.getFitWidth()-imageView.getFitHeight())%140==70){
+                        imageView.setLayoutX(nearLoc.getLayoutX()-35);
+                        imageView.setLayoutY(nearLoc.getLayoutY()-35);
+                    }else {
+                        imageView.setLayoutX(nearLoc.getLayoutX());
+                        imageView.setLayoutY(nearLoc.getLayoutY());
+                    }
 
+                }
+
+            });
         }
     }
 
@@ -466,51 +451,19 @@ public class  Board extends Application {
         public Tile(int x, int y){
             posX = x;
             posY = y;
-
             //Creating a Pane to visualize a rectangle.
             Pane rect = new Pane();
-            rect.setStyle("-fx-border-style: solid; -fx-min-width: 70; -fx-min-height:70; -fx-max-width:70; -fx-max-height: 70");
+            rect.setStyle("-fx-border-style: solid;-fx-background-color: CAC9CC; -fx-min-width: 70; -fx-min-height:70; -fx-max-width:70; -fx-max-height: 70");
 
-            //Captures mouse press event and highlights the tile green if a piece is selected otherwise red
-            setOnMousePressed(event ->{
-                if(!isPlaced){
-                    rect.setEffect(new DropShadow( 20, Color.GREEN));
-                }
-                else {
-                    rect.setEffect(new DropShadow( 20, Color.INDIANRED));
-                }
-            });
 
-            //Captures mouse release event and verifies whether the placement is valid and proceeds with the placement in the board.
-            setOnMouseReleased(event -> {
-                rect.setEffect(null);
-                String placement = piece + posY + posX + orientation;
-                //System.out.println(placement);
-                if((!isPlaced) && (FocusGame.isPlacementStringValid(placement))){
-                    Image img = new Image(Viewer.class.getResource("assets/"+ piece +".png" ).toString());
-                    ImageView view = new ImageView();
-                    view.setImage(img);
-                    view.setCache(false);
-                    view.setFitHeight(img.getHeight() * 0.7);
-                    view.setFitWidth(img.getWidth() * 0.7);
-                    if(img.getHeight()!=img.getWidth() && (orientation %2 != 0))
-                    {
-                        if((img.getWidth() == 300) &&(img.getHeight()==200)){
-                            view.setX(-35);
-                            view.setY(35);
-                        }
-                        else{
-                            view.setX(-70);
-                            view.setY(70);
-                        }
-                    }
-                    view.setRotate( 90 * orientation);
-                    rect.getChildren().add(view);
-                isPlaced = true;
-                }
-
-            });
             getChildren().add(rect);
+        }
+        //return the distance from(x,y) to the centre of traingle
+        private double distance(double x, double y){
+            double disX=Math.pow(this.getLayoutX()-x,2);
+            double disY=Math.pow(this.getLayoutY()-y,2);
+            double dis=Math.sqrt(disX+disY);
+            return dis;
         }
     }
     @Override
