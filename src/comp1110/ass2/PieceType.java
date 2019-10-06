@@ -1,5 +1,10 @@
 package comp1110.ass2;
 
+import javafx.scene.paint.Color;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static comp1110.ass2.Colors.*;
 
 public enum PieceType {
@@ -76,6 +81,43 @@ public enum PieceType {
         }
         Location location = new Location(xoff, yoff);
         return location;
+    }
+
+    public Colors[][] getPieceColors(char t){
+        Colors[][] tempPiece = null;
+        switch ((char)(t+97)){
+            case 'a':
+                tempPiece=PieceType.pieceA;
+                break;
+            case 'b':
+                tempPiece=PieceType.pieceB;
+                break;
+            case 'c':
+                tempPiece=PieceType.pieceC;
+                break;
+            case 'd':
+                tempPiece=PieceType.pieceD;
+                break;
+            case 'e':
+                tempPiece=PieceType.pieceE;
+                break;
+            case 'f':
+                tempPiece=PieceType.pieceF;
+                break;
+            case 'g':
+                tempPiece=PieceType.pieceG;
+                break;
+            case 'h':
+                tempPiece=PieceType.pieceH;
+                break;
+            case 'i':
+                tempPiece=PieceType.pieceI;
+                break;
+            case 'j':
+                tempPiece=PieceType.pieceJ;
+                break;
+        }
+        return tempPiece;
     }
 
 
