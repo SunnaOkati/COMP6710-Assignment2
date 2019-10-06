@@ -646,7 +646,9 @@ public class FocusGame {
             }
         }
 
+        System.out.println("challenge: "+challenge);
         System.out.println("newplacement: "+newPlacement);
+
         //System.out.println("placement: "+placement);
         //return null;
         placement=newPlacement;
@@ -812,7 +814,6 @@ public class FocusGame {
     //find all possible occasions of specific square based on task 9 request
     //@author Rong Hu
     static Set<String> getViablePiecePlacements2(String placement, String challenge, int col, int row) {
-        // FIXME Task 6: determine the set of all viable piece placements given existing placements and a challenge
         Colors[][] boardState = new Colors[5][9];
         //fill the challenge
         int count=0;
