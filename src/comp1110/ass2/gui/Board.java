@@ -52,12 +52,13 @@ public class  Board extends Application {
     private static final int BOARD_HEIGHT = 700;
 
     private boolean isPlaced = true;
-    private int orientation = 0;
-    private char ChosenType=' ';
+    //private int orientation = 0;
+    //private char ChosenType=' ';
     private String placement = "";
     private String challengeString = "";
     Group root = new Group();
 
+    String rightPlacement="";
     ArrayList<Tile> boardArray = new ArrayList<>();
     LinkedList<ChosenPieceImage> placedImage=new LinkedList<ChosenPieceImage>();
 
@@ -227,6 +228,56 @@ public class  Board extends Application {
         button resetButton = new button(buttonStyle, "Reset", buttonSize);
         button hintButton = new button(hintStyle, "Hint", buttonSize);
 
+        //implement hintButton: give a hint of next step
+        LinkedList<ChosenPieceImage> tempplacedImage=placedImage;
+        hintButton.setOnMousePressed(e-> {
+            //get the hint placement
+            String hintPlacement=Hint.giveHint(placement,rightPlacement,challengeString);
+            System.out.println("hint: "+hintPlacement);
+            //modify all the original placement
+            Iterator<ChosenPieceImage> chosenPieceIter=placedImage.iterator();
+            for (int i=0;i<placement.length();i=i+4){
+                int x=hintPlacement.charAt(i+1)-48;
+                int y=hintPlacement.charAt(i+2)-48;
+                int angle=(hintPlacement.charAt(i+3)-48)*90;
+                //get the original piece them set it to right placement
+                ChosenPieceImage tempChosenPiece=chosenPieceIter.next();
+                tempChosenPiece.imageView.setRotate(angle);
+                //set location of the modified piece
+                if (angle%180==90){
+                    tempChosenPiece.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX()-(tempChosenPiece.imageView.getFitWidth()-tempChosenPiece.imageView.getFitHeight())/2);
+                    tempChosenPiece.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY()+(tempChosenPiece.imageView.getFitWidth()-tempChosenPiece.imageView.getFitHeight())/2);
+                }else{
+                    tempChosenPiece.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX());
+                    tempChosenPiece.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY());
+                }
+            }
+            //if hint has next step, show it
+            if (hintPlacement.length()>placement.length()){
+
+            }
+
+        });
+        hintButton.setOnMouseReleased(e->{
+            Iterator<ChosenPieceImage> oriPieceIter=placedImage.iterator();
+            for (int i=0;i<placement.length();i=i+4){
+                int x=placement.charAt(i+1)-48;
+                int y=placement.charAt(i+2)-48;
+                int angle=(placement.charAt(i+3)-48)*90;
+                //get the original piece them set it to right placement
+                ChosenPieceImage tempChosenPiece=oriPieceIter.next();
+                tempChosenPiece.imageView.setRotate(angle);
+                //set location of the modified piece
+                if (angle%180==90){
+                    tempChosenPiece.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX()-(tempChosenPiece.imageView.getFitWidth()-tempChosenPiece.imageView.getFitHeight())/2);
+                    tempChosenPiece.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY()+(tempChosenPiece.imageView.getFitWidth()-tempChosenPiece.imageView.getFitHeight())/2);
+                }else{
+                    tempChosenPiece.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX());
+                    tempChosenPiece.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY());
+                }
+            }
+        });
+
         //implement resetButton: remove all the piece on the board
         resetButton.setOnAction(e-> {
             Iterator<ChosenPieceImage> chosenPieceIter=placedImage.iterator();
@@ -270,8 +321,6 @@ public class  Board extends Application {
 
 
 
-
-
         VBox challengePiece = new VBox();
         //Creating a vertical box to display the "challenge" button and the Challenge.
         VBox challenge = new VBox();
@@ -308,6 +357,8 @@ public class  Board extends Application {
             challengePiece.setLayoutX(boardArray.get(12).getLayoutX());
             challengePiece.setLayoutY(boardArray.get(12).getLayoutY());
             challengePiece.setBlendMode(BlendMode.MULTIPLY);
+            rightPlacement= FocusGame.getSolution(challengeString);
+            //System.out.println("solution: "+ rightPlacement);
             });
 
 
@@ -348,13 +399,13 @@ public class  Board extends Application {
                     ChosenPieceImage temp_chosenPieceImage=new ChosenPieceImage(message,this);
                     temp_chosenPieceImage.imageView.setImage(img);
                     temp_chosenPieceImage.imageView.setLayoutX(680);
-                    temp_chosenPieceImage.imageView.setLayoutY(180);
+                    temp_chosenPieceImage.imageView.setLayoutY(150);
                     temp_chosenPieceImage.imageView.setFitWidth(temp_chosenPieceImage.imageView.getImage().getWidth() * 0.7);
                     temp_chosenPieceImage.imageView.setFitHeight(temp_chosenPieceImage.imageView.getImage().getHeight() * 0.7);
                     root.getChildren().add(temp_chosenPieceImage.imageView);
                     temp_chosenPieceImage.imageView.toFront();
                     //placedImage.add(temp_chosenPieceImage);
-                    System.out.println(placedImage.size());
+                    //System.out.println(placedImage.size());
                     isPlaced = false;
                 }
                 else{
@@ -380,7 +431,6 @@ public class  Board extends Application {
 
         //Creating a root node and aligning vertically the "hboxTop" and "hboxBottom".
         //Group root = new Group();
-        //challengePiece.toFront();
         root.getChildren().addAll(new VBox(hboxTop, hboxBottom),challengePiece);
 
         return root;
@@ -470,7 +520,6 @@ public class  Board extends Application {
                     int y=nearLoc.posY;
                     int orientation=(int)(imageView.getRotate()/90)%4;
                     String tempPlacement=""+type+x+y+orientation;
-                    System.out.println(tempPlacement);
 
                     //edit palcement when put the piece on the board
                     if (placedImage.contains(this)){
@@ -486,7 +535,7 @@ public class  Board extends Application {
                         placement=placement+tempPlacement;
                         placedImage.add(this);
                     }
-                    System.out.println(placement+" overlap: "+isPlacementStringValid(placement)+" challenge: "+FocusGame.verifyChallenge(tempPlacement,challengeString));
+                    //System.out.println(placement+" overlap: "+isPlacementStringValid(placement)+" challenge: "+FocusGame.verifyChallenge(tempPlacement,challengeString));
                     System.out.println("challenge String :"+challengeString);
 
                     //if placement is invalid, placement string should be the original one and move the piece to the start area
@@ -500,7 +549,7 @@ public class  Board extends Application {
                             }
                         }
                         imageView.setLayoutX(680);
-                        imageView.setLayoutY(180);
+                        imageView.setLayoutY(150);
                         placedImage.remove(this);
                     }
                 }
@@ -508,6 +557,7 @@ public class  Board extends Application {
             });
         }
     }
+
 
 
     // vertical box of remove area
