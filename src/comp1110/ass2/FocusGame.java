@@ -646,7 +646,9 @@ public class FocusGame {
             }
         }
 
+        System.out.println("challenge: "+challenge);
         System.out.println("newplacement: "+newPlacement);
+
         //System.out.println("placement: "+placement);
         //return null;
         placement=newPlacement;
@@ -812,7 +814,6 @@ public class FocusGame {
     //find all possible occasions of specific square based on task 9 request
     //@author Rong Hu
     static Set<String> getViablePiecePlacements2(String placement, String challenge, int col, int row) {
-        // FIXME Task 6: determine the set of all viable piece placements given existing placements and a challenge
         Colors[][] boardState = new Colors[5][9];
         //fill the challenge
         int count=0;
@@ -898,6 +899,41 @@ public class FocusGame {
         }
         return viablePiece;
     }
+
+    //verify whether the placement(4 characters) is valid based on the challenge), if invalid, return true
+    static public boolean verifyChallenge(String placement,String challenge){
+        Colors[][] boardState = new Colors[5][9];
+        int count=0;
+        char type=placement.charAt(0);
+        int x=(int)placement.charAt(1)-48;
+        int y=(int)placement.charAt(2)-48;
+        int orientation=placement.charAt(3)-48;
+        //fill the board with chanllenge
+        for (int i=0;i<3;i++){
+            for (int j=0;j<3;j++){
+                Colors constrain=Colors.getColors(challenge.charAt(count));
+                count++;
+                boardState[1+i][3+j]=constrain;
+            }
+        }
+        //verify whether each of square of the piece is corresponding with the challenge
+        Colors[][] tempPiece=Piece.placementToPieceArray(placement);
+        int length=tempPiece[0].length;
+        int width=tempPiece.length;
+        boolean sig=false;
+        for (int j=0;j<width;j++){
+            for (int k=0;k<length;k++){
+                Location rotateLoc=PieceType.rotateXY(k,j,length,width,orientation);
+                if ((y+rotateLoc.getY()<=3 && y+rotateLoc.getY()>=1)&&(x+rotateLoc.getX()<=5 && x+rotateLoc.getX()>=3)){
+                    if (boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]!=tempPiece[j][k]&& tempPiece[j][k]!=null){
+                        sig=true;
+                    }
+                }
+            }
+        }
+        return sig;
+    }
+
 
     //fill the cells based on the input placement string(4 characters)
     //@author Rong Hu

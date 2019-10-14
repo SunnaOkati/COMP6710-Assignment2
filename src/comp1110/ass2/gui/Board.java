@@ -10,6 +10,7 @@ import javafx.css.Style;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.*;
@@ -30,6 +31,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.regex.*;
 
+import static comp1110.ass2.FocusGame.isPlacementStringValid;
 
 
 public class  Board extends Application {
@@ -49,8 +53,10 @@ public class  Board extends Application {
 
     private boolean isPlaced = true;
     private int orientation = 0;
-    private int ChosenNum=Integer.MAX_VALUE;
-    private String boardState = "";
+    private char ChosenType=' ';
+    private String placement = "";
+    private String challengeString = "";
+    Group root = new Group();
 
     ArrayList<Tile> boardArray = new ArrayList<>();
     LinkedList<ChosenPieceImage> placedImage=new LinkedList<ChosenPieceImage>();
@@ -204,24 +210,41 @@ public class  Board extends Application {
         return nearTile;
     }
 
+
     //component:play/reset buttons, paneBoard,
     private Parent createContent(){
         DropShadow ds = new DropShadow( 20, Color.AQUA );
         String[] pieces = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
-        Group root = new Group();
+        //Group root = new Group();
 
         //Button style and size
-        String buttonStyle = "-fx-base:#bcd4e6; -fx-font: 24 arial";
-        int[] buttonSize = {100,50};
+        String buttonStyle = "-fx-font: 16 arial";
+        String hintStyle = "-fx-base:#E93939; -fx-font: 16 arial";
+        int[] buttonSize = {80,40};
 
         //Creating the play and reset buttons using "button" class
         button playButton = new button(buttonStyle, "Play", buttonSize);
         button resetButton = new button(buttonStyle, "Reset", buttonSize);
+        button hintButton = new button(hintStyle, "Hint", buttonSize);
+
+        //implement resetButton: remove all the piece on the board
+        resetButton.setOnAction(e-> {
+            Iterator<ChosenPieceImage> chosenPieceIter=placedImage.iterator();
+            while (chosenPieceIter.hasNext()){
+                ChosenPieceImage tempChosenPiece=chosenPieceIter.next();
+                root.getChildren().remove(tempChosenPiece.imageView);
+            }
+            placedImage.clear();
+            placement="";
+        });
 
         //Creating a horizontal box with play and reset buttons
         HBox buttons = new HBox();
-        buttons.setSpacing(20);
-        buttons.getChildren().addAll(playButton,resetButton);
+        buttons.setSpacing(5);
+        buttons.setPadding(new Insets(20, 0, 10, 5));
+        buttons.getChildren().addAll(playButton,resetButton,hintButton);
+
+
 
         //Creating a grid pane to place the tiles in 2-D fashion (left->right; top->bottom)
         GridPane paneBoard = new GridPane();
@@ -237,7 +260,7 @@ public class  Board extends Application {
 
                 }
                 else{
-                    Tile temp = new Tile(i,j);
+                    Tile temp = new Tile(j,i);
                     boardArray.add(temp);
                     //System.out.println(boardArray.get(i * j));
                     paneBoard.add(temp, j, i, 1, 1);
@@ -245,49 +268,25 @@ public class  Board extends Application {
             }
         }
 
-        //Creating the rotate button with "rotate.png" image beside the text
-        button rotateButton = new button("-fx-font: 12 arial; -fx-base: #bcd4e6;", "Rotate");
-        Image imageRotate = new Image(Board.class.getResource("assets/rotate.png" ).toString());
-        ImageView imageRotateView = new ImageView();
-        imageRotateView.setFitWidth(10);
-        imageRotateView.setFitHeight(10);
-        imageRotateView.setImage(imageRotate);
-        rotateButton.setGraphic(imageRotateView);
 
-        //Creating an image view to display the selected piece
 
-        //ChosenPieceImage chosenPieceImage = new ChosenPieceImage(this);
 
-        //Creating a horizontal box to display the chosen piece and rotate button
-        HBox chosenPiece = new HBox();
-        chosenPiece.setCache(false);
-        chosenPiece.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;"
-                + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
-                + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
-        chosenPiece.setSpacing(10);
-        chosenPiece.getChildren().addAll(rotateButton);
-        chosenPiece.setAlignment(Pos.CENTER);
 
-        /*
-        //Captures "rotate" button click event and uses math to change orientation of piece
-        rotateButton.setOnAction(new EventHandler<ActionEvent>() {
-            ChosenPieceImage selectedPiece=null;
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                 orientation = (orientation+ 1 )% 4;
-                 if (selectedPiece!=null){
-                     selectedPiece.setRotate(90 * orientation);
-                 }
-            }
-        });
-         */
         VBox challengePiece = new VBox();
         //Creating a vertical box to display the "challenge" button and the Challenge.
         VBox challenge = new VBox();
-        challenge.setPrefSize(200,200);
-        challenge.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;"
+        Text startText=new Text("Start Area: ");
+        Text hintText=new Text("(Click right mouse to rotate piece!)");
+        hintText.setFont(Font.font ("Tahoma", 14));
+        startText.setFont(Font.font ("Tahoma", 20));
+        startText.setFill(Color.GREY);
+        hintText.setFill(Color.GREY);
+        challenge.setPrefSize(300,300);
+        challenge.setStyle("-fx-padding: 5;" + "-fx-border-style: solid inside;"
                 + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
+        challenge.getChildren().addAll(startText,hintText);
+        challenge.setAlignment(Pos.TOP_LEFT);
 
 
         // -------------------------------------Task 8------------------------------------------------------------------------
@@ -295,26 +294,17 @@ public class  Board extends Application {
         // Lines from random generation to challenge.Button inclusive
         // Challenge Virtual
         Random rand = new Random();
-        // Challenge button
-        // Random is just added for testing
-        button challengeButton = new button("-fx-font: 12 arial; -fx-base: #bcd4e6;", "Different Challenge");
 
-        // This just verifies that the challenge button is being pressed
-        // In the future it will be using the fileScraper method to return an appropriate value
-        challengeButton.setOnAction(e-> System.out.println(rand.nextInt(5)));
-
-        challenge.getChildren().add(challengeButton);
 
         //Vertically aligns buttons, chosenPiece and challenge
         // A test sample of challenges
         String[] challengesList = {"RRRBWBBRB","RRBBBBGGB","RRRRRWRWW","RRRBWBBRB"};
 
         // This challenge button generates a new challenge grid on mouseclick
-        challengeButton.setOnAction(e-> {
-            challenge.getChildren().clear();
-            challenge.getChildren().add(challengeButton);
+        playButton.setOnAction(e-> {
             challengePiece.getChildren().clear();
-            challengeGridVisualiser((challengesList[rand.nextInt(challengesList.length)]),challengePiece);
+            challengeString=challengesList[rand.nextInt(challengesList.length)];
+            challengeGridVisualiser(challengeString,challengePiece);
             challengePiece.setLayoutX(boardArray.get(12).getLayoutX());
             challengePiece.setLayoutY(boardArray.get(12).getLayoutY());
             challengePiece.setBlendMode(BlendMode.MULTIPLY);
@@ -323,12 +313,13 @@ public class  Board extends Application {
 
         // Looks like vertically aligns playButton, chosenPiece and challenge
         VBox vboxRight = new VBox();
-        vboxRight.getChildren().addAll( buttons,chosenPiece,challenge);
+        //vboxRight.setSpacing(5);
+        vboxRight.getChildren().addAll( buttons,challenge);
 
-        //Horizontally aligns board and the above vertically aligned box.
+        //Horizontally aligns board and vboxRight
         HBox hboxTop = new HBox();
         hboxTop.setSpacing(paneBoard.getMaxWidth());
-        hboxTop.setSpacing(50);
+        hboxTop.setSpacing(5);
         hboxTop.getChildren().addAll(paneBoard, vboxRight);
 
         //Creates a grid to hold the pieces
@@ -353,22 +344,17 @@ public class  Board extends Application {
             //Captures mouse click event and replaces chosen piece image in chose piece image view.
             view.setOnMouseClicked(( MouseEvent event ) ->
             { if (isPlaced) {
-                    ChosenNum= (int)message-97;
-                    //chosenPieceImage.imageView.setImage(img);
-                    //chosenPieceImage.imageView.setLayoutX(700);
-                    //chosenPieceImage.imageView.setLayoutY(200);
-                    //chosenPieceImage.imageView.setFitWidth(chosenPieceImage.imageView.getImage().getWidth() * 0.7);
-                    //chosenPieceImage.imageView.setFitHeight(chosenPieceImage.imageView.getImage().getHeight() * 0.7);
-                    ChosenPieceImage temp_chosenPieceImage=new ChosenPieceImage((int)message-97,this);
+                    //ChosenType= message;
+                    ChosenPieceImage temp_chosenPieceImage=new ChosenPieceImage(message,this);
                     temp_chosenPieceImage.imageView.setImage(img);
-                    temp_chosenPieceImage.imageView.setLayoutX(700);
-                    temp_chosenPieceImage.imageView.setLayoutY(200);
+                    temp_chosenPieceImage.imageView.setLayoutX(680);
+                    temp_chosenPieceImage.imageView.setLayoutY(180);
                     temp_chosenPieceImage.imageView.setFitWidth(temp_chosenPieceImage.imageView.getImage().getWidth() * 0.7);
                     temp_chosenPieceImage.imageView.setFitHeight(temp_chosenPieceImage.imageView.getImage().getHeight() * 0.7);
                     root.getChildren().add(temp_chosenPieceImage.imageView);
-                    root.getChildren().get(1).toFront();
-                    placedImage.add(temp_chosenPieceImage);
-                    //System.out.println(placedImage.size());
+                    temp_chosenPieceImage.imageView.toFront();
+                    //placedImage.add(temp_chosenPieceImage);
+                    System.out.println(placedImage.size());
                     isPlaced = false;
                 }
                 else{
@@ -382,7 +368,7 @@ public class  Board extends Application {
 
         //Creating a vertical box to hold the ten different pieces which are set in a grid.
         VBox vboxPieces = new VBox();
-        vboxPieces.setStyle("-fx-padding: 10;" + "-fx-border-style: solid inside;"
+        vboxPieces.setStyle("-fx-padding: 5;" + "-fx-border-style: solid inside;"
                 + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
         vboxPieces.getChildren().add(pane);
@@ -394,7 +380,7 @@ public class  Board extends Application {
 
         //Creating a root node and aligning vertically the "hboxTop" and "hboxBottom".
         //Group root = new Group();
-        challengePiece.toFront();
+        //challengePiece.toFront();
         root.getChildren().addAll(new VBox(hboxTop, hboxBottom),challengePiece);
 
         return root;
@@ -406,21 +392,27 @@ public class  Board extends Application {
     //Author: Ranjth Raj
     //Ron: should add setOnMouseReleased() event to make the piece place in the nearest location
     private class ChosenPieceImage extends ImageView{
-        int typeNum;
+        char type;
         Board board;
         private double mouseX;
         private double mouseY;
         ImageView imageView;
+        Can can=new Can();
 
-        public ChosenPieceImage(int typeNum,Board board){
-            this.typeNum=typeNum;
+        public ChosenPieceImage(char type,Board board){
+            this.type=type;
             this.board=board;
             imageView=new ImageView();
+            imageView.setBlendMode(BlendMode.MULTIPLY);
             imageView.setOnMousePressed(event->{
                 MouseButton button = event.getButton();
                 if (button==MouseButton.PRIMARY){
                     mouseX = event.getSceneX();
                     mouseY = event.getSceneY();
+                    //show the remove area
+                    //can.setLayoutY(0);
+                    can.setLayoutX(BOARD_WIDTH-80);
+                    root.getChildren().addAll(can);
                 }else {
                     double angle=imageView.getRotate();
                     imageView.setRotate(angle+90);
@@ -430,35 +422,111 @@ public class  Board extends Application {
             imageView.setOnMouseDragged(event->{
                 //System.out.println(event.getSceneX());
                 //imageView.toFront();
-                double movementX = event.getSceneX() - mouseX;
-                double movementY = event.getSceneY() - mouseY;
-                //imageView.setFitWidth(imageView.getImage().getWidth() * 0.7);
-                //imageView.setFitHeight(imageView.getImage().getHeight() * 0.7);
-                imageView.setLayoutX(imageView.getLayoutX()+movementX);
-                imageView.setLayoutY(imageView.getLayoutY()+movementY);
-                mouseX=event.getSceneX();
-                mouseY=event.getSceneY();
+                MouseButton button = event.getButton();
+                if (button==MouseButton.PRIMARY){
+                    double movementX = event.getSceneX() - mouseX;
+                    double movementY = event.getSceneY() - mouseY;
+                    imageView.setLayoutX(imageView.getLayoutX()+movementX);
+                    imageView.setLayoutY(imageView.getLayoutY()+movementY);
+                    mouseX=event.getSceneX();
+                    mouseY=event.getSceneY();
+                }
             });
             imageView.setOnMouseReleased(event -> {
+                Tile nearLoc=null;
                 MouseButton button = event.getButton();
                 if (button==MouseButton.PRIMARY){
                     mouseX = imageView.getLayoutX();
                     mouseY= imageView.getLayoutY();
-                    Tile nearLoc=board.findNearestTile(mouseX,mouseY);
+
+                    // if drag the piece to the remove area, remove it
+                    if (mouseX>700){
+                        for (int i=0;i<placement.length();i++){
+                            if (placement.charAt(i)==type){
+                                String replece1=placement.substring(0,i);
+                                String replece2=placement.substring(i+4);
+                                placement=replece1+replece2;
+                                break;
+                            }
+                        }
+                        placedImage.remove(this);
+                        root.getChildren().remove(this.imageView);
+                    }
+
                     double angle=imageView.getRotate();
-                    if (angle%180==90&&(imageView.getFitWidth()-imageView.getFitHeight())%140==70){
-                        imageView.setLayoutX(nearLoc.getLayoutX()-35);
-                        imageView.setLayoutY(nearLoc.getLayoutY()-35);
-                    }else {
+                    //Tile nearLoc=board.findNearestTile(mouseX,mouseY);
+                    if (angle%180==90){
+                        nearLoc=board.findNearestTile(mouseX+(imageView.getFitWidth()-imageView.getFitHeight())/2,mouseY-(imageView.getFitWidth()-imageView.getFitHeight())/2);
+                        imageView.setLayoutX(nearLoc.getLayoutX()-(imageView.getFitWidth()-imageView.getFitHeight())/2);
+                        imageView.setLayoutY(nearLoc.getLayoutY()+(imageView.getFitWidth()-imageView.getFitHeight())/2);
+                    }else{
+                        nearLoc=board.findNearestTile(mouseX,mouseY);
                         imageView.setLayoutX(nearLoc.getLayoutX());
                         imageView.setLayoutY(nearLoc.getLayoutY());
                     }
 
-                }
+                    //generate the placement string and verify it
+                    int x=nearLoc.posX;
+                    int y=nearLoc.posY;
+                    int orientation=(int)(imageView.getRotate()/90)%4;
+                    String tempPlacement=""+type+x+y+orientation;
+                    System.out.println(tempPlacement);
 
+                    //edit palcement when put the piece on the board
+                    if (placedImage.contains(this)){
+                        for (int i=0;i<placement.length();i++){
+                            if (placement.charAt(i)==type){
+                                String replece1=placement.substring(0,i);
+                                String replece2=placement.substring(i+4);
+                                placement=replece1+tempPlacement+replece2;
+                                break;
+                            }
+                        }
+                    }else {
+                        placement=placement+tempPlacement;
+                        placedImage.add(this);
+                    }
+                    System.out.println(placement+" overlap: "+isPlacementStringValid(placement)+" challenge: "+FocusGame.verifyChallenge(tempPlacement,challengeString));
+                    System.out.println("challenge String :"+challengeString);
+
+                    //if placement is invalid, placement string should be the original one and move the piece to the start area
+                    if (isPlacementStringValid(placement)==false||FocusGame.verifyChallenge(tempPlacement,challengeString)==true){
+                        for (int i=0;i<placement.length();i++){
+                            if (placement.charAt(i)==type){
+                                String replece1=placement.substring(0,i);
+                                String replece2=placement.substring(i+4);
+                                placement=replece1+replece2;
+                                break;
+                            }
+                        }
+                        imageView.setLayoutX(680);
+                        imageView.setLayoutY(180);
+                        placedImage.remove(this);
+                    }
+                }
+                root.getChildren().remove(can);
             });
         }
     }
+
+
+    // vertical box of remove area
+    private class  Can extends VBox{
+        public Can(){
+            Image canImg = new Image(Board.class.getResource("assets/can.png" ).toString());
+            this.setPrefSize(100,BOARD_HEIGHT-50);
+            ImageView viewCan= new ImageView();
+            viewCan.setImage(canImg);
+            viewCan.setFitWidth(50);
+            viewCan.setFitHeight(50);
+            this.getChildren().addAll(viewCan);
+            this.setAlignment(Pos.CENTER);
+            this.setStyle(" -fx-background-color: rgba(224,0,0,0.55);" + "-fx-border-radius: 5;" + "-fx-background-radius: 10;" );
+        }
+    }
+
+
+
 
     //Author: Ranjth Raj
     //Task 7
@@ -472,7 +540,7 @@ public class  Board extends Application {
             posY = y;
             //Creating a Pane to visualize a rectangle.
             Pane rect = new Pane();
-            rect.setStyle("-fx-border-style: solid;-fx-background-color: CAC9CC; -fx-min-width: 70; -fx-min-height:70; -fx-max-width:70; -fx-max-height: 70");
+            rect.setStyle("-fx-border-style: solid;-fx-background-color: #D5D5D5; -fx-min-width: 70; -fx-min-height:70; -fx-max-width:70; -fx-max-height: 70");
 
 
             getChildren().add(rect);
