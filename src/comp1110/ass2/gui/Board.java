@@ -34,7 +34,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
+import org.junit.Assert;
+import org.junit.Test;
 
 
 import java.util.*;
@@ -94,6 +95,24 @@ public class  Board extends Application {
         --> If exists, repeat task 8.
     */
 
+    //---------------------------------Task 11---------------------------------------------------------------------------
+    //Author: Ranjth
+    public static String generateChallenege(){
+        Random rand = new Random();
+        String challenge = "";
+        String colors = "RBWG";
+        boolean containsSolution = false;
+
+        while (!containsSolution) {
+            for (int i = 0; i < 9; i++)
+                challenge += colors.charAt(rand.nextInt(colors.length()));
+
+            if (FocusGame.getSolution(challenge) != null) {
+                containsSolution = true;
+            }
+        }
+        return challenge;
+    }
 
 
     // Author: Victor
