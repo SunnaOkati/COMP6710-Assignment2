@@ -95,25 +95,6 @@ public class  Board extends Application {
         --> If exists, repeat task 8.
     */
 
-    //---------------------------------Task 11---------------------------------------------------------------------------
-    //Author: Ranjth
-    public static String generateChallenege(){
-        Random rand = new Random();
-        String challenge = "";
-        String colors = "RBWG";
-        boolean containsSolution = false;
-
-        while (!containsSolution) {
-            for (int i = 0; i < 9; i++)
-                challenge += colors.charAt(rand.nextInt(colors.length()));
-
-            if (FocusGame.getSolution(challenge) != null) {
-                containsSolution = true;
-            }
-        }
-        return challenge;
-    }
-
 
     // Author: Victor
     // Task 8
@@ -437,7 +418,7 @@ public class  Board extends Application {
                 MouseButton button = event.getButton();
                 if (button==MouseButton.PRIMARY){
                     mouseX = imageView.getLayoutX();
-                    mouseY= imageView.getLayoutY();
+                    mouseY= imageView .getLayoutY();
 
                     // if drag the piece to the remove area, remove it
                     if (mouseX>700){
