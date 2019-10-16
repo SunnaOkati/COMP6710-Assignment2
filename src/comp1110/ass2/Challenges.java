@@ -218,7 +218,7 @@ public class Challenges {
             }
 
             //Find the co-ordinates in the board which are yet to be filled
-            Location empty = FocusGame.findEmpty(boardState);
+            Location empty = FocusGame.findEmpty(boardState, 0,8,0,4);
 
             Set<String> viable = null;
             if(empty == null){
