@@ -601,7 +601,10 @@ public class FocusGame {
         while (placement.length()<40){
             //get the possible solution of the empty square
             //System.out.println(placement);
-            Location empty=FocusGame.findEmpty(boardState);
+            Location empty=FocusGame.findEmpty(boardState,3,5,1,3);
+            if (empty==null){
+                empty=FocusGame.findEmpty(boardState,0,8,0,4);
+            }
             Set<String> viablePiece=getViablePiecePlacements(placement,challenge,empty.getX(),empty.getY());
 
             //if the empty square have solution, add it to solutionStep and placement string
@@ -645,6 +648,7 @@ public class FocusGame {
             }
         }
 
+        //deal with symmetry pieces, e.g. g002 -> g000
         String newPlacement="";
         for (int i=0;i<40;i=i+4){
             String subPlacement=placement.substring(i,i+4);
@@ -670,12 +674,12 @@ public class FocusGame {
 
     //find the empty square on the board
     //@author Rong Hu
-    public static Location findEmpty(Colors[][] boardState){
+    public static Location findEmpty(Colors[][] boardState, int startX, int endX, int startY, int endY){
         int x,y;
         Location empty=null;
         boolean quit=true;
-        for (x=0;x<9 && quit;x++){
-            for (y=0;y<5&&quit;y++){
+        for (x=startX;x<=endX && quit;x++){
+            for (y=startY;y<=endY&&quit;y++){
                 if ((x==0 && y==4)||(x==8 && y==4)){
                     continue;
                 }else if (boardState[y][x]==null){

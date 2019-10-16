@@ -52,14 +52,19 @@ public class  Board extends Application {
     private static final int BOARD_HEIGHT = 700;
 
     private boolean isPlaced = true;
-    private int orientation = 0;
-    private char ChosenType=' ';
+    //private int orientation = 0;
+    //private char ChosenType=' ';
     private String placement = "";
     private String challengeString = "";
     Group root = new Group();
+    GridPane pane = new GridPane();      //the pane of pieceButtons
 
+    String rightPlacement="";
+    ChosenPieceImage next_chosenPieceImage=null;
     ArrayList<Tile> boardArray = new ArrayList<>();
     LinkedList<ChosenPieceImage> placedImage=new LinkedList<ChosenPieceImage>();
+    LinkedList<ImageView> ChosenButtons=new LinkedList<ImageView>(); //set of Chosed piece button
+
 
     // FIXME Task 7: Implement a basic playable Focus Game in JavaFX that only allows pieces to be placed in valid places
     /*use javafx to create gui and event operating code in start()
@@ -208,13 +213,95 @@ public class  Board extends Application {
         button resetButton = new button(buttonStyle, "Reset", buttonSize);
         button hintButton = new button(hintStyle, "Hint", buttonSize);
 
+        //implement hintButton: give a hint of next step
+
+        hintButton.setOnMousePressed(e-> {
+            //get the hint placement
+            String hintPlacement=Hint.giveHint(placement,rightPlacement,challengeString);
+            System.out.println("hint: "+hintPlacement);
+            //modify all the original placement
+            Iterator<ChosenPieceImage> chosenPieceIter=placedImage.iterator();
+            for (int i=0;i<placement.length();i=i+4){
+                int x=hintPlacement.charAt(i+1)-48;
+                int y=hintPlacement.charAt(i+2)-48;
+                int angle=(hintPlacement.charAt(i+3)-48)*90;
+                //get the original piece them set it to right placement
+                ChosenPieceImage tempChosenPiece=chosenPieceIter.next();
+                tempChosenPiece.imageView.setRotate(angle);
+                //set location of the modified piece
+                if (angle%180==90){
+                    tempChosenPiece.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX()-(tempChosenPiece.imageView.getFitWidth()-tempChosenPiece.imageView.getFitHeight())/2);
+                    tempChosenPiece.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY()+(tempChosenPiece.imageView.getFitWidth()-tempChosenPiece.imageView.getFitHeight())/2);
+                }else{
+                    tempChosenPiece.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX());
+                    tempChosenPiece.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY());
+                }
+            }
+            //if hint has next step, show it
+            if (hintPlacement.length()>placement.length()){
+                //get the parameter of the next step
+                String nextStep=hintPlacement.substring(hintPlacement.length()-4);
+                //System.out.println("next step: "+nextStep);
+                char type=nextStep.charAt(0);
+                int x=nextStep.charAt(1)-48;
+                int y=nextStep.charAt(2)-48;
+                int angle=(nextStep.charAt(3)-48)*90;
+                // set the img and rotate it
+                next_chosenPieceImage=new ChosenPieceImage(type,this);
+                Image img = new Image(Board.class.getResource("assets/"+String.valueOf(type)+".png" ).toString());
+                next_chosenPieceImage.imageView.setImage(img);
+                next_chosenPieceImage.imageView.setFitWidth(next_chosenPieceImage.imageView.getImage().getWidth() * 0.7);
+                next_chosenPieceImage.imageView.setFitHeight(next_chosenPieceImage.imageView.getImage().getHeight() * 0.7);
+                next_chosenPieceImage.imageView.setRotate(angle);
+                //set location of the modified piece
+                if (angle%180==90){
+                    next_chosenPieceImage.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX()-(next_chosenPieceImage.imageView.getFitWidth()-next_chosenPieceImage.imageView.getFitHeight())/2);
+                    next_chosenPieceImage.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY()+(next_chosenPieceImage.imageView.getFitWidth()-next_chosenPieceImage.imageView.getFitHeight())/2);
+                }else{
+                    next_chosenPieceImage.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX());
+                    next_chosenPieceImage.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY());
+                }
+                root.getChildren().add(next_chosenPieceImage.imageView);
+            }
+
+        });
+
+        //when release mouse,show the original set
+        hintButton.setOnMouseReleased(e->{
+            Iterator<ChosenPieceImage> oriPieceIter=placedImage.iterator();
+            for (int i=0;i<placement.length();i=i+4){
+                int x=placement.charAt(i+1)-48;
+                int y=placement.charAt(i+2)-48;
+                int angle=(placement.charAt(i+3)-48)*90;
+                //get the original piece them set it to right placement
+                ChosenPieceImage tempChosenPiece=oriPieceIter.next();
+                tempChosenPiece.imageView.setRotate(angle);
+                //set location of the modified piece
+                if (angle%180==90){
+                    tempChosenPiece.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX()-(tempChosenPiece.imageView.getFitWidth()-tempChosenPiece.imageView.getFitHeight())/2);
+                    tempChosenPiece.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY()+(tempChosenPiece.imageView.getFitWidth()-tempChosenPiece.imageView.getFitHeight())/2);
+                }else{
+                    tempChosenPiece.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX());
+                    tempChosenPiece.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY());
+                }
+            }
+            if (next_chosenPieceImage!=null){
+                root.getChildren().remove(next_chosenPieceImage.imageView);
+                next_chosenPieceImage=null;
+            }
+
+        });
+
         //implement resetButton: remove all the piece on the board
         resetButton.setOnAction(e-> {
             Iterator<ChosenPieceImage> chosenPieceIter=placedImage.iterator();
             while (chosenPieceIter.hasNext()){
                 ChosenPieceImage tempChosenPiece=chosenPieceIter.next();
                 root.getChildren().remove(tempChosenPiece.imageView);
+                int i=tempChosenPiece.type-97;
+                pane.add(ChosenButtons.get(i), i %5, i/5,1,1);
             }
+
             placedImage.clear();
             placement="";
         });
@@ -248,8 +335,6 @@ public class  Board extends Application {
                 }
             }
         }
-
-
 
 
 
@@ -289,6 +374,8 @@ public class  Board extends Application {
             challengePiece.setLayoutX(boardArray.get(12).getLayoutX());
             challengePiece.setLayoutY(boardArray.get(12).getLayoutY());
             challengePiece.setBlendMode(BlendMode.MULTIPLY);
+            rightPlacement= FocusGame.getSolution(challengeString);
+            //System.out.println("solution: "+ rightPlacement);
             });
 
 
@@ -304,7 +391,7 @@ public class  Board extends Application {
         hboxTop.getChildren().addAll(paneBoard, vboxRight);
 
         //Creates a grid to hold the pieces
-        GridPane pane = new GridPane();
+
         pane.setAlignment(Pos.CENTER_LEFT);
         pane.setHgap(10);
         pane.setVgap(10);
@@ -320,7 +407,7 @@ public class  Board extends Application {
             view.setFitHeight(img.getHeight()/2);
             view.setFitWidth(img.getWidth()/2);
             char message = pieces[i].charAt(0);
-
+            ChosenButtons.add(i,view);
 
             //Captures mouse click event and replaces chosen piece image in chose piece image view.
             view.setOnMouseClicked(( MouseEvent event ) ->
@@ -329,13 +416,12 @@ public class  Board extends Application {
                     ChosenPieceImage temp_chosenPieceImage=new ChosenPieceImage(message,this);
                     temp_chosenPieceImage.imageView.setImage(img);
                     temp_chosenPieceImage.imageView.setLayoutX(680);
-                    temp_chosenPieceImage.imageView.setLayoutY(180);
+                    temp_chosenPieceImage.imageView.setLayoutY(150);
                     temp_chosenPieceImage.imageView.setFitWidth(temp_chosenPieceImage.imageView.getImage().getWidth() * 0.7);
                     temp_chosenPieceImage.imageView.setFitHeight(temp_chosenPieceImage.imageView.getImage().getHeight() * 0.7);
                     root.getChildren().add(temp_chosenPieceImage.imageView);
                     temp_chosenPieceImage.imageView.toFront();
-                    //placedImage.add(temp_chosenPieceImage);
-                    System.out.println(placedImage.size());
+                    pane.getChildren().remove(view);
                     isPlaced = false;
                 }
                 else{
@@ -361,9 +447,7 @@ public class  Board extends Application {
 
         //Creating a root node and aligning vertically the "hboxTop" and "hboxBottom".
         //Group root = new Group();
-        //challengePiece.toFront();
         root.getChildren().addAll(new VBox(hboxTop, hboxBottom),challengePiece);
-
         return root;
     }
 
@@ -422,6 +506,7 @@ public class  Board extends Application {
 
                     // if drag the piece to the remove area, remove it
                     if (mouseX>700){
+                        //update placement string
                         for (int i=0;i<placement.length();i++){
                             if (placement.charAt(i)==type){
                                 String replece1=placement.substring(0,i);
@@ -430,7 +515,11 @@ public class  Board extends Application {
                                 break;
                             }
                         }
+
                         placedImage.remove(this);
+                        //show the Piecebutton that is corresponding with the removed piece
+                        int i=this.type-97;
+                        pane.add(ChosenButtons.get(i), i %5, i/5,1,1);
                         root.getChildren().remove(this.imageView);
                     }
 
@@ -451,7 +540,6 @@ public class  Board extends Application {
                     int y=nearLoc.posY;
                     int orientation=(int)(imageView.getRotate()/90)%4;
                     String tempPlacement=""+type+x+y+orientation;
-                    System.out.println(tempPlacement);
 
                     //edit palcement when put the piece on the board
                     if (placedImage.contains(this)){
@@ -467,7 +555,7 @@ public class  Board extends Application {
                         placement=placement+tempPlacement;
                         placedImage.add(this);
                     }
-                    System.out.println(placement+" overlap: "+isPlacementStringValid(placement)+" challenge: "+FocusGame.verifyChallenge(tempPlacement,challengeString));
+                    //System.out.println(placement+" overlap: "+isPlacementStringValid(placement)+" challenge: "+FocusGame.verifyChallenge(tempPlacement,challengeString));
                     System.out.println("challenge String :"+challengeString);
 
                     //if placement is invalid, placement string should be the original one and move the piece to the start area
@@ -481,7 +569,7 @@ public class  Board extends Application {
                             }
                         }
                         imageView.setLayoutX(680);
-                        imageView.setLayoutY(180);
+                        imageView.setLayoutY(150);
                         placedImage.remove(this);
                     }
                 }
@@ -489,6 +577,7 @@ public class  Board extends Application {
             });
         }
     }
+
 
 
     // vertical box of remove area
