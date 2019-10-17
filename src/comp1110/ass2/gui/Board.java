@@ -113,6 +113,7 @@ public class  Board extends Application {
         HBox rowMid = new HBox(HBOXWIDTH);
         HBox rowBot = new HBox(HBOXWIDTH);
 
+
         // Makes the invisible grid layout for each colour
         /*
         ____________________
@@ -642,6 +643,10 @@ public class  Board extends Application {
         vBox.setTranslateY(500);
         primaryStage.setTitle("IQ-Focus");
 
+
+        ImageView img = new ImageView("comp1110/ass2/gui/assets/instruction-background.png");
+
+
         Text info = new Text(     "Press the play button to display a new challenge\n" +
                                   "Hold the Hint button for a new hint\n" +
                                   "Clicking on a piece will send it to piece box, there you can rotate it by clicking the right hand mouse button\n" +
@@ -651,6 +656,7 @@ public class  Board extends Application {
         StackPane root = new StackPane();
         root.getChildren().add(info);
         root.getChildren().add(vBox);
+        root.getChildren().add(img);
         Scene scene = new Scene(root,933,700);
         primaryStage.setScene(scene);
         Scene secondScene = new Scene(createContent());

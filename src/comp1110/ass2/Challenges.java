@@ -9,7 +9,7 @@ public class Challenges {
     private int challengeNumber;          // The problem number from the original board game
     private String colorConstraint;    // The color constraint of 3 * 3 matrix.
     private static Challenges[] challenge = new Challenges[120]; //List of challenges.
-    // This is for the playButton to acccess
+    // This is for the playButton to access
     public static String[] challengesList = {
             "RRRBWBBRB", "RWWRRRWWW", "BGGWGGRWB", "WRRWRRGWW", "GWRGWWGGG", "GRWGRWWWW",
             "RGGRGGRRB", "GGGRGRBBB", "RGGGGRBGG", "BBBWRWGGG", "WBWWWWRWG", "BBGRWBRRB",
