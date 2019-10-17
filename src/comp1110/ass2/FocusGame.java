@@ -496,6 +496,8 @@ public class FocusGame {
                 boardState[1+i][3+j]=constrain;
             }
         }
+        if (!placement.isEmpty())
+            boardState = FocusGame.fillBoard(placement, boardState);
 
         Set<String> viablePiece=new HashSet<String>();
 
@@ -517,7 +519,6 @@ public class FocusGame {
                         int width=tempPiece.length;
                         boolean sig = true;
                         boolean sig2 = false;
-
                         for (int j = 0; j < width; j++) {
                             for (int k = 0; k < length; k++) {
                                 if (tempPiece[j][k] == null){
@@ -609,6 +610,7 @@ public class FocusGame {
      * the challenge.
      */
 
+
     //@author Rong Hu
     public static String getSolution(String challenge) {
         // FIXME Task 9: determine the solution to the game, given a particular challenge
@@ -618,6 +620,11 @@ public class FocusGame {
 
         //start first step at (4,2)
         Set<String> firstStep = getViablePiecePlacements2(placement,challenge,4,2);
+
+        //Checks whether any piece placement is valid in the specified co-ordinates for given challenge
+        if ( firstStep == null || firstStep.size() == 0)
+            return "";
+
         solutionStep.add(firstStep);
         Iterator<String> iter=firstStep.iterator();
         placement=iter.next();
@@ -632,7 +639,6 @@ public class FocusGame {
             }
             Set<String> viablePiece=getViablePiecePlacements(placement,challenge,empty.getX(),empty.getY());
 
-
             //if the empty square have solution, add it to solutionStep and placement string
             if (viablePiece!=null){
                 solutionStep.add(viablePiece);
@@ -640,12 +646,20 @@ public class FocusGame {
                 String nextStep=iter.next();
                 placement=placement+nextStep;
                 boardState=FocusGame.fillBoard(nextStep,boardState);
+                //System.out.println("Piece placement: " + nextStep);
             } else {
                 boolean change=false;
                 String tempPlacement="";
                 while (change==false) {
                     //remove the former last step
+                    //System.out.println("Piece removal: ");
+
+                    if(solutionStep.size() == 0){
+                        return "";
+                    }
+
                     Set<String> placementSet = solutionStep.get(solutionStep.size() - 1);
+
                     String lastPiece = placement.substring(placement.length() - 4);
                     placementSet.remove(lastPiece);
                     boardState=FocusGame.removeBoard(lastPiece,boardState);
@@ -681,8 +695,8 @@ public class FocusGame {
             }
         }
 
-        System.out.println("challenge: "+challenge);
-        System.out.println("newplacement: "+newPlacement);
+        //System.out.println("challenge: "+challenge);
+        //System.out.println("newplacement: "+newPlacement);
 
         //System.out.println("placement: "+placement);
         //return null;
@@ -921,7 +935,15 @@ public class FocusGame {
                                 }
                             }
                         }
-                        if (sig==true && sig2==true && isDeadCell(tempPlace)!=true){
+                        if (sig == true && sig2 == true && isDeadCell(tempPlace) != true) {
+                            if ((tempPlace.charAt(0) == 'g' || tempPlace.charAt(0) == 'f') && (tempPlace.charAt(3) == '2' || tempPlace.charAt(3) == '3')) {
+                                if (tempPlace.charAt(3) == '2') {
+                                    tempPlace = tempPlace.substring(0, 3) + "0";
+
+                                } else if (tempPlace.charAt(3) == '3') {
+                                    tempPlace = tempPlace.substring(0, 3) + "1";
+                                }
+                            }
                             viablePiece.add(tempPlace);
                         }
                     }
@@ -932,6 +954,7 @@ public class FocusGame {
         if (viablePiece.isEmpty()==true){
             return null;
         }
+
         return viablePiece;
     }
 
@@ -972,7 +995,7 @@ public class FocusGame {
 
     //fill the cells based on the input placement string(4 characters)
     //@author Rong Hu
-    static public Colors[][] fillBoard(String placement,Colors[][] boardState){
+    static public Colors[][] fillBoard(String placement,Colors[][] board){
         char type=placement.charAt(0);
         int x=(int)placement.charAt(1)-48;
         int y=(int)placement.charAt(2)-48;
@@ -984,11 +1007,12 @@ public class FocusGame {
             for (int k=0;k<length;k++){
                 Location rotateLoc=PieceType.rotateXY(k,j,length,width,orientation);
                 if (tempPiece[j][k]!=null){
-                    boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]=tempPiece[j][k];
+                    //System.out.println("Entered: "+ tempPiece[j][k]);
+                    board[y+rotateLoc.getY()][x+rotateLoc.getX()]=tempPiece[j][k];
                 }
             }
         }
-        return boardState;
+        return board;
     }
 
     //remove the cells based on the input placement string(4 characters)
