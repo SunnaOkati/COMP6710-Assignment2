@@ -40,4 +40,10 @@ public class PopWindow {
         window.setScene(popScene);
         window.showAndWait();
     }
+    static String guidance="Press the play button to display a new challenge\n" +
+            "Hold the Hint button for a new hint\n" +
+            "Clicking on a piece will send it to piece box\nThere you can rotate it by clicking the right hand mouse button\n" +
+            "From there, you can drag the piece to the board\nOr into the bin if you selected it by accident\n" +
+            "After completing the game you can reset by pressing the reset button\nClick play for a new challenge!\n" +
+            "Have fun!!!" ;
 }
