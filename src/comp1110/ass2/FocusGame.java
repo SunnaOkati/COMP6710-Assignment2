@@ -500,9 +500,9 @@ public class FocusGame {
         Set<String> viablePiece=new HashSet<String>();
 
         for (int t=0;t<10;t++){
-            for (int x=0;x<9;x++){
-                for (int y=0;y<5;y++){
-                    for (int d=0;d<4;d++){
+            for (int d=0;d<4;d++){
+                for (int x=findStartX((char)(t+97),d,col,row);x<=col;x++){
+                    for (int y=findStartY((char)(t+97),d,col,row);y<=row;y++){
                         String tempPlace=""+((char)(t+97))+x+y+d;
                         String newPlacement=placement.concat(tempPlace);
                         //System.out.println(newPlacement);
@@ -511,7 +511,7 @@ public class FocusGame {
                         }
 
                         //@Ron, I implemented the below method. I felt implementing this way seemed a bit clean.
-                        Colors[][] tempPiece= Piece.pieceColorArray((char)(t+97));
+                        Colors[][] tempPiece= Piece.placementToPieceArray(tempPlace);
 
                         int length=tempPiece[0].length;
                         int width=tempPiece.length;
@@ -520,6 +520,9 @@ public class FocusGame {
 
                         for (int j = 0; j < width; j++) {
                             for (int k = 0; k < length; k++) {
+                                if (tempPiece[j][k] == null){
+                                    continue;
+                                }
                                 Location rotateLoc = PieceType.rotateXY(k, j, length, width, d);
                                 //@Ron, I created the below two variables, because it is less time consuming if you call Location.getX() once
                                 // and store it for further use,
@@ -547,19 +550,47 @@ public class FocusGame {
             }
         }
 
-
         return viablePiece.isEmpty()? null: viablePiece;
     }
 
     //Author: Ranjth
     //Checks whether the co-ordinates within the challenge square(area)
     public static boolean isWithinChallengeSquare(int x, int y){
-        if ((y <=3 ) && (y >= 1))//Between second and fourth row
-            if ((x <=5 )&&(x >= 3))//Between fourth and sixth column
-                return true;
+        if ((y <=3 && y >= 1)&&(x <=5 &&x >= 3))//Y:Between second and fourth row X: Between fourth and sixth column
+            return true;
 
         return false;
     }
+
+    //find the range of X according to the type and orientation of the piece
+    public static int findStartX(char type, int orientation, int x, int y){
+        int startX;
+        String pieceString=""+type+0+0+orientation;
+        Colors[][] tempPiece= Piece.placementToPieceArray(pieceString);
+        int length=tempPiece[0].length;
+        int width=tempPiece.length;
+        if (orientation==0||orientation==2){
+            startX=x-length<0 ? 0: x-length;
+        }else {
+            startX=x-width<0 ? 0: x-width;
+        }
+        return startX;
+    }
+    public static int findStartY(char type, int orientation, int x, int y){
+        int startY;
+        String pieceString=""+type+0+0+orientation;
+        Colors[][] tempPiece= Piece.placementToPieceArray(pieceString);
+        int length=tempPiece[0].length;
+        int width=tempPiece.length;
+        if (orientation==0||orientation==2){
+            startY=y-width<0 ? 0: y-width;
+        }else {
+            startY=y-length<0 ? 0: y-length;
+        }
+        return startY;
+    }
+
+
 
     /**
      * Return the canonical encoding of the solution to a particular challenge.
