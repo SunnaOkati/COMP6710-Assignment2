@@ -33,9 +33,9 @@ declaration: >-
 # I wish to submit the following classes as entirely my own (remove this if
 # you want to just submit methods):
 class:
-   - Hint
-   - PopWindow
-   - viewer
+   - Hint.java
+   - PopWindow.java
+   - viewer.java
 
 # I wish to submit the following methods as entirely my own (remove this if
 # you want to just submit classes):
