@@ -118,7 +118,7 @@ public class Challenges {
                         }
 
                         //@Ron, I implemented the below method. I felt implementing this way seemed a bit clean.
-                        Colors[][] tempPiece= Piece.pieceColorArray((char)(t+97));
+                        Colors[][] tempPiece= Piece.placementToPieceArray(tempPlace);
 
                         int length=tempPiece[0].length;
                         int width=tempPiece.length;
