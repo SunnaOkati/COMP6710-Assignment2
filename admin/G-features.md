@@ -11,3 +11,6 @@ of our project implements the following features:
  - Implements interesting starting challenges (Task 11)
 
 additional features...
+ - Instructions to play the game
+ - Difficulty setting
+ - A reset button
