@@ -112,10 +112,13 @@ public class Challenges {
             else
                 System.out.println("No possible solution exists.");
         }
+
         return solution;
     }
 
     static Set<String> getViablePiecePlacements(String placement, String challenge, int col, int row) {
+
+
         Colors[][] boardState = new Colors[5][9];
         //fill the challenge
         int count=0;
@@ -355,6 +358,5 @@ public class Challenges {
 
         //System.out.println("Debugging: "+ FocusGame.getSolution("GGWRBGGWW"));
         System.out.println("The solution for the challenge is "+ generateChallenege());
-
     }
 }

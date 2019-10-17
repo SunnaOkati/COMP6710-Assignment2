@@ -26,6 +26,7 @@ public class FocusGame {
      * @return True if the piece placement is well-formed
      */
 
+    // Author: Ranjth
     static boolean isPiecePlacementWellFormed(String piecePlacement) {
         // FIXME Task 2: determine whether a piece placement is well-formed
         
@@ -57,6 +58,8 @@ public class FocusGame {
      * @param placement A string describing a placement of one or more pieces
      * @return True if the placement is well-formed
      */
+
+    // Author: Ranjth
     public static boolean isPlacementStringWellFormed(String placement) {
         // FIXME Task 3: determine whether a placement is well-formed
         /*
@@ -457,6 +460,24 @@ public class FocusGame {
         return true;
     }
 
+    // Author: Ranjth
+    /*
+    * Fills the board's state wrt to given challenge constraint(encoding)
+     */
+    public static Colors[][] fillingChallenge(String challenge){
+
+        Colors[][] boardState = new Colors[5][9];
+        int count=0;
+        for (int i=0;i<3;i++){
+            for (int j=0;j<3;j++){
+                Colors constrain=Colors.getColors(challenge.charAt(count));
+                count++;
+                boardState[1+i][3+j]=constrain;
+            }
+        }
+        return boardState;
+    }
+
 
     /**
      * Given a string describing a placement of pieces and a string describing
@@ -487,15 +508,8 @@ public class FocusGame {
     static Set<String> getViablePiecePlacements(String placement, String challenge, int col, int row) {
         // FIXME Task 6: determine the set of all viable piece placements given existing placements and a challenge
         Colors[][] boardState = new Colors[5][9];
-        //fill the challenge
-        int count=0;
-        for (int i=0;i<3;i++){
-            for (int j=0;j<3;j++){
-                Colors constrain=Colors.getColors(challenge.charAt(count));
-                count++;
-                boardState[1+i][3+j]=constrain;
-            }
-        }
+        boardState = fillingChallenge(challenge);
+
         if (!placement.isEmpty())
             boardState = FocusGame.fillBoard(placement, boardState);
 
@@ -865,15 +879,8 @@ public class FocusGame {
     //@author Rong Hu
     static Set<String> getViablePiecePlacements2(String placement, String challenge, int col, int row) {
         Colors[][] boardState = new Colors[5][9];
-        //fill the challenge
-        int count=0;
-        for (int i=0;i<3;i++){
-            for (int j=0;j<3;j++){
-                Colors constrain=Colors.getColors(challenge.charAt(count));
-                count++;
-                boardState[1+i][3+j]=constrain;
-            }
-        }
+        boardState = fillingChallenge(challenge);
+
         Set<String> viablePiece=new HashSet<String>();
 
         // FIXME Set by Victor
