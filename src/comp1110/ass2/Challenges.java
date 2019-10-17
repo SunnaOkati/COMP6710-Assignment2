@@ -34,6 +34,16 @@ public class Challenges {
 // comment that I'm adding to commit presentation.pdf
 //    };
 
+    /*
+    * Generated randomly and sorted in descending order of difficulty levels.
+    * Difficulty levels are defined based on number of solutions possible for one given challenge
+    * (i.e., A challenge with most number of solutions is considered easy.)
+    * Row 1-2 ---> 1 Solution
+    * Row 3-4 ---> 2 Solutions
+    * Row 5-6 ---> 3 Solutions
+    * Row 7-8 ---> >3 Solutions
+     */
+
     public static String[] randomChallengeList = {
             "RRRRRRWBB", "RRRRRBRWB", "RRRRRBBBB", "RRRRRWBGW", "RRRRRWWGR",
             "RRRRRWWBG", "RRRRGGRWB", "RRRRGGWRR", "RRRRGGWWG", "RRRRGGWWW",
