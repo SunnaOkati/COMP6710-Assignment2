@@ -657,25 +657,22 @@ public class  Board extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        // Initial instructions screen
+        // Author: Victor
+        // This creates the initial screen with the information on how to play
         Font font = Font.font(72);
         String startButtonStyle = "-fx-font: 72 arial";
         Button startButton = new Button("Start!");
         startButton.setFont(font);
         startButton.setStyle(startButtonStyle);
+        // Orients the startButton
         VBox vBox = new VBox(50,startButton);
         vBox.setTranslateX(336.5);
         vBox.setTranslateY(500);
         primaryStage.setTitle("IQ-Focus");
-
-//        Image img = new Image("comp1110/ass2/gui/assets/instruction-background.png");
         ImageView view = new ImageView("comp1110/ass2/gui/assets/instruction-background.png");
         view.setFitHeight(700);
         view.setFitWidth(933);
-
-
-
-
-
         Text info = new Text("Press the play button to display a new challenge\n" +
                         "Hold the Hint button for a new hint\n" +
                         "Clicking on a piece will send it to piece box\nThere you can rotate it by clicking the right hand mouse button\n" +
