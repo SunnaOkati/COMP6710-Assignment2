@@ -1,6 +1,7 @@
 package comp1110.ass2.gui;
 
 import comp1110.ass2.FocusGame;
+import comp1110.ass2.Solution;
 import comp1110.ass2.gittest.Main;
 import java.io.*;
 import javafx.application.Application;
@@ -15,10 +16,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
@@ -44,6 +42,7 @@ import java.util.Random;
 import java.util.regex.*;
 
 import static comp1110.ass2.FocusGame.isPlacementStringValid;
+import static comp1110.ass2.Solution.SOLUTIONS;
 
 
 public class  Board extends Application {
@@ -51,6 +50,7 @@ public class  Board extends Application {
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
 
+    private int difficulty = 0;
     private boolean isPlaced = true;
     //private int orientation = 0;
     //private char ChosenType=' ';
@@ -58,6 +58,7 @@ public class  Board extends Application {
     private String challengeString = "";
     Group root = new Group();
     GridPane pane = new GridPane();      //the pane of pieceButtons
+    MenuBar menuBar = new MenuBar();
 
     String rightPlacement="";
     ChosenPieceImage next_chosenPieceImage=null;
@@ -356,20 +357,49 @@ public class  Board extends Application {
 
 
         // -------------------------------------Task 8------------------------------------------------------------------------
-        // Author: Victor
+        // @Author: Rong HU
+        //item menu that choose difficult level
+        //MenuBar menuBar = new MenuBar();
+
+        Menu menuDiff = new Menu("Difficulty");
+        //choose expert difficulty
+        ToggleGroup toggleGroup=new ToggleGroup();
+        RadioMenuItem expert= new RadioMenuItem("Expert");
+        expert.setOnAction((ActionEvent t) -> { difficulty=2;});
+        //choose junior difficulty
+        RadioMenuItem junior= new RadioMenuItem("Junior");
+        expert.setOnAction((ActionEvent t) -> {difficulty=1;});
+        //choose master difficulty
+        RadioMenuItem master= new RadioMenuItem("Master");
+        expert.setOnAction((ActionEvent t) -> { difficulty=3;});
+        //choose wizard difficulty
+        RadioMenuItem wizard= new RadioMenuItem("Wizard");
+        expert.setOnAction((ActionEvent t) -> { difficulty=4; });
+        //choose starter difficulty
+        RadioMenuItem starter= new RadioMenuItem("Starter");
+        expert.setOnAction((ActionEvent t) -> {difficulty=0; });
+        toggleGroup.getToggles().addAll(wizard,master,expert,junior,starter);
+        starter.setSelected(true);
+        menuDiff.getItems().addAll(wizard,master,expert,junior,starter);
+
+        Menu menuHelp = new Menu("Help");
+        MenuItem guidance= new MenuItem("guidance");
+        expert.setOnAction((ActionEvent t) -> { });
+        menuHelp.getItems().addAll(guidance);
+
+        menuBar.getMenus().addAll(menuDiff, menuHelp);
+
+
+
+        // Author: Victor,Rong HU
         // Lines from random generation to challenge.Button inclusive
         // Challenge Virtual
         Random rand = new Random();
 
-
-        //Vertically aligns buttons, chosenPiece and challenge
-        // A test sample of challenges
-        String[] challengesList = {"RRRBWBBRB","RRBBBBGGB","RRRRRWRWW","RRRBWBBRB"};
-
         // This challenge button generates a new challenge grid on mouseclick
         playButton.setOnAction(e-> {
             challengePiece.getChildren().clear();
-            challengeString=challengesList[rand.nextInt(challengesList.length)];
+            challengeString= SOLUTIONS[(difficulty * (SOLUTIONS.length / 5))+rand.nextInt(SOLUTIONS.length/5)].objective;
             challengeGridVisualiser(challengeString,challengePiece);
             challengePiece.setLayoutX(boardArray.get(12).getLayoutX());
             challengePiece.setLayoutY(boardArray.get(12).getLayoutY());
@@ -447,7 +477,8 @@ public class  Board extends Application {
 
         //Creating a root node and aligning vertically the "hboxTop" and "hboxBottom".
         //Group root = new Group();
-        root.getChildren().addAll(new VBox(hboxTop, hboxBottom),challengePiece);
+        root.getChildren().addAll(new VBox(hboxTop,menuBar, hboxBottom),challengePiece);
+
         return root;
     }
 

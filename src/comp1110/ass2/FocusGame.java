@@ -614,25 +614,24 @@ public class FocusGame {
     //@author Rong Hu
     public static String getSolution(String challenge) {
         // FIXME Task 9: determine the solution to the game, given a particular challenge
-        String placement="";
-        Colors[][] boardState = new Colors[5][9];
+        String placement="";                           //the solution
+        Colors[][] boardState = new Colors[5][9];          //the current state of the board
         List<Set<String>> solutionStep = new ArrayList<Set<String>>();        //store the possibility in every step solutionStep
 
-        //start first step at (4,2)
-        Set<String> firstStep = getViablePiecePlacements2(placement,challenge,4,2);
 
+        //start first step at the middle cell(4,2)
+        Set<String> firstStep = getViablePiecePlacements2(placement,challenge,4,2);
         //Checks whether any piece placement is valid in the specified co-ordinates for given challenge
         if ( firstStep == null || firstStep.size() == 0)
             return "";
-
         solutionStep.add(firstStep);
         Iterator<String> iter=firstStep.iterator();
         placement=iter.next();
         boardState=FocusGame.fillBoard(placement,boardState);
 
+
         while (placement.length()<40){
             //get the possible solution of the empty square
-            //System.out.println(placement);
             Location empty=FocusGame.findEmpty(boardState,3,5,1,3);
             if (empty==null){
                 empty=FocusGame.findEmpty(boardState,0,8,0,4);
@@ -695,7 +694,7 @@ public class FocusGame {
             }
         }
 
-        //System.out.println("challenge: "+challenge);
+        //System.out.println(challenge);
         //System.out.println("newplacement: "+newPlacement);
 
         //System.out.println("placement: "+placement);
@@ -703,6 +702,8 @@ public class FocusGame {
         placement=newPlacement;
         return placement;
     }
+
+
 
     //find the empty square on the board
     //@author Rong Hu
