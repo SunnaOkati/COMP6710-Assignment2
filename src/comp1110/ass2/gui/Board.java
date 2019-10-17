@@ -57,10 +57,14 @@ public class  Board extends Application {
     private String placement = "";
     private String challengeString = "";
     Group root = new Group();
+    GridPane pane = new GridPane();      //the pane of pieceButtons
 
     String rightPlacement="";
+    ChosenPieceImage next_chosenPieceImage=null;
     ArrayList<Tile> boardArray = new ArrayList<>();
     LinkedList<ChosenPieceImage> placedImage=new LinkedList<ChosenPieceImage>();
+    LinkedList<ImageView> ChosenButtons=new LinkedList<ImageView>(); //set of Chosed piece button
+
 
     // FIXME Task 7: Implement a basic playable Focus Game in JavaFX that only allows pieces to be placed in valid places
     /*use javafx to create gui and event operating code in start()
@@ -95,25 +99,6 @@ public class  Board extends Application {
         --> Verify whether a solution exists using getSolution() 
         --> If exists, repeat task 8.
     */
-
-    //---------------------------------Task 11---------------------------------------------------------------------------
-    //Author: Ranjth
-    public static String generateChallenege(){
-        Random rand = new Random();
-        String challenge = "";
-        String colors = "RBWG";
-        boolean containsSolution = false;
-
-        while (!containsSolution) {
-            for (int i = 0; i < 9; i++)
-                challenge += colors.charAt(rand.nextInt(colors.length()));
-
-            if (FocusGame.getSolution(challenge) != null) {
-                containsSolution = true;
-            }
-        }
-        return challenge;
-    }
 
 
     // Author: Victor
@@ -229,7 +214,7 @@ public class  Board extends Application {
         button hintButton = new button(hintStyle, "Hint", buttonSize);
 
         //implement hintButton: give a hint of next step
-        LinkedList<ChosenPieceImage> tempplacedImage=placedImage;
+
         hintButton.setOnMousePressed(e-> {
             //get the hint placement
             String hintPlacement=Hint.giveHint(placement,rightPlacement,challengeString);
@@ -254,10 +239,34 @@ public class  Board extends Application {
             }
             //if hint has next step, show it
             if (hintPlacement.length()>placement.length()){
-
+                //get the parameter of the next step
+                String nextStep=hintPlacement.substring(hintPlacement.length()-4);
+                //System.out.println("next step: "+nextStep);
+                char type=nextStep.charAt(0);
+                int x=nextStep.charAt(1)-48;
+                int y=nextStep.charAt(2)-48;
+                int angle=(nextStep.charAt(3)-48)*90;
+                // set the img and rotate it
+                next_chosenPieceImage=new ChosenPieceImage(type,this);
+                Image img = new Image(Board.class.getResource("assets/"+String.valueOf(type)+".png" ).toString());
+                next_chosenPieceImage.imageView.setImage(img);
+                next_chosenPieceImage.imageView.setFitWidth(next_chosenPieceImage.imageView.getImage().getWidth() * 0.7);
+                next_chosenPieceImage.imageView.setFitHeight(next_chosenPieceImage.imageView.getImage().getHeight() * 0.7);
+                next_chosenPieceImage.imageView.setRotate(angle);
+                //set location of the modified piece
+                if (angle%180==90){
+                    next_chosenPieceImage.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX()-(next_chosenPieceImage.imageView.getFitWidth()-next_chosenPieceImage.imageView.getFitHeight())/2);
+                    next_chosenPieceImage.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY()+(next_chosenPieceImage.imageView.getFitWidth()-next_chosenPieceImage.imageView.getFitHeight())/2);
+                }else{
+                    next_chosenPieceImage.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX());
+                    next_chosenPieceImage.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY());
+                }
+                root.getChildren().add(next_chosenPieceImage.imageView);
             }
 
         });
+
+        //when release mouse,show the original set
         hintButton.setOnMouseReleased(e->{
             Iterator<ChosenPieceImage> oriPieceIter=placedImage.iterator();
             for (int i=0;i<placement.length();i=i+4){
@@ -276,6 +285,11 @@ public class  Board extends Application {
                     tempChosenPiece.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY());
                 }
             }
+            if (next_chosenPieceImage!=null){
+                root.getChildren().remove(next_chosenPieceImage.imageView);
+                next_chosenPieceImage=null;
+            }
+
         });
 
         //implement resetButton: remove all the piece on the board
@@ -284,7 +298,10 @@ public class  Board extends Application {
             while (chosenPieceIter.hasNext()){
                 ChosenPieceImage tempChosenPiece=chosenPieceIter.next();
                 root.getChildren().remove(tempChosenPiece.imageView);
+                int i=tempChosenPiece.type-97;
+                pane.add(ChosenButtons.get(i), i %5, i/5,1,1);
             }
+
             placedImage.clear();
             placement="";
         });
@@ -374,7 +391,7 @@ public class  Board extends Application {
         hboxTop.getChildren().addAll(paneBoard, vboxRight);
 
         //Creates a grid to hold the pieces
-        GridPane pane = new GridPane();
+
         pane.setAlignment(Pos.CENTER_LEFT);
         pane.setHgap(10);
         pane.setVgap(10);
@@ -390,7 +407,7 @@ public class  Board extends Application {
             view.setFitHeight(img.getHeight()/2);
             view.setFitWidth(img.getWidth()/2);
             char message = pieces[i].charAt(0);
-
+            ChosenButtons.add(i,view);
 
             //Captures mouse click event and replaces chosen piece image in chose piece image view.
             view.setOnMouseClicked(( MouseEvent event ) ->
@@ -404,8 +421,7 @@ public class  Board extends Application {
                     temp_chosenPieceImage.imageView.setFitHeight(temp_chosenPieceImage.imageView.getImage().getHeight() * 0.7);
                     root.getChildren().add(temp_chosenPieceImage.imageView);
                     temp_chosenPieceImage.imageView.toFront();
-                    //placedImage.add(temp_chosenPieceImage);
-                    //System.out.println(placedImage.size());
+                    pane.getChildren().remove(view);
                     isPlaced = false;
                 }
                 else{
@@ -432,7 +448,6 @@ public class  Board extends Application {
         //Creating a root node and aligning vertically the "hboxTop" and "hboxBottom".
         //Group root = new Group();
         root.getChildren().addAll(new VBox(hboxTop, hboxBottom),challengePiece);
-
         return root;
     }
 
@@ -487,10 +502,11 @@ public class  Board extends Application {
                 MouseButton button = event.getButton();
                 if (button==MouseButton.PRIMARY){
                     mouseX = imageView.getLayoutX();
-                    mouseY= imageView.getLayoutY();
+                    mouseY= imageView .getLayoutY();
 
                     // if drag the piece to the remove area, remove it
                     if (mouseX>700){
+                        //update placement string
                         for (int i=0;i<placement.length();i++){
                             if (placement.charAt(i)==type){
                                 String replece1=placement.substring(0,i);
@@ -499,7 +515,11 @@ public class  Board extends Application {
                                 break;
                             }
                         }
+
                         placedImage.remove(this);
+                        //show the Piecebutton that is corresponding with the removed piece
+                        int i=this.type-97;
+                        pane.add(ChosenButtons.get(i), i %5, i/5,1,1);
                         root.getChildren().remove(this.imageView);
                     }
 

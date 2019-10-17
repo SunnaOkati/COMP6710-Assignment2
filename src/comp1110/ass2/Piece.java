@@ -105,19 +105,7 @@ public class Piece {
         }
     }
 
-    //Author: Ranjth
-    //Finds the corresponding array of color states given piece name
-    public static Colors[][] pieceColorArray(char piece){
-        Map<String, Colors[][]> map = new HashMap<String, Colors[][]>();
 
-        Object[] pieces = {PieceType.pieceA, PieceType.pieceB, PieceType.pieceC, PieceType.pieceD, PieceType.pieceE,
-                PieceType.pieceF, PieceType.pieceG, PieceType.pieceH, PieceType.pieceI, PieceType.pieceJ};
-
-        for (int i = 0 ; i< pieces.length; i++)
-            map.put(Character.toString((char)('a' + i)), (Colors[][]) pieces[i]);
-
-        return map.get(Character.toString(piece));
-    }
 
     //find the corresponding array of different type
     //@author Rong Hu

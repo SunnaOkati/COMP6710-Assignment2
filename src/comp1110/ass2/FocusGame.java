@@ -496,13 +496,15 @@ public class FocusGame {
                 boardState[1+i][3+j]=constrain;
             }
         }
+        if (!placement.isEmpty())
+            boardState = FocusGame.fillBoard(placement, boardState);
 
         Set<String> viablePiece=new HashSet<String>();
 
         for (int t=0;t<10;t++){
-            for (int x=0;x<9;x++){
-                for (int y=0;y<5;y++){
-                    for (int d=0;d<4;d++){
+            for (int d=0;d<4;d++){
+                for (int x=findStartX((char)(t+97),d,col,row);x<=col;x++){
+                    for (int y=findStartY((char)(t+97),d,col,row);y<=row;y++){
                         String tempPlace=""+((char)(t+97))+x+y+d;
                         String newPlacement=placement.concat(tempPlace);
                         //System.out.println(newPlacement);
@@ -511,15 +513,17 @@ public class FocusGame {
                         }
 
                         //@Ron, I implemented the below method. I felt implementing this way seemed a bit clean.
-                        Colors[][] tempPiece= Piece.pieceColorArray((char)(t+97));
+                        Colors[][] tempPiece= Piece.placementToPieceArray(tempPlace);
 
                         int length=tempPiece[0].length;
                         int width=tempPiece.length;
                         boolean sig = true;
                         boolean sig2 = false;
-
                         for (int j = 0; j < width; j++) {
                             for (int k = 0; k < length; k++) {
+                                if (tempPiece[j][k] == null){
+                                    continue;
+                                }
                                 Location rotateLoc = PieceType.rotateXY(k, j, length, width, d);
                                 //@Ron, I created the below two variables, because it is less time consuming if you call Location.getX() once
                                 // and store it for further use,
@@ -547,19 +551,47 @@ public class FocusGame {
             }
         }
 
-
         return viablePiece.isEmpty()? null: viablePiece;
     }
 
     //Author: Ranjth
     //Checks whether the co-ordinates within the challenge square(area)
     public static boolean isWithinChallengeSquare(int x, int y){
-        if ((y <=3 ) && (y >= 1))//Between second and fourth row
-            if ((x <=5 )&&(x >= 3))//Between fourth and sixth column
-                return true;
+        if ((y <=3 && y >= 1)&&(x <=5 &&x >= 3))//Y:Between second and fourth row X: Between fourth and sixth column
+            return true;
 
         return false;
     }
+
+    //find the range of X according to the type and orientation of the piece
+    public static int findStartX(char type, int orientation, int x, int y){
+        int startX;
+        String pieceString=""+type+0+0+orientation;
+        Colors[][] tempPiece= Piece.placementToPieceArray(pieceString);
+        int length=tempPiece[0].length;
+        int width=tempPiece.length;
+        if (orientation==0||orientation==2){
+            startX=x-length<0 ? 0: x-length;
+        }else {
+            startX=x-width<0 ? 0: x-width;
+        }
+        return startX;
+    }
+    public static int findStartY(char type, int orientation, int x, int y){
+        int startY;
+        String pieceString=""+type+0+0+orientation;
+        Colors[][] tempPiece= Piece.placementToPieceArray(pieceString);
+        int length=tempPiece[0].length;
+        int width=tempPiece.length;
+        if (orientation==0||orientation==2){
+            startY=y-width<0 ? 0: y-width;
+        }else {
+            startY=y-length<0 ? 0: y-length;
+        }
+        return startY;
+    }
+
+
 
     /**
      * Return the canonical encoding of the solution to a particular challenge.
@@ -578,6 +610,7 @@ public class FocusGame {
      * the challenge.
      */
 
+
     //@author Rong Hu
     public static String getSolution(String challenge) {
         // FIXME Task 9: determine the solution to the game, given a particular challenge
@@ -587,6 +620,11 @@ public class FocusGame {
 
         //start first step at (4,2)
         Set<String> firstStep = getViablePiecePlacements2(placement,challenge,4,2);
+
+        //Checks whether any piece placement is valid in the specified co-ordinates for given challenge
+        if ( firstStep == null || firstStep.size() == 0)
+            return "";
+
         solutionStep.add(firstStep);
         Iterator<String> iter=firstStep.iterator();
         placement=iter.next();
@@ -601,7 +639,6 @@ public class FocusGame {
             }
             Set<String> viablePiece=getViablePiecePlacements(placement,challenge,empty.getX(),empty.getY());
 
-
             //if the empty square have solution, add it to solutionStep and placement string
             if (viablePiece!=null){
                 solutionStep.add(viablePiece);
@@ -609,12 +646,20 @@ public class FocusGame {
                 String nextStep=iter.next();
                 placement=placement+nextStep;
                 boardState=FocusGame.fillBoard(nextStep,boardState);
+                //System.out.println("Piece placement: " + nextStep);
             } else {
                 boolean change=false;
                 String tempPlacement="";
                 while (change==false) {
                     //remove the former last step
+                    //System.out.println("Piece removal: ");
+
+                    if(solutionStep.size() == 0){
+                        return "";
+                    }
+
                     Set<String> placementSet = solutionStep.get(solutionStep.size() - 1);
+
                     String lastPiece = placement.substring(placement.length() - 4);
                     placementSet.remove(lastPiece);
                     boardState=FocusGame.removeBoard(lastPiece,boardState);
@@ -650,8 +695,8 @@ public class FocusGame {
             }
         }
 
-        System.out.println("challenge: "+challenge);
-        System.out.println("newplacement: "+newPlacement);
+        //System.out.println("challenge: "+challenge);
+        //System.out.println("newplacement: "+newPlacement);
 
         //System.out.println("placement: "+placement);
         //return null;
@@ -890,7 +935,15 @@ public class FocusGame {
                                 }
                             }
                         }
-                        if (sig==true && sig2==true && isDeadCell(tempPlace)!=true){
+                        if (sig == true && sig2 == true && isDeadCell(tempPlace) != true) {
+                            if ((tempPlace.charAt(0) == 'g' || tempPlace.charAt(0) == 'f') && (tempPlace.charAt(3) == '2' || tempPlace.charAt(3) == '3')) {
+                                if (tempPlace.charAt(3) == '2') {
+                                    tempPlace = tempPlace.substring(0, 3) + "0";
+
+                                } else if (tempPlace.charAt(3) == '3') {
+                                    tempPlace = tempPlace.substring(0, 3) + "1";
+                                }
+                            }
                             viablePiece.add(tempPlace);
                         }
                     }
@@ -901,6 +954,7 @@ public class FocusGame {
         if (viablePiece.isEmpty()==true){
             return null;
         }
+
         return viablePiece;
     }
 
@@ -941,7 +995,7 @@ public class FocusGame {
 
     //fill the cells based on the input placement string(4 characters)
     //@author Rong Hu
-    static public Colors[][] fillBoard(String placement,Colors[][] boardState){
+    static public Colors[][] fillBoard(String placement,Colors[][] board){
         char type=placement.charAt(0);
         int x=(int)placement.charAt(1)-48;
         int y=(int)placement.charAt(2)-48;
@@ -953,11 +1007,12 @@ public class FocusGame {
             for (int k=0;k<length;k++){
                 Location rotateLoc=PieceType.rotateXY(k,j,length,width,orientation);
                 if (tempPiece[j][k]!=null){
-                    boardState[y+rotateLoc.getY()][x+rotateLoc.getX()]=tempPiece[j][k];
+                    //System.out.println("Entered: "+ tempPiece[j][k]);
+                    board[y+rotateLoc.getY()][x+rotateLoc.getX()]=tempPiece[j][k];
                 }
             }
         }
-        return boardState;
+        return board;
     }
 
     //remove the cells based on the input placement string(4 characters)

@@ -23,4 +23,8 @@ public class Location {
         return Y;
     }
 
+    @Override
+    public String toString(){
+        return getY() + " " + getX();
+    }
 }
