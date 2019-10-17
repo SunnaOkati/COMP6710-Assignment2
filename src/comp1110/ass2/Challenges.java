@@ -217,8 +217,12 @@ public class Challenges {
                 boardState = FocusGame.fillBoard(placement.substring(l, l+4), boardState);
             }
 
-            //Find the co-ordinates in the board which are yet to be filled
-            Location empty = FocusGame.findEmpty(boardState, 0,8,0,4);
+            //Find the co-ordinates in the board which are yet to be filled in the square region
+            Location empty = FocusGame.findEmpty(boardState, 3,5,1,3);
+
+            if(empty == null)
+                empty = FocusGame.findEmpty(boardState, 0,8,0,4);
+
 
             Set<String> viable = null;
             if(empty == null){
