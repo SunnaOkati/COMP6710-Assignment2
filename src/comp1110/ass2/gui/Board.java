@@ -31,6 +31,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.junit.Assert;
 import org.junit.Test;
@@ -679,12 +680,15 @@ public class  Board extends Application {
                         "From there, you can drag the piece to the board\nOr into the bin if you selected it by accident\n" +
                         "After completing the game you can reset by pressing the reset button\nClick play for a new challenge!\n" +
                         "Have fun!!!");
-        Font infoFont = Font.font(25);
+        info.setTextAlignment(TextAlignment.CENTER);
+        Font infoFont = Font.font(30);
         info.setFont(infoFont);
+        VBox tBox = new VBox(50,info);
+        tBox.setTranslateX(10);
         StackPane root = new StackPane();
 
         root.getChildren().addAll(view);
-        root.getChildren().add(info);
+        root.getChildren().add(tBox);
         root.getChildren().add(vBox);
         Scene scene = new Scene(root,933,700);
         primaryStage.setScene(scene);
