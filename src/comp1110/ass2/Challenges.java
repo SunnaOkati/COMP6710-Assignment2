@@ -9,6 +9,31 @@ public class Challenges {
     private int challengeNumber;          // The problem number from the original board game
     private String colorConstraint;    // The color constraint of 3 * 3 matrix.
     private static Challenges[] challenge = new Challenges[120]; //List of challenges.
+    // This is for the playButton to access
+    public static String[] challengesList = {
+            "RRRBWBBRB", "RWWRRRWWW", "BGGWGGRWB", "WRRWRRGWW", "GWRGWWGGG", "GRWGRWWWW",
+            "RGGRGGRRB", "GGGRGRBBB", "RGGGGRBGG", "BBBWRWGGG", "WBWWWWRWG", "BBGRWBRRB",
+            "WWRGWWGGW", "WRRRRRWWW", "WWWWRWBBB", "GBBRRRBBG", "BRRBWRBBB", "GGGWGWGGB",
+            "GWRGGWGGG", "WWRGWRWWR", "WWRGGWGGW", "RBGWBBGWR", "BGWBWRBBB", "BGRWWWWWW",
+            "WBWWBWGGG", "WGBWGBWGB", "BBBGGGWWW", "GBBGWWGBB", "BWGGWGGWB", "WBWGGBWGW",
+            "GWGGWBGGG", "BGGWGGGWB", "GWWGWBGGG", "GBGWWBWWG", "GWWBWWGBG", "BGBWWWWBW",
+            "GGWWGGBWG", "WBWWWWGGG", "BBBBGGBGB", "BBBWWWBGB", "WGGBGGGBW", "GBGWWWBGB",
+            "BWGWWWGWB", "BGBBGGWBB", "BGBBWBBGB", "WWGBBWWBW", "WBWGGBBGW", "BWWBWGBWW",
+            "RRRRRRRRR", "RRRRRWRWW", "RWWWRWWWR", "BWBBWBBBB", "BWWBBBBWB", "WWBWWBWWB",
+            "BWBBBBWWW", "BBBBWBBWB", "BBBBWBBBB", "BBBWWBWBB", "WBBWBWWBW", "BBBWWBBBB",
+            "WGGWWGWWW", "GGGGWGWWG", "GGWWGGWWG", "WBBWWBWWW", "BBBBWWBBB", "WBBBWWBWW",
+            "WWRWRWWWR", "RRWWRWWRR", "WWWRRWWRR", "WGGGGGGGW", "WGGGGGWWW", "GGGGGGGGG",
+            "GGRBGRBBR", "BGBGBRGRR", "WBWWRWWGW", "GGBRRGBRG", "GWWWRWWWB", "BBRWBBGWB",
+            "BGWWBGWWW", "GWBGGWWGG", "BGGBGBBGG", "GGRGGRRRR", "GWGGWRGGG", "RRWGRRGGR",
+            "GRRGGGRRG", "WRWWRWGWG", "RGGRWGGRR", "GGGGGGRWR", "GGGRRRWRW", "GRGWRRRWG",
+            "RBRRBBRRB", "RRBWBRWWR", "WBWWRWWBW", "WWWRBRRBR", "RWWRWBWWB", "RBRRBRRBR",
+            "WWWWWWWWW", "RRBBBBGGB", "GGGBBGRBG", "GBGRRRBRB", "GBRGBRGGG", "GBWRBBRRG",
+            "WWBWGWWWR", "BGGRWBBGG", "BGRBGRGGG", "BRWRRRWRB", "BBBRRBWRB", "BWRBBWWBB",
+            "RBBRBBRRR", "RWWBWWBBR", "RBBRWBRRB", "BBRRRRBBR", "RBBBWWBWR", "BWRBWRBWR",
+            "BBBWRWRRR", "BBBRWBWRB", "RWBWWWBWR", "WRBWRBWRB", "BWRBRWBWR", "BRBBRBBWB",
+
+    };
+
 
     public Challenges(int challengeNumber, String colorConstraint){
         this.challengeNumber = challengeNumber;
@@ -217,8 +242,12 @@ public class Challenges {
                 boardState = FocusGame.fillBoard(placement.substring(l, l+4), boardState);
             }
 
-            //Find the co-ordinates in the board which are yet to be filled
-            Location empty = FocusGame.findEmpty(boardState, 0,8,0,4);
+            //Find the co-ordinates in the board which are yet to be filled in the square region
+            Location empty = FocusGame.findEmpty(boardState, 3,5,1,3);
+
+            if(empty == null)
+                empty = FocusGame.findEmpty(boardState, 0,8,0,4);
+
 
             Set<String> viable = null;
             if(empty == null){
@@ -326,5 +355,6 @@ public class Challenges {
 
         //System.out.println("Debugging: "+ FocusGame.getSolution("GGWRBGGWW"));
         System.out.println("The solution for the challenge is "+ generateChallenege());
+
     }
 }

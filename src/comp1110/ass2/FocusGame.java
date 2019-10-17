@@ -876,6 +876,9 @@ public class FocusGame {
         }
         Set<String> viablePiece=new HashSet<String>();
 
+        // FIXME Set by Victor
+        // Ron, why is this set up as at least 4 nested for loops (t,x,y,d) when nothing happens in the t,x or y loop?
+        // You still haven't named these constants so I don't know what they do or why they're here
         for (int t=0;t<10;t++){
             for (int x=0;x<9;x++){
                 for (int y=0;y<5;y++){
