@@ -208,10 +208,13 @@ public class  Board extends Application {
         String hintStyle = "-fx-base:#E93939; -fx-font: 16 arial";
         int[] buttonSize = {80,40};
 
+
         //Creating the play and reset buttons using "button" class
         button playButton = new button(buttonStyle, "Play", buttonSize);
         button resetButton = new button(buttonStyle, "Reset", buttonSize);
         button hintButton = new button(hintStyle, "Hint", buttonSize);
+
+
 
         //implement hintButton: give a hint of next step
 
@@ -306,6 +309,7 @@ public class  Board extends Application {
             placement="";
         });
 
+
         //Creating a horizontal box with play and reset buttons
         HBox buttons = new HBox();
         buttons.setSpacing(5);
@@ -335,6 +339,8 @@ public class  Board extends Application {
                 }
             }
         }
+
+
 
 
 
@@ -407,11 +413,13 @@ public class  Board extends Application {
             view.setFitHeight(img.getHeight()/2);
             view.setFitWidth(img.getWidth()/2);
             char message = pieces[i].charAt(0);
+
             ChosenButtons.add(i,view);
 
-            //Captures mouse click event and replaces chosen piece image in chose piece image view.
+            //Captures mouse click event and replaces chosen piece image in chosen piece image view.
             view.setOnMouseClicked(( MouseEvent event ) ->
-            { if (isPlaced) {
+            {
+                if (isPlaced) {
                     //ChosenType= message;
                     ChosenPieceImage temp_chosenPieceImage=new ChosenPieceImage(message,this);
                     temp_chosenPieceImage.imageView.setImage(img);
@@ -424,6 +432,7 @@ public class  Board extends Application {
                     pane.getChildren().remove(view);
                     isPlaced = false;
                 }
+
                 else{
                     view.setEffect(null);
                     isPlaced = true;
@@ -625,8 +634,34 @@ public class  Board extends Application {
     }
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setScene(new Scene(createContent()));
+
+        Font font = Font.font(72);
+        String startButtonStyle = "-fx-font: 72 arial";
+        Button startButton = new Button("Start!");
+        startButton.setFont(font);
+        startButton.setStyle(startButtonStyle);
+        VBox vBox = new VBox(50,startButton);
+        vBox.setTranslateX(336.5);
+        vBox.setTranslateY(500);
         primaryStage.setTitle("IQ-Focus");
+
+        Text info = new Text(     "Press the play button to display a new challenge\n" +
+                                  "Hold the Hint button for a new hint\n" +
+                                  "Clicking on a piece will send it to piece box, there you can rotate it by clicking the right hand mouse button\n" +
+                                  "From there, you can drag the piece to the board, or into the bin if you selected it by accident\n" +
+                                  "After completing the game you can reset by pressing the reset button, and click play for a new challenge!\n" +
+                                  "Have fun!!!");
+        StackPane root = new StackPane();
+        root.getChildren().add(info);
+        root.getChildren().add(vBox);
+        Scene scene = new Scene(root,933,700);
+        primaryStage.setScene(scene);
+        Scene secondScene = new Scene(createContent());
+        startButton.setOnAction(e->primaryStage.setScene(secondScene));
+
         primaryStage.show();
+
+
+
     }
 }

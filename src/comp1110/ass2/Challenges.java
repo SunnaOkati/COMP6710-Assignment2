@@ -326,5 +326,6 @@ public class Challenges {
 
         //System.out.println("Debugging: "+ FocusGame.getSolution("GGWRBGGWW"));
         System.out.println("The solution for the challenge is "+ generateChallenege());
+
     }
 }
