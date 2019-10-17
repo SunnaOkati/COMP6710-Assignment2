@@ -31,7 +31,7 @@ public class Challenges {
 //            "WWBWGWWWR", "BGGRWBBGG", "BGRBGRGGG", "BRWRRRWRB", "BBBRRBWRB", "BWRBBWWBB",
 //            "RBBRBBRRR", "RWWBWWBBR", "RBBRWBRRB", "BBRRRRBBR", "RBBBWWBWR", "BWRBWRBWR",
 //            "BBBWRWRRR", "BBBRWBWRB", "RWBWWWBWR", "WRBWRBWRB", "BWRBRWBWR", "BRBBRBBWB",
-// comment that I'm adding to commit presentation.pdf
+// comment that I'm adding to commit
 //    };
 
     /*
