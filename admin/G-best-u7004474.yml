@@ -20,7 +20,7 @@ declaration: >-
 # (or remove it altogether if you haven't collaborated with anyone)
 collaboration:
   - name: Ron
-    comment: >- He helped me with drag and drop, while implementing the basic functioning board as part of Task 7.
+    comment: He helped me with drag and drop, while implementing the basic functioning board as part of Task 7.
 
 # Use this to list any code that you used that you did not write,
 # aside from code provided by the lecturer.  Provide a comment

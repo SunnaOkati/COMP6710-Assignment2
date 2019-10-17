@@ -9,7 +9,7 @@
 # https://cs.anu.edu.au/courses/comp1110/help/faq/09-originality/
 #
 
-declaration: >-
+declaration:
   I submit the work below for assessment as my best work. I declare that this
   is entirely my own work, with the following documented exceptions:
 
@@ -20,7 +20,7 @@ declaration: >-
 # (or remove it altogether if you haven't collaborated with anyone)
 collaboration:
   - name: Ron
-    comment: >-
+    comment:
       Ron made the class to clean it up, but all the contents/methods are mine, so I think it would count, although I am not sure
       Ron also expanded upon the playbutton (originally a challengebutton) to make it write to the board instead of a vBox
 
@@ -30,7 +30,6 @@ collaboration:
 # you want to just submit methods):
 class:
    - Challenge.java
-   - 
 
 # I wish to submit the following methods as entirely my own (remove this if
 # you want to just submit classes):
