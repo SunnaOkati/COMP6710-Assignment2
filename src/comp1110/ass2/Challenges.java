@@ -34,6 +34,19 @@ public class Challenges {
 
     };
 
+    public static String[] randomChallengeList = {
+            "RRRRRRWBB", "RRRRRBRWB", "RRRRRBBBB", "RRRRRWBGW", "RRRRRWWGR",
+            "RRRRRWWBG", "RRRRGGRWB", "RRRRGGWRR", "RRRRGGWWG", "RRRRGGWWW",
+
+            "RRRRWBRWW", "RRRGBBWWW", "RRRGBWWBB", "RRRBRWBGW", "RRRBGGWRW",
+            "RRRBBBBGG", "RRRBWBBWW", "RRRBWWGBG", "RRRBWWWWG", "RRRWRRGWB",
+
+            "RRRRGGGWB","RRRBWBWWB", "RRRWRRWWG", "RRRWBBGBW","RRGBBGRWW",
+            "RRGWRGBRG", "RRWRWBWGB", "RRWBBWGGR", "RGRRBBRBG", "RGRWRWGWW",
+
+            "RRRBGGWGW", "RRRBBBRWW", "RRGWGGRWW", "RRGWGGBGG", "RRGWBGGBW",
+            "RRBRRBWWB", "RRBBWWRRR", "RRWRWBBGB", "RRWBWBBRB", "RRWWGGBGG"
+};
 
     public Challenges(int challengeNumber, String colorConstraint){
         this.challengeNumber = challengeNumber;
