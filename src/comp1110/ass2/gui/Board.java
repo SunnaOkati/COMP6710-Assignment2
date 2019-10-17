@@ -1,5 +1,6 @@
 package comp1110.ass2.gui;
 
+import comp1110.ass2.Challenges;
 import comp1110.ass2.FocusGame;
 import comp1110.ass2.gittest.Main;
 import java.io.*;
@@ -366,16 +367,12 @@ public class  Board extends Application {
         // Lines from random generation to challenge.Button inclusive
         // Challenge Virtual
         Random rand = new Random();
-
-
         //Vertically aligns buttons, chosenPiece and challenge
-        // A test sample of challenges
-        String[] challengesList = {"RRRBWBBRB","RRBBBBGGB","RRRRRWRWW","RRRBWBBRB"};
 
         // This challenge button generates a new challenge grid on mouseclick
         playButton.setOnAction(e-> {
             challengePiece.getChildren().clear();
-            challengeString=challengesList[rand.nextInt(challengesList.length)];
+            challengeString= Challenges.challengesList[rand.nextInt(Challenges.challengesList.length)];
             challengeGridVisualiser(challengeString,challengePiece);
             challengePiece.setLayoutX(boardArray.get(12).getLayoutX());
             challengePiece.setLayoutY(boardArray.get(12).getLayoutY());
