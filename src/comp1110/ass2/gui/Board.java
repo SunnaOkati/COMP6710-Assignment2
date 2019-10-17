@@ -385,7 +385,7 @@ public class  Board extends Application {
 
         Menu menuHelp = new Menu("Help");
         MenuItem guidance= new MenuItem("guidance");
-        expert.setOnAction((ActionEvent t) -> { });
+        guidance.setOnAction((ActionEvent t) -> { PopWindow.display("Guide",PopWindow.guidance);});
         menuHelp.getItems().addAll(guidance);
 
         menuBar.getMenus().addAll(menuDiff, menuHelp);
@@ -486,7 +486,7 @@ public class  Board extends Application {
 
 
     //-----------------------------------------Task 7----------------------------------------------------------------
-    //Author: Ranjth Raj
+    //Author: Ranjth Raj,Rong HU
     //Ron: should add setOnMouseReleased() event to make the piece place in the nearest location
     private class ChosenPieceImage extends ImageView{
         char type;
@@ -604,6 +604,9 @@ public class  Board extends Application {
                         imageView.setLayoutY(150);
                         placedImage.remove(this);
                     }
+                    if (placement.equals(rightPlacement)){
+                        PopWindow.display("Congratulations","finished!");
+                    }
                 }
                 root.getChildren().remove(can);
             });
@@ -694,7 +697,6 @@ public class  Board extends Application {
         primaryStage.setScene(scene);
         Scene secondScene = new Scene(createContent());
         startButton.setOnAction(e->primaryStage.setScene(secondScene));
-
         primaryStage.show();
     }
 }
