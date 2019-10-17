@@ -643,27 +643,33 @@ public class  Board extends Application {
         vBox.setTranslateY(500);
         primaryStage.setTitle("IQ-Focus");
 
+//        Image img = new Image("comp1110/ass2/gui/assets/instruction-background.png");
+        ImageView view = new ImageView("comp1110/ass2/gui/assets/instruction-background.png");
+//        view.setImage(img);
 
-        ImageView img = new ImageView("comp1110/ass2/gui/assets/instruction-background.png");
 
 
-        Text info = new Text(     "Press the play button to display a new challenge\n" +
-                                  "Hold the Hint button for a new hint\n" +
-                                  "Clicking on a piece will send it to piece box, there you can rotate it by clicking the right hand mouse button\n" +
-                                  "From there, you can drag the piece to the board, or into the bin if you selected it by accident\n" +
-                                  "After completing the game you can reset by pressing the reset button, and click play for a new challenge!\n" +
-                                  "Have fun!!!");
+
+
+        Text info = new Text("Press the play button to display a new challenge\n" +
+                        "Hold the Hint button for a new hint\n" +
+                        "Clicking on a piece will send it to piece box, there you can rotate it by clicking the right hand mouse button\n" +
+                        "From there, you can drag the piece to the board, or into the bin if you selected it by accident\n" +
+                        "After completing the game you can reset by pressing the reset button, and click play for a new challenge!\n" +
+                        "Have fun!!!");
+        Font infoFont = Font.font(18);
+        info.setFont(infoFont);
         StackPane root = new StackPane();
+
         root.getChildren().add(info);
         root.getChildren().add(vBox);
-        root.getChildren().add(img);
+        root.getChildren().addAll(view);
         Scene scene = new Scene(root,933,700);
         primaryStage.setScene(scene);
         Scene secondScene = new Scene(createContent());
         startButton.setOnAction(e->primaryStage.setScene(secondScene));
 
         primaryStage.show();
-
 
 
     }
