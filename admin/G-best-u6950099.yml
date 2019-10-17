@@ -18,11 +18,11 @@ declaration:
 #
 # Add as many "name+comment" entries as necessary
 # (or remove it altogether if you haven't collaborated with anyone)
+
+
 collaboration:
   - name: Ron
-    comment:
-      - Ron made the class to clean it up, but all the contents/methods are mine, so I think it would count, although I am not sure
-      - Ron also expanded upon the playbutton (originally a challengebutton) to make it write to the board instead of a vBox
+    comment: Ron made the class to clean it up, but all the contents/methods are mine, so I think it would count, although I am not sure Ron also expanded upon the playbutton (originally a challengebutton) to make it write to the board instead of a vBox
 
 
 
