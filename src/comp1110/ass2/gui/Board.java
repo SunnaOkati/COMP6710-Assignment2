@@ -232,9 +232,11 @@ public class  Board extends Application {
                 tempChosenPiece.imageView.setRotate(angle);
                 //set location of the modified piece
                 if (angle%180==90){
+                    if (y>3) x=x-1;
                     tempChosenPiece.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX()-(tempChosenPiece.imageView.getFitWidth()-tempChosenPiece.imageView.getFitHeight())/2);
                     tempChosenPiece.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY()+(tempChosenPiece.imageView.getFitWidth()-tempChosenPiece.imageView.getFitHeight())/2);
                 }else{
+                    if (y>3) x=x-1;
                     tempChosenPiece.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX());
                     tempChosenPiece.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY());
                 }
@@ -257,9 +259,11 @@ public class  Board extends Application {
                 next_chosenPieceImage.imageView.setRotate(angle);
                 //set location of the modified piece
                 if (angle%180==90){
+                    if (y>3) x=x-1;
                     next_chosenPieceImage.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX()-(next_chosenPieceImage.imageView.getFitWidth()-next_chosenPieceImage.imageView.getFitHeight())/2);
                     next_chosenPieceImage.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY()+(next_chosenPieceImage.imageView.getFitWidth()-next_chosenPieceImage.imageView.getFitHeight())/2);
                 }else{
+                    if (y>3) x=x-1;
                     next_chosenPieceImage.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX());
                     next_chosenPieceImage.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY());
                 }
@@ -280,9 +284,11 @@ public class  Board extends Application {
                 tempChosenPiece.imageView.setRotate(angle);
                 //set location of the modified piece
                 if (angle%180==90){
+                    if (y>3) x=x-1;
                     tempChosenPiece.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX()-(tempChosenPiece.imageView.getFitWidth()-tempChosenPiece.imageView.getFitHeight())/2);
                     tempChosenPiece.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY()+(tempChosenPiece.imageView.getFitWidth()-tempChosenPiece.imageView.getFitHeight())/2);
                 }else{
+                    if (y>3) x=x-1;
                     tempChosenPiece.imageView.setLayoutX(boardArray.get(y*9+x).getLayoutX());
                     tempChosenPiece.imageView.setLayoutY(boardArray.get(y*9+x).getLayoutY());
                 }

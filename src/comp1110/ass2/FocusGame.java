@@ -591,6 +591,7 @@ public class FocusGame {
         }
         return startX;
     }
+
     public static int findStartY(char type, int orientation, int x, int y){
         int startY;
         String pieceString=""+type+0+0+orientation;
