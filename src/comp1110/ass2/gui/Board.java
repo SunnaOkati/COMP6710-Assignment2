@@ -412,7 +412,7 @@ public class  Board extends Application {
             challengePiece.setLayoutY(boardArray.get(12).getLayoutY());
             challengePiece.setBlendMode(BlendMode.MULTIPLY);
             rightPlacement= FocusGame.getSolution(challengeString);
-            //System.out.println("solution: "+ rightPlacement);
+            System.out.println("solution: "+ rightPlacement);
             });
 
 
@@ -594,7 +594,7 @@ public class  Board extends Application {
                         placedImage.add(this);
                     }
                     //System.out.println(placement+" overlap: "+isPlacementStringValid(placement)+" challenge: "+FocusGame.verifyChallenge(tempPlacement,challengeString));
-                    System.out.println("challenge String :"+challengeString);
+                    //System.out.println("challenge String :"+challengeString);
 
                     //if placement is invalid, placement string should be the original one and move the piece to the start area
                     if (isPlacementStringValid(placement)==false||FocusGame.verifyChallenge(tempPlacement,challengeString)==true){
